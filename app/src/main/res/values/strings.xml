@@ -1,0 +1,40 @@
+<resources>
+
+    <string name="app_name">SmartSeva</string>
+
+    <string name="user_registration">User Registration</string>
+    <string name="name">Full Name</string>
+    <string name="ngo_name">NGO Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Gender</string>
+    <string name="availability">Availability</string>
+    <string name="work_type">Preferred Work Type</string>
+    <string name="experience">Experience</string>
+
+    <string name="skills">Select Skills</string>
+    <string name="medical">Medical Help</string>
+    <string name="rescue">Rescue Work</string>
+    <string name="food">Food Distribution</string>
+
+    <string name="reg_number">Registration Number</string>
+    <string name="ngo_type">NGO Type</string>
+    <string name="address">Address</string>
+    <string name="city">City / State</string>
+    <string name="about_ngo">About NGO</string>
+    <string name="website">Website</string>
+
+    <string name="upload_photo">Upload Photo</string>
+    <string name="upload_id">Upload ID Proof</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="location">Get Current Location</string>
+
+    <string name="register">Register</string>
+
+</resources>

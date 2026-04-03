@@ -1,0 +1,243 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- COMMON -->
+        <TextView
+            android:id="@+id/tvHeading"
+            android:text="@string/user_registration"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <EditText
+            android:id="@+id/etName"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:autofillHints="name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:autofillHints="email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:hint="@string/phone"
+            android:inputType="phone"
+            android:autofillHints="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:autofillHints="password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnLocation"
+            android:text="@string/location"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnUploadId"
+            android:text="@string/upload_id"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- VOLUNTEER -->
+        <EditText
+            android:id="@+id/etAge"
+            android:hint="@string/age"
+            android:visibility="gone"
+            android:inputType="number"
+            android:autofillHints="age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvGender"
+            android:text="@string/gender"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RadioGroup
+            android:id="@+id/rgGender"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rbMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_male"/>
+
+            <RadioButton
+                android:id="@+id/rbFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_female"/>
+
+            <RadioButton
+                android:id="@+id/rbOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_other"/>
+        </RadioGroup>
+
+        <TextView
+            android:text="@string/skills"
+            android:visibility="gone"
+            android:id="@+id/tvSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbMedical"
+            android:text="@string/medical"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbRescue"
+            android:text="@string/rescue"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbFood"
+            android:text="@string/food"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etAvailability"
+            android:hint="@string/availability"
+            android:visibility="gone"
+            android:inputType="textCapSentences"
+            android:autofillHints="availability"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etWorkType"
+            android:hint="@string/work_type"
+            android:visibility="gone"
+            android:inputType="textCapWords"
+            android:autofillHints="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etExperience"
+            android:hint="@string/experience"
+            android:visibility="gone"
+            android:inputType="text"
+            android:autofillHints="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:contentDescription="@string/profile_image"
+            android:src="@android:drawable/ic_menu_camera" />
+
+        <Button
+            android:id="@+id/btnUploadPhoto"
+            android:text="@string/upload_photo"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- NGO -->
+        <EditText
+            android:id="@+id/etRegNumber"
+            android:hint="@string/reg_number"
+            android:visibility="gone"
+            android:inputType="numberSigned"
+            android:autofillHints="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etOrgType"
+            android:hint="@string/ngo_type"
+            android:visibility="gone"
+            android:inputType="textCapWords"
+            android:autofillHints="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:hint="@string/address"
+            android:visibility="gone"
+            android:inputType="textPostalAddress"
+            android:autofillHints="postalAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etCity"
+            android:hint="@string/city"
+            android:visibility="gone"
+            android:inputType="textCapWords"
+            android:autofillHints="addressLocality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etDescription"
+            android:hint="@string/about_ngo"
+            android:visibility="gone"
+            android:inputType="textMultiLine"
+            android:autofillHints="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etWebsite"
+            android:hint="@string/website"
+            android:visibility="gone"
+            android:inputType="textUri"
+            android:autofillHints="url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:text="@string/register"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</ScrollView>
