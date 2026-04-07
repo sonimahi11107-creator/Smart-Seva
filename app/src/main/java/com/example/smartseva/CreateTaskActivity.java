@@ -1,5 +1,6 @@
 package com.example.smartseva;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +22,23 @@ public class CreateTaskActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btnSubmitTask);
 
         btnSubmit.setOnClickListener(v -> {
-            String title = etTitle.getText().toString();
 
-            Toast.makeText(this, "Task Created: " + title, Toast.LENGTH_SHORT).show();
+            String title = etTitle.getText().toString();
+            String desc = etDesc.getText().toString();
+            String location = etLocation.getText().toString();
+
+            if (title.isEmpty() || desc.isEmpty()) {
+                Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 🔥 Send data to Dashboard
+            Intent intent = new Intent(CreateTaskActivity.this, DashboardActivity.class);
+            intent.putExtra("title", title);
+            intent.putExtra("desc", desc);
+            intent.putExtra("location", location);
+
+            startActivity(intent);
         });
     }
 }

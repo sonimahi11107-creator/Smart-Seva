@@ -3,7 +3,9 @@ package com.example.smartseva;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +25,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTitle, tvDesc, tvLocation;
+        Button btnApply;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -30,6 +33,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
             tvLocation = itemView.findViewById(R.id.tvLocation);
+            btnApply = itemView.findViewById(R.id.btnApply);
         }
     }
 
@@ -51,6 +55,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.tvTitle.setText(task.getTitle());
         holder.tvDesc.setText(task.getDescription());
         holder.tvLocation.setText(task.getLocation());
+
+        holder.btnApply.setOnClickListener(v -> {
+            Toast.makeText(v.getContext(),
+                    "Applied for: " + task.getTitle(),
+                    Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override

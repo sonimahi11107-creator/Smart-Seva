@@ -39,6 +39,18 @@ public class DashboardActivity extends AppCompatActivity {
         taskList.add(new Task("Medical Camp", "Assist doctors", "Mumbai"));
         taskList.add(new Task("Teaching Kids", "Teach students", "Jaipur"));
 
+        // 🔥 Receive data from CreateTaskActivity
+        Intent intent = getIntent();
+
+        if (intent != null && intent.hasExtra("title")) {
+
+            String title = intent.getStringExtra("title");
+            String desc = intent.getStringExtra("desc");
+            String location = intent.getStringExtra("location");
+
+            taskList.add(new Task(title, desc, location));
+        }
+
 // Adapter set
         adapter = new TaskAdapter(taskList);
         recyclerView.setAdapter(adapter);
@@ -56,5 +68,6 @@ public class DashboardActivity extends AppCompatActivity {
         btnCreateTask.setOnClickListener(v -> 
             startActivity(new Intent(this, CreateTaskActivity.class))
         );
+
     }
 }
