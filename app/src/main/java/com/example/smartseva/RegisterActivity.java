@@ -1,5 +1,5 @@
 package com.example.smartseva;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -116,6 +116,11 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // 🔥 Move to Dashboard
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra("role", role);
+        startActivity(intent);
+
         StringBuilder skills = new StringBuilder();
         if ("volunteer".equals(role)) {
             int selectedId = rgGender.getCheckedRadioButtonId();
@@ -135,5 +140,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
     }
 }
