@@ -18,12 +18,13 @@ public class MainActivity extends AppCompatActivity {
         btnOrg = findViewById(R.id.btnOrg);
 
         btnVolunteer.setOnClickListener(v -> openRegister("volunteer"));
-        btnOrg.setOnClickListener(v -> openRegister("organization"));
+        btnOrg.setOnClickListener(v -> openRegister("ngo"));
     }
 
     private void openRegister(String role) {
         Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-        intent.putExtra("role", role);
+        intent.putExtra("type", role); // IMPORTANT: use "type"
         startActivity(intent);
     }
 }
+
