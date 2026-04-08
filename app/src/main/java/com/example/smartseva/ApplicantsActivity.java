@@ -29,8 +29,9 @@ public class ApplicantsActivity extends AppCompatActivity {
         }
 
         // Create and set the adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicants);
+        ApplicantAdapter adapter = new ApplicantAdapter(this, applicants);
         listView.setAdapter(adapter);
+
 
         // Show in ListView
         ArrayList<String> finalApplicants = applicants;
