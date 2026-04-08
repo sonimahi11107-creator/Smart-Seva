@@ -1,5 +1,6 @@
 package com.example.smartseva;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -57,10 +59,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.tvLocation.setText(task.getLocation());
 
         holder.btnApply.setOnClickListener(v -> {
+
+            // Example volunteer name (later from login)
+            String volunteerName = "User1";
+
+            task.getApplicants().add(volunteerName);
+
             Toast.makeText(v.getContext(),
                     "Applied for: " + task.getTitle(),
                     Toast.LENGTH_SHORT).show();
         });
+
+        holder.itemView.setOnClickListener(v -> {
+
+            Intent intent = new Intent(v.getContext(), ApplicantsActivity.class);
+
+            intent.putStringArrayListExtra(
+                    "applicants",
+                    new ArrayList<>(task.getApplicants())
+            );
+
+            v.getContext().startActivity(intent);
+        });
+
     }
 
     @Override
