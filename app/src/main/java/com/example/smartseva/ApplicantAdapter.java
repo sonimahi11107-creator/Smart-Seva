@@ -28,21 +28,30 @@ public class ApplicantAdapter extends ArrayAdapter<String> {
         Button btnAccept = convertView.findViewById(R.id.btnAccept);
         Button btnReject = convertView.findViewById(R.id.btnReject);
 
+
+
         tvName.setText(name);
 
-        // ✅ Accept Button
+        // ✅ ACCEPT BUTTON
         btnAccept.setOnClickListener(v -> {
             Toast.makeText(getContext(),
                     name + " Accepted",
                     Toast.LENGTH_SHORT).show();
+
+            // 🔥 Update status
+            ((ApplicantsActivity) getContext()).updateTaskStatus("Accepted");
         });
 
-        // ❌ Reject Button
+        // ❌ REJECT BUTTON
         btnReject.setOnClickListener(v -> {
             Toast.makeText(getContext(),
                     name + " Rejected",
                     Toast.LENGTH_SHORT).show();
+
+            // 🔥 Update status
+            ((ApplicantsActivity) getContext()).updateTaskStatus("Rejected");
         });
+
 
         return convertView;
     }

@@ -28,6 +28,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         TextView tvTitle, tvDesc, tvLocation;
         Button btnApply;
+        TextView tvStatus;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -36,6 +37,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvDesc = itemView.findViewById(R.id.tvDesc);
             tvLocation = itemView.findViewById(R.id.tvLocation);
             btnApply = itemView.findViewById(R.id.btnApply);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
         }
     }
 
@@ -57,13 +59,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.tvTitle.setText(task.getTitle());
         holder.tvDesc.setText(task.getDescription());
         holder.tvLocation.setText(task.getLocation());
+        holder.tvStatus.setText("Status: " + task.getStatus());
 
         holder.btnApply.setOnClickListener(v -> {
 
             // Example volunteer name (later from login)
             String volunteerName = "User1";
 
-            task.getApplicants().add(volunteerName);
+            task.getApplicantStatus().put(volunteerName, "Pending");
 
             Toast.makeText(v.getContext(),
                     "Applied for: " + task.getTitle(),
@@ -74,10 +77,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
             Intent intent = new Intent(v.getContext(), ApplicantsActivity.class);
 
-            intent.putStringArrayListExtra(
-                    "applicants",
-                    new ArrayList<>(task.getApplicants())
-            );
+            intent.putExtra("task", task);
 
             v.getContext().startActivity(intent);
         });
