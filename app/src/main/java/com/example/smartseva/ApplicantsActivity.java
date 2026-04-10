@@ -35,7 +35,7 @@ public class ApplicantsActivity extends AppCompatActivity {
         }
 
         // Create and set the adapter
-        ApplicantAdapter adapter = new ApplicantAdapter(this, applicants);
+        ApplicantAdapter adapter = new ApplicantAdapter(this, applicants, task);
         listView.setAdapter(adapter);
 
 

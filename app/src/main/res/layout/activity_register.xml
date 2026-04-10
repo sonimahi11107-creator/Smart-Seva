@@ -1,215 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- COMMON -->
+        <!-- Header -->
         <TextView
-            android:id="@+id/tvHeading"
-            android:text="@string/user_registration"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/etName"
-            android:hint="@string/name"
-            android:inputType="textPersonName"
-            android:autofillHints="name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/etEmail"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:autofillHints="email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/etPhone"
-            android:hint="@string/phone"
-            android:inputType="phone"
-            android:autofillHints="phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/etPassword"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:autofillHints="password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <!-- VOLUNTEER -->
-        <EditText
-            android:id="@+id/etAge"
-            android:hint="@string/age"
-            android:visibility="gone"
-            android:inputType="number"
-            android:autofillHints="age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:text="Create Account"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"
+            android:layout_marginBottom="4dp"/>
 
         <TextView
-            android:id="@+id/tvGender"
-            android:text="@string/gender"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fill all details accurately for verification"
+            android:textSize="13sp"
+            android:textColor="#888888"
+            android:layout_marginBottom="20dp"/>
 
-        <RadioGroup
-            android:id="@+id/rgGender"
+        <!-- Tab Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_marginBottom="20dp">
 
-            <RadioButton
-                android:id="@+id/rbMale"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btnTabNGO"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="NGO / Organisation"
+                android:textSize="13sp"
+                android:backgroundTint="#1A1A1A"
+                android:textColor="#FFFFFF"/>
+
+            <Button
+                android:id="@+id/btnTabVolunteer"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Volunteer"
+                android:textSize="13sp"
+                android:backgroundTint="#E0E0E0"
+                android:textColor="#1A1A1A"/>
+        </LinearLayout>
+
+        <!-- NGO FORM -->
+        <LinearLayout
+            android:id="@+id/layoutNGO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <!-- Organisation Name -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Organisation Name *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etOrgName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/gender_male"/>
+                android:hint="e.g. Green Earth Foundation"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errOrgName" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-            <RadioButton
-                android:id="@+id/rbFemale"
-                android:layout_width="wrap_content"
+            <!-- Registration Number -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Registration / Trust No. *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etRegNo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/gender_female"/>
+                android:hint="e.g. DIT/2020/1234"
+                android:inputType="text"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errRegNo" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-            <RadioButton
-                android:id="@+id/rbOther"
-                android:layout_width="wrap_content"
+            <!-- NGO Type -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Type of NGO *" android:textSize="12sp" android:textColor="#555"/>
+            <Spinner
+                android:id="@+id/spinnerNGOType"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/gender_other"/>
-        </RadioGroup>
+                android:layout_marginBottom="12dp"/>
 
-        <TextView
-            android:text="@string/skills"
-            android:visibility="gone"
-            android:id="@+id/tvSkills"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <!-- Official Email -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Official Email *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etNGOEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="contact@organisation.org"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errNGOEmail" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <CheckBox
-            android:id="@+id/cbMedical"
-            android:text="@string/medical"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <!-- Phone -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Phone Number *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etNGOPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="10-digit number"
+                android:inputType="phone"
+                android:maxLength="10"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errNGOPhone" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <CheckBox
-            android:id="@+id/cbRescue"
-            android:text="@string/rescue"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <!-- Address -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Registered Address *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etNGOAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Full registered address"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errNGOAddress" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <CheckBox
-            android:id="@+id/cbFood"
-            android:text="@string/food"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <!-- Password -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Password *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etNGOPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Min 8 chars, 1 number"
+                android:inputType="textPassword"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errNGOPassword" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etAvailability"
-            android:hint="@string/availability"
-            android:visibility="gone"
-            android:inputType="textCapSentences"
-            android:autofillHints="availability"
+            <!-- Confirm Password -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Confirm Password *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etNGOConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Re-enter password"
+                android:inputType="textPassword"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errNGOConfirmPassword" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="20dp"/>
+
+            <Button
+                android:id="@+id/btnRegisterNGO"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Register Organisation"
+                android:backgroundTint="#1A1A1A"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="16dp"/>
+        </LinearLayout>
+
+        <!-- VOLUNTEER FORM -->
+        <LinearLayout
+            android:id="@+id/layoutVolunteer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/etWorkType"
-            android:hint="@string/work_type"
-            android:visibility="gone"
-            android:inputType="textCapWords"
-            android:autofillHints="none"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- First Name -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="First Name *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Priya"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errFirstName" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etExperience"
-            android:hint="@string/experience"
-            android:visibility="gone"
-            android:inputType="text"
-            android:autofillHints="none"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- Last Name -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Last Name *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Sharma"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errLastName" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <!-- NGO -->
-        <EditText
-            android:id="@+id/etRegNumber"
-            android:hint="@string/reg_number"
-            android:visibility="gone"
-            android:inputType="numberSigned"
-            android:autofillHints="none"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- Email -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Email Address *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etVolEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="yourname@example.com"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errVolEmail" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etOrgType"
-            android:hint="@string/ngo_type"
-            android:visibility="gone"
-            android:inputType="textCapWords"
-            android:autofillHints="none"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- Phone -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Phone Number *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etVolPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="10-digit number"
+                android:inputType="phone"
+                android:maxLength="10"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errVolPhone" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etAddress"
-            android:hint="@string/address"
-            android:visibility="gone"
-            android:inputType="textPostalAddress"
-            android:autofillHints="postalAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- Government ID -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Government ID Type *" android:textSize="12sp" android:textColor="#555"/>
+            <Spinner
+                android:id="@+id/spinnerIDType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etCity"
-            android:hint="@string/city"
-            android:visibility="gone"
-            android:inputType="textCapWords"
-            android:autofillHints="addressLocality"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- ID Number -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="ID Number *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etIDNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your ID number"
+                android:inputType="text"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errIDNumber" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etDescription"
-            android:hint="@string/about_ngo"
-            android:visibility="gone"
-            android:inputType="textMultiLine"
-            android:autofillHints="none"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- Password -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Password *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etVolPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Min 8 chars, 1 number"
+                android:inputType="textPassword"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errVolPassword" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="12dp"/>
 
-        <EditText
-            android:id="@+id/etWebsite"
-            android:hint="@string/website"
-            android:visibility="gone"
-            android:inputType="textUri"
-            android:autofillHints="url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <!-- Confirm Password -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Confirm Password *" android:textSize="12sp" android:textColor="#555"/>
+            <EditText
+                android:id="@+id/etVolConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Re-enter password"
+                android:inputType="textPassword"
+                android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/errVolConfirmPassword" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#E24B4A"
+                android:textSize="11sp" android:layout_marginBottom="20dp"/>
 
-        <Button
-            android:id="@+id/btnRegister"
-            android:text="@string/register"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/btnRegisterVolunteer"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Register as Volunteer"
+                android:backgroundTint="#1A1A1A"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="16dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

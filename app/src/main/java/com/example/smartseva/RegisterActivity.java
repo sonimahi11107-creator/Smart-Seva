@@ -1,194 +1,168 @@
 package com.example.smartseva;
 
-import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    // COMMON
-    EditText etName, etEmail, etPhone, etPassword;
+    Button btnTabNGO, btnTabVolunteer;
+    LinearLayout layoutNGO, layoutVolunteer;
 
-    // VOLUNTEER
-    EditText etAge, etAvailability, etWorkType, etExperience;
-    TextView tvGender, tvSkills;
-    RadioGroup rgGender;
-    RadioButton rbMale, rbFemale, rbOther;
-    CheckBox cbMedical, cbRescue, cbFood;
+    EditText etOrgName, etRegNo, etNGOEmail, etNGOPhone, etNGOAddress, etNGOPassword, etNGOConfirmPassword;
+    TextView errOrgName, errRegNo, errNGOEmail, errNGOPhone, errNGOAddress, errNGOPassword, errNGOConfirmPassword;
+    Spinner spinnerNGOType;
 
-    // NGO
-    EditText etRegNumber, etOrgType, etAddress, etCity, etDescription, etWebsite;
-
-    Button btnRegister;
-    String role;
-    FirebaseFirestore db;
+    EditText etFirstName, etLastName, etVolEmail, etVolPhone, etIDNumber, etVolPassword, etVolConfirmPassword;
+    TextView errFirstName, errLastName, errVolEmail, errVolPhone, errIDNumber, errVolPassword, errVolConfirmPassword;
+    Spinner spinnerIDType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        
-        db = FirebaseFirestore.getInstance();
 
-        // COMMON
-        etName = findViewById(R.id.etName);
-        etEmail = findViewById(R.id.etEmail);
-        etPhone = findViewById(R.id.etPhone);
-        etPassword = findViewById(R.id.etPassword);
+        btnTabNGO       = findViewById(R.id.btnTabNGO);
+        btnTabVolunteer = findViewById(R.id.btnTabVolunteer);
+        layoutNGO       = findViewById(R.id.layoutNGO);
+        layoutVolunteer = findViewById(R.id.layoutVolunteer);
 
-        // VOLUNTEER
-        etAge = findViewById(R.id.etAge);
-        etAvailability = findViewById(R.id.etAvailability);
-        etWorkType = findViewById(R.id.etWorkType);
-        etExperience = findViewById(R.id.etExperience);
-        tvGender = findViewById(R.id.tvGender);
-        rgGender = findViewById(R.id.rgGender);
-        rbMale = findViewById(R.id.rbMale);
-        rbFemale = findViewById(R.id.rbFemale);
-        rbOther = findViewById(R.id.rbOther);
-        tvSkills = findViewById(R.id.tvSkills);
-        cbMedical = findViewById(R.id.cbMedical);
-        cbRescue = findViewById(R.id.cbRescue);
-        cbFood = findViewById(R.id.cbFood);
+        etOrgName             = findViewById(R.id.etOrgName);
+        etRegNo               = findViewById(R.id.etRegNo);
+        etNGOEmail            = findViewById(R.id.etNGOEmail);
+        etNGOPhone            = findViewById(R.id.etNGOPhone);
+        etNGOAddress          = findViewById(R.id.etNGOAddress);
+        etNGOPassword         = findViewById(R.id.etNGOPassword);
+        etNGOConfirmPassword  = findViewById(R.id.etNGOConfirmPassword);
+        errOrgName            = findViewById(R.id.errOrgName);
+        errRegNo              = findViewById(R.id.errRegNo);
+        errNGOEmail           = findViewById(R.id.errNGOEmail);
+        errNGOPhone           = findViewById(R.id.errNGOPhone);
+        errNGOAddress         = findViewById(R.id.errNGOAddress);
+        errNGOPassword        = findViewById(R.id.errNGOPassword);
+        errNGOConfirmPassword = findViewById(R.id.errNGOConfirmPassword);
+        spinnerNGOType        = findViewById(R.id.spinnerNGOType);
 
-        // NGO
-        etRegNumber = findViewById(R.id.etRegNumber);
-        etOrgType = findViewById(R.id.etOrgType);
-        etAddress = findViewById(R.id.etAddress);
-        etCity = findViewById(R.id.etCity);
-        etDescription = findViewById(R.id.etDescription);
-        etWebsite = findViewById(R.id.etWebsite);
+        etFirstName           = findViewById(R.id.etFirstName);
+        etLastName            = findViewById(R.id.etLastName);
+        etVolEmail            = findViewById(R.id.etVolEmail);
+        etVolPhone            = findViewById(R.id.etVolPhone);
+        etIDNumber            = findViewById(R.id.etIDNumber);
+        etVolPassword         = findViewById(R.id.etVolPassword);
+        etVolConfirmPassword  = findViewById(R.id.etVolConfirmPassword);
+        errFirstName          = findViewById(R.id.errFirstName);
+        errLastName           = findViewById(R.id.errLastName);
+        errVolEmail           = findViewById(R.id.errVolEmail);
+        errVolPhone           = findViewById(R.id.errVolPhone);
+        errIDNumber           = findViewById(R.id.errIDNumber);
+        errVolPassword        = findViewById(R.id.errVolPassword);
+        errVolConfirmPassword = findViewById(R.id.errVolConfirmPassword);
+        spinnerIDType         = findViewById(R.id.spinnerIDType);
 
-        btnRegister = findViewById(R.id.btnRegister);
+        ArrayAdapter<String> ngoAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Select type","Trust","Society","Section 8 Company","Charitable Organisation","Other"});
+        spinnerNGOType.setAdapter(ngoAdapter);
 
-        // Get role (handle both "role" and "type" keys for safety)
-        role = getIntent().getStringExtra("role");
-        if (role == null) {
-            role = getIntent().getStringExtra("type");
-        }
+        ArrayAdapter<String> idAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Select ID","Aadhaar Card","PAN Card","Passport","Voter ID","Driving Licence"});
+        spinnerIDType.setAdapter(idAdapter);
 
-        setupUI();
-        setDynamicHints();
+        btnTabNGO.setOnClickListener(v -> showNGO());
+        btnTabVolunteer.setOnClickListener(v -> showVolunteer());
 
-        btnRegister.setOnClickListener(v -> registerUser());
+        findViewById(R.id.btnRegisterNGO).setOnClickListener(v -> validateAndRegisterNGO());
+        findViewById(R.id.btnRegisterVolunteer).setOnClickListener(v -> validateAndRegisterVolunteer());
     }
 
-    private void setupUI() {
-        if ("volunteer".equalsIgnoreCase(role)) {
-            etAge.setVisibility(View.VISIBLE);
-            etAvailability.setVisibility(View.VISIBLE);
-            etWorkType.setVisibility(View.VISIBLE);
-            etExperience.setVisibility(View.VISIBLE);
-            tvSkills.setVisibility(View.VISIBLE);
-            cbMedical.setVisibility(View.VISIBLE);
-            cbRescue.setVisibility(View.VISIBLE);
-            cbFood.setVisibility(View.VISIBLE);
-            tvGender.setVisibility(View.VISIBLE);
-            rgGender.setVisibility(View.VISIBLE);
-
-            // Hide NGO fields
-            etRegNumber.setVisibility(View.GONE);
-            etOrgType.setVisibility(View.GONE);
-            etAddress.setVisibility(View.GONE);
-            etCity.setVisibility(View.GONE);
-            etDescription.setVisibility(View.GONE);
-            etWebsite.setVisibility(View.GONE);
-        } else {
-            // Assume NGO
-            etAge.setVisibility(View.GONE);
-            etAvailability.setVisibility(View.GONE);
-            etWorkType.setVisibility(View.GONE);
-            etExperience.setVisibility(View.GONE);
-            tvSkills.setVisibility(View.GONE);
-            cbMedical.setVisibility(View.GONE);
-            cbRescue.setVisibility(View.GONE);
-            cbFood.setVisibility(View.GONE);
-            tvGender.setVisibility(View.GONE);
-            rgGender.setVisibility(View.GONE);
-
-            // Show NGO fields
-            etRegNumber.setVisibility(View.VISIBLE);
-            etOrgType.setVisibility(View.VISIBLE);
-            etAddress.setVisibility(View.VISIBLE);
-            etCity.setVisibility(View.VISIBLE);
-            etDescription.setVisibility(View.VISIBLE);
-            etWebsite.setVisibility(View.VISIBLE);
-        }
+    void showNGO() {
+        layoutNGO.setVisibility(View.VISIBLE);
+        layoutVolunteer.setVisibility(View.GONE);
+        btnTabNGO.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1A1A1A")));
+        btnTabNGO.setTextColor(Color.WHITE);
+        btnTabVolunteer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E0E0E0")));
+        btnTabVolunteer.setTextColor(Color.parseColor("#1A1A1A"));
     }
 
-    private void setDynamicHints() {
-        if ("NGO".equalsIgnoreCase(role)) {
-            etName.setHint(getString(R.string.ngo_name));
-        } else {
-            etName.setHint(getString(R.string.name));
-        }
+    void showVolunteer() {
+        layoutNGO.setVisibility(View.GONE);
+        layoutVolunteer.setVisibility(View.VISIBLE);
+        btnTabVolunteer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1A1A1A")));
+        btnTabVolunteer.setTextColor(Color.WHITE);
+        btnTabNGO.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E0E0E0")));
+        btnTabNGO.setTextColor(Color.parseColor("#1A1A1A"));
     }
 
-    private void registerUser() {
-        String name = etName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String phone = etPhone.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+    boolean checkEmpty(EditText et, TextView err, String msg) {
+        if (et.getText().toString().trim().isEmpty()) { err.setText(msg); return false; }
+        err.setText(""); return true;
+    }
 
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill required fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    boolean checkEmail(EditText et, TextView err) {
+        String v = et.getText().toString().trim();
+        if (v.isEmpty()) { err.setText("Email is required"); return false; }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(v).matches()) {
+            err.setText("Enter a valid email address"); return false; }
+        err.setText(""); return true;
+    }
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", name);
-        user.put("email", email);
-        user.put("phone", phone);
-        user.put("role", role);
+    boolean checkPhone(EditText et, TextView err) {
+        String v = et.getText().toString().trim();
+        if (v.length() != 10) { err.setText("Phone must be exactly 10 digits"); return false; }
+        if (!v.matches("[6-9][0-9]{9}")) { err.setText("Enter a valid Indian mobile number"); return false; }
+        err.setText(""); return true;
+    }
 
-        if ("volunteer".equalsIgnoreCase(role)) {
-            user.put("age", etAge.getText().toString());
-            user.put("availability", etAvailability.getText().toString());
-            user.put("workType", etWorkType.getText().toString());
-            user.put("experience", etExperience.getText().toString());
+    boolean checkPassword(EditText et, TextView err) {
+        String v = et.getText().toString();
+        if (v.length() < 8) { err.setText("Min 8 characters required"); return false; }
+        if (!v.matches(".*\\d.*")) { err.setText("Include at least one number"); return false; }
+        err.setText(""); return true;
+    }
 
-            int selectedId = rgGender.getCheckedRadioButtonId();
-            if (selectedId != -1) {
-                RadioButton selectedGender = findViewById(selectedId);
-                user.put("gender", selectedGender.getText().toString());
-            }
+    boolean checkConfirm(EditText pass, EditText confirm, TextView err) {
+        if (!pass.getText().toString().equals(confirm.getText().toString())) {
+            err.setText("Passwords do not match"); return false; }
+        err.setText(""); return true;
+    }
 
-            StringBuilder skills = new StringBuilder();
-            if (cbMedical.isChecked()) skills.append("Medical ");
-            if (cbRescue.isChecked()) skills.append("Rescue ");
-            if (cbFood.isChecked()) skills.append("Food ");
-            user.put("skills", skills.toString().trim());
+    void validateAndRegisterNGO() {
+        boolean ok = true;
+        if (!checkEmpty(etOrgName, errOrgName, "Organisation name is required")) ok = false;
+        if (!checkEmpty(etRegNo, errRegNo, "Registration number is required")) ok = false;
+        if (spinnerNGOType.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Please select NGO type", Toast.LENGTH_SHORT).show(); ok = false; }
+        if (!checkEmail(etNGOEmail, errNGOEmail)) ok = false;
+        if (!checkPhone(etNGOPhone, errNGOPhone)) ok = false;
+        if (!checkEmpty(etNGOAddress, errNGOAddress, "Address is required")) ok = false;
+        if (!checkPassword(etNGOPassword, errNGOPassword)) ok = false;
+        if (!checkConfirm(etNGOPassword, etNGOConfirmPassword, errNGOConfirmPassword)) ok = false;
 
-            db.collection("volunteers")
-                    .add(user)
-                    .addOnSuccessListener(doc -> finalizeRegistration())
-                    .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        } else {
-            user.put("regNumber", etRegNumber.getText().toString());
-            user.put("orgType", etOrgType.getText().toString());
-            user.put("address", etAddress.getText().toString());
-            user.put("city", etCity.getText().toString());
-            user.put("description", etDescription.getText().toString());
-            user.put("website", etWebsite.getText().toString());
-
-            db.collection("ngos")
-                    .add(user)
-                    .addOnSuccessListener(doc -> finalizeRegistration())
-                    .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        if (ok) {
+            // Firebase teammate yahan connect karega
+            Toast.makeText(this, "NGO Registered Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void finalizeRegistration() {
-        Toast.makeText(this, "Registered successfully as " + role, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, DashboardActivity.class);
-        intent.putExtra("role", role);
-        startActivity(intent);
-        finish();
+    void validateAndRegisterVolunteer() {
+        boolean ok = true;
+        if (!checkEmpty(etFirstName, errFirstName, "First name is required")) ok = false;
+        if (!checkEmpty(etLastName, errLastName, "Last name is required")) ok = false;
+        if (!checkEmail(etVolEmail, errVolEmail)) ok = false;
+        if (!checkPhone(etVolPhone, errVolPhone)) ok = false;
+        if (spinnerIDType.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Please select ID type", Toast.LENGTH_SHORT).show(); ok = false; }
+        if (!checkEmpty(etIDNumber, errIDNumber, "ID number is required")) ok = false;
+        if (!checkPassword(etVolPassword, errVolPassword)) ok = false;
+        if (!checkConfirm(etVolPassword, etVolConfirmPassword, errVolConfirmPassword)) ok = false;
+
+        if (ok) {
+            // Firebase teammate yahan connect karega
+            Toast.makeText(this, "Volunteer Registered Successfully!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
