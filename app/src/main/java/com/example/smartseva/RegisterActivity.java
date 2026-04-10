@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.ImageView;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -19,6 +22,11 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etFirstName, etLastName, etVolEmail, etVolPhone, etIDNumber, etVolPassword, etVolConfirmPassword;
     TextView errFirstName, errLastName, errVolEmail, errVolPhone, errIDNumber, errVolPassword, errVolConfirmPassword;
     Spinner spinnerIDType;
+
+    ImageView imgPassportPhoto;
+    TextView errPassportPhoto;
+    Uri selectedPhotoUri = null;
+    private static final int PICK_IMAGE_REQUEST = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
         errVolPassword        = findViewById(R.id.errVolPassword);
         errVolConfirmPassword = findViewById(R.id.errVolConfirmPassword);
         spinnerIDType         = findViewById(R.id.spinnerIDType);
+        imgPassportPhoto  = findViewById(R.id.imgPassportPhoto);
+        errPassportPhoto  = findViewById(R.id.errPassportPhoto);
+
+        findViewById(R.id.btnUploadPhoto).setOnClickListener(v -> openImagePicker());
 
         ArrayAdapter<String> ngoAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -71,6 +83,11 @@ public class RegisterActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_dropdown_item,
                 new String[]{"Select ID","Aadhaar Card","PAN Card","Passport","Voter ID","Driving Licence"});
         spinnerIDType.setAdapter(idAdapter);
+
+        imgPassportPhoto = findViewById(R.id.imgPassportPhoto);
+        errPassportPhoto = findViewById(R.id.errPassportPhoto);
+
+        findViewById(R.id.btnUploadPhoto).setOnClickListener(v -> openImagePicker());
 
         btnTabNGO.setOnClickListener(v -> showNGO());
         btnTabVolunteer.setOnClickListener(v -> showVolunteer());
@@ -95,6 +112,46 @@ public class RegisterActivity extends AppCompatActivity {
         btnTabVolunteer.setTextColor(Color.WHITE);
         btnTabNGO.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E0E0E0")));
         btnTabNGO.setTextColor(Color.parseColor("#1A1A1A"));
+    }
+
+    void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null) {
+
+            selectedPhotoUri = data.getData();
+
+            try {
+                android.database.Cursor cursor = getContentResolver().query(
+                        selectedPhotoUri, null, null, null, null);
+                int sizeIndex = cursor.getColumnIndex(
+                        android.provider.OpenableColumns.SIZE);
+                cursor.moveToFirst();
+                long fileSize = cursor.getLong(sizeIndex);
+                cursor.close();
+
+                if (fileSize > 2 * 1024 * 1024) {
+                    Toast.makeText(this, "Photo size must be less than 2MB",
+                            Toast.LENGTH_SHORT).show();
+                    selectedPhotoUri = null;
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            imgPassportPhoto.setImageURI(selectedPhotoUri);
+            errPassportPhoto.setText("");
+        }
     }
 
     boolean checkEmpty(EditText et, TextView err, String msg) {
@@ -150,6 +207,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     void validateAndRegisterVolunteer() {
         boolean ok = true;
+        if (selectedPhotoUri == null) {
+            errPassportPhoto.setText("Please upload your passport photo");
+            ok = false;
+        }
         if (!checkEmpty(etFirstName, errFirstName, "First name is required")) ok = false;
         if (!checkEmpty(etLastName, errLastName, "Last name is required")) ok = false;
         if (!checkEmail(etVolEmail, errVolEmail)) ok = false;
@@ -161,8 +222,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (!checkConfirm(etVolPassword, etVolConfirmPassword, errVolConfirmPassword)) ok = false;
 
         if (ok) {
-            // Firebase teammate yahan connect karega
+
             Toast.makeText(this, "Volunteer Registered Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
