@@ -1,6 +1,4 @@
 <resources>
-<<<<<<< HEAD
-
     <string name="app_name">SmartSeva</string>
 
     <string name="user_registration">User Registration</string>
@@ -14,7 +12,7 @@
     <string name="gender">Gender</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
-    <string name="gender_other">Gender</string>
+    <string name="gender_other">Other</string>
     <string name="availability">Availability</string>
     <string name="work_type">Preferred Work Type</string>
     <string name="experience">Experience</string>
@@ -37,8 +35,4 @@
     <string name="location">Get Current Location</string>
 
     <string name="register">Register</string>
-
-=======
-    <string name="app_name">Smart Seva</string>
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
 </resources>

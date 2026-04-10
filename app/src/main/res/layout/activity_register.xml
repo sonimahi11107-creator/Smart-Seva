@@ -9,7 +9,6 @@
         android:layout_height="wrap_content">
 
         <!-- COMMON -->
-<<<<<<< HEAD
         <TextView
             android:id="@+id/tvHeading"
             android:text="@string/user_registration"
@@ -25,69 +24,36 @@
             android:hint="@string/name"
             android:inputType="textPersonName"
             android:autofillHints="name"
-=======
-        <EditText
-            android:id="@+id/etName"
-            android:hint="Name "
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etEmail"
-<<<<<<< HEAD
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:autofillHints="email"
-=======
-            android:hint="Email"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etPhone"
-<<<<<<< HEAD
             android:hint="@string/phone"
             android:inputType="phone"
             android:autofillHints="phone"
-=======
-            android:hint="Phone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etPassword"
-<<<<<<< HEAD
             android:hint="@string/password"
             android:inputType="textPassword"
             android:autofillHints="password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnLocation"
-            android:text="@string/location"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnUploadId"
-            android:text="@string/upload_id"
-            android:visibility="gone"
-=======
-            android:hint="Password"
-            android:inputType="textPassword"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
         <!-- VOLUNTEER -->
         <EditText
             android:id="@+id/etAge"
-<<<<<<< HEAD
             android:hint="@string/age"
             android:visibility="gone"
             android:inputType="number"
@@ -154,58 +120,28 @@
             android:text="@string/food"
             android:visibility="gone"
             android:layout_width="wrap_content"
-=======
-            android:hint="Age"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/etGender"
-            android:hint="Gender"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/etSkills"
-            android:hint="Skills"
-            android:visibility="gone"
-            android:layout_width="match_parent"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etAvailability"
-<<<<<<< HEAD
             android:hint="@string/availability"
             android:visibility="gone"
             android:inputType="textCapSentences"
             android:autofillHints="availability"
-=======
-            android:hint="Availability"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etWorkType"
-<<<<<<< HEAD
             android:hint="@string/work_type"
             android:visibility="gone"
             android:inputType="textCapWords"
             android:autofillHints="none"
-=======
-            android:hint="Preferred Work Type"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etExperience"
-<<<<<<< HEAD
             android:hint="@string/experience"
             android:visibility="gone"
             android:inputType="text"
@@ -213,115 +149,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:id="@+id/imgProfile"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:contentDescription="@string/profile_image"
-            android:src="@android:drawable/ic_menu_camera" />
-
-        <Button
-            android:id="@+id/btnUploadPhoto"
-            android:text="@string/upload_photo"
-=======
-            android:hint="Experience"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
         <!-- NGO -->
         <EditText
             android:id="@+id/etRegNumber"
-<<<<<<< HEAD
             android:hint="@string/reg_number"
             android:visibility="gone"
             android:inputType="numberSigned"
             android:autofillHints="none"
-=======
-            android:hint="Registration Number"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etOrgType"
-<<<<<<< HEAD
             android:hint="@string/ngo_type"
             android:visibility="gone"
             android:inputType="textCapWords"
             android:autofillHints="none"
-=======
-            android:hint="NGO Type"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etAddress"
-<<<<<<< HEAD
             android:hint="@string/address"
             android:visibility="gone"
             android:inputType="textPostalAddress"
             android:autofillHints="postalAddress"
-=======
-            android:hint="Address"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etCity"
-<<<<<<< HEAD
             android:hint="@string/city"
             android:visibility="gone"
             android:inputType="textCapWords"
             android:autofillHints="addressLocality"
-=======
-            android:hint="City / State"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etDescription"
-<<<<<<< HEAD
             android:hint="@string/about_ngo"
             android:visibility="gone"
             android:inputType="textMultiLine"
             android:autofillHints="none"
-=======
-            android:hint="About NGO"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/etWebsite"
-<<<<<<< HEAD
             android:hint="@string/website"
             android:visibility="gone"
             android:inputType="textUri"
             android:autofillHints="url"
-=======
-            android:hint="Website"
-            android:visibility="gone"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btnRegister"
-<<<<<<< HEAD
             android:text="@string/register"
-=======
-            android:text="Register"
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

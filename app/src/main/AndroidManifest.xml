@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.SmartSeva">
-        <activity
-            android:name=".VolunteerProfileActivity"
-            android:exported="false" />
-        <!-- 🔹 Applicants Screen -->
-        <activity
-            android:name=".ApplicantsActivity"
-            android:exported="false" /> <!-- 🔹 Main Screen (App Start) -->
-=======
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -27,33 +11,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartSeva">
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-<<<<<<< HEAD
-        </activity> <!-- 🔹 Registration Screen -->
+        </activity>
+
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" /> <!-- 🔹 Dashboard Screen -->
+            android:exported="false" />
+
         <activity
             android:name=".DashboardActivity"
-            android:exported="false" /> <!-- 🔹 Create Task Screen -->
+            android:exported="false" />
+
         <activity
             android:name=".CreateTaskActivity"
             android:exported="false" />
 
-=======
-        </activity>
->>>>>>> 7ea1fd67c95f2149531da91656258298ff557a8f
+        <activity
+            android:name=".ApplicantsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".VolunteerProfileActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
