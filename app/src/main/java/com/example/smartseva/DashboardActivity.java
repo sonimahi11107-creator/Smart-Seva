@@ -281,16 +281,9 @@ public class DashboardActivity extends AppCompatActivity {
             String selected = filtered.get(position);
             String[] parts = selected.split("\\|");
 
-            Intent intent = new Intent(this, TaskDetailActivity.class);
-            intent.putExtra("taskTitle",    parts.length > 0 ? parts[0].trim() : "Task");
-            intent.putExtra("taskUrgency",  parts.length > 1 ? parts[1].trim() : "Normal");
-            intent.putExtra("taskLocation", parts.length > 2 ? parts[2].trim() : "Raipur");
-            intent.putExtra("taskDesc",     "Task created by your NGO.");
-            intent.putExtra("taskCategory", "Community Service");
-            intent.putExtra("taskSkill",    "Any Skill");
-            intent.putExtra("taskDate",     "20/04/2026");
-            intent.putExtra("taskNGO",      "My NGO");
-            intent.putExtra("taskVolunteers", 5);
+            // NGO ke liye → Applicants Screen
+            Intent intent = new Intent(this, ApplicantsActivity.class);
+            intent.putExtra("taskTitle", parts.length > 0 ? parts[0].trim() : "Task");
             startActivity(intent);
         });
     }
