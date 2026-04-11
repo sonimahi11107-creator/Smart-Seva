@@ -91,13 +91,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (ok) {
-            // ✅ Data ready — Firebase teammate yahan login call karega
-            // Role bhi available hai: selectedRole ("NGO" or "Volunteer")
-            Toast.makeText(this,
-                    "Logging in as " + selectedRole + "...",
-                    Toast.LENGTH_SHORT).show();
-
-            // Abhi ke liye seedha Dashboard pe jaao
+            // Firebase teammate yahan login verify karega
+            Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, DashboardActivity.class));
             finish();
         }
