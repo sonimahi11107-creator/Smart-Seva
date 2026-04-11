@@ -91,9 +91,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (ok) {
-            // Firebase teammate yahan login verify karega
             Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, DashboardActivity.class));
+            Intent intent = new Intent(this, DashboardActivity.class);
+            intent.putExtra("role", selectedRole); // "NGO" or "Volunteer"
+            startActivity(intent);
             finish();
         }
     }
