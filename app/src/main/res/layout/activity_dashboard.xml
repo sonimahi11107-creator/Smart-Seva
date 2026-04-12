@@ -90,6 +90,16 @@
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:text="Completed" android:textColor="#AAAAAA" android:textSize="12sp"/>
                     </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnSmartMatchNGO"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="🧠 Find Best Volunteers (Smart Match)"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:layout_margin="16dp"/>
                 </LinearLayout>
 
                 <!-- Stats Row 2 -->
@@ -362,6 +372,16 @@
                     android:textSize="18sp" android:textStyle="bold"
                     android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
 
+                <Button
+                    android:id="@+id/btnSmartMatchVol"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="🧠 Find Best Tasks For Me (Smart Match)"
+                    android:backgroundTint="#1565C0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp"/>
+
                 <EditText android:id="@+id/etSearchTask"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:hint="🔍 Search tasks..."
@@ -541,7 +561,7 @@
         android:background="#FFFFFF"
         android:orientation="horizontal"
         android:elevation="8dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="30dp"
         android:paddingTop="4dp">
 
         <!-- NGO Bottom Nav -->

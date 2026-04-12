@@ -263,11 +263,18 @@ public class ApplicantsActivity extends AppCompatActivity {
         intent.putExtra("city",         a.city);
         intent.putExtra("skills",       a.skills);
         intent.putExtra("availability", a.availability);
-        intent.putExtra("experience",   a.experience);
+        intent.putExtra("availTime",    "Part-time");
+        intent.putExtra("languages",    "Hindi, English");
+        intent.putExtra("vehicle",      "Yes");
+        intent.putExtra("travel",       "Yes");
+        intent.putExtra("causes",       "Education, Health");
+        intent.putExtra("idType",       "Aadhaar Card");
         intent.putExtra("status",       a.status);
+        intent.putExtra("experience",   a.experience);
+        intent.putExtra("email",        "volunteer@email.com");
+        intent.putExtra("phone",        "9876543210");
         startActivity(intent);
     }
-
     // ═══════════════════════════════════════
     // ADAPTER
     // ═══════════════════════════════════════

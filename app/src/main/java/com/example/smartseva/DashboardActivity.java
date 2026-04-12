@@ -152,6 +152,9 @@ public class DashboardActivity extends AppCompatActivity {
         if (role != null) userRole = role;
 
         setupDashboard();
+
+        findViewById(R.id.btnSmartMatchNGO).setOnClickListener(v -> openSmartMatchNGO());
+        findViewById(R.id.btnSmartMatchVol).setOnClickListener(v -> openSmartMatchVolunteer());
     }
 
     void setupDashboard() {
@@ -162,6 +165,11 @@ public class DashboardActivity extends AppCompatActivity {
             btnNavTasks.setVisibility(View.VISIBLE);
             btnNavCreate.setVisibility(View.VISIBLE);
             btnNavVolunteers.setVisibility(View.VISIBLE);
+            // Smart Match button NGO Stats panel mein
+            findViewById(R.id.btnNavStats).setOnLongClickListener(v -> {
+                openSmartMatchNGO();
+                return true;
+            });
             showNGOPanel("stats");
         } else {
             tvWelcome.setText("Volunteer Dashboard");
@@ -171,7 +179,29 @@ public class DashboardActivity extends AppCompatActivity {
             btnNavProfile.setVisibility(View.VISIBLE);
             btnNavImpact.setVisibility(View.VISIBLE);
             showVolunteerPanel("tasks");
+            btnNavAvailable.setOnLongClickListener(v -> {
+                openSmartMatchVolunteer();
+                return true;
+            });
         }
+    }
+    void openSmartMatchNGO() {
+        Intent intent = new Intent(this, SmartMatchActivity.class);
+        intent.putExtra("mode",         "NGO");
+        intent.putExtra("taskTitle",    "Food Distribution Drive");
+        intent.putExtra("taskSkill",    "Food Distribution");
+        intent.putExtra("taskLocation", "Raipur, CG");
+        intent.putExtra("taskUrgency",  "🔴 Critical (24 hrs)");
+        startActivity(intent);
+    }
+
+    void openSmartMatchVolunteer() {
+        Intent intent = new Intent(this, SmartMatchActivity.class);
+        intent.putExtra("mode",            "Volunteer");
+        intent.putExtra("volSkills",       "Teaching, Medical Help");
+        intent.putExtra("volCity",         "Raipur, CG");
+        intent.putExtra("volAvailability", "Weekends");
+        startActivity(intent);
     }
 
     // ═══════════════════════════════════════

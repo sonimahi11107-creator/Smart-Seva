@@ -48,6 +48,7 @@
             android:exported="false" />
 
         <activity android:name=".TaskDetailActivity" android:exported="false"/>
+        <activity android:name=".SmartMatchActivity" android:exported="false"/>
 
 
     </application>
