@@ -16,15 +16,12 @@ public class SmartMatchActivity extends AppCompatActivity {
     Button btnBackMatch, btnMatchAll, btnMatchExcellent, btnMatchGood;
     ListView listMatchResults;
 
-    String mode; // "NGO" or "Volunteer"
+    String mode;
     String taskTitle, taskSkill, taskLocation, taskUrgency;
     String volSkills, volCity, volAvailability;
 
-    // NGO mode — volunteer results
     List<SmartMatcher.MatchResult> volResults = new ArrayList<>();
     List<SmartMatcher.MatchResult> filteredVolResults = new ArrayList<>();
-
-    // Volunteer mode — task results
     List<SmartMatcher.TaskMatchResult> taskResults = new ArrayList<>();
     List<SmartMatcher.TaskMatchResult> filteredTaskResults = new ArrayList<>();
 
@@ -33,7 +30,6 @@ public class SmartMatchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smart_match);
 
-        // ── Views ──
         tvMatchTitle       = findViewById(R.id.tvMatchTitle);
         tvMatchSubtitle    = findViewById(R.id.tvMatchSubtitle);
         tvTotalMatches     = findViewById(R.id.tvTotalMatches);
@@ -45,117 +41,72 @@ public class SmartMatchActivity extends AppCompatActivity {
         btnMatchGood       = findViewById(R.id.btnMatchGood);
         listMatchResults   = findViewById(R.id.listMatchResults);
 
-        // ── Intent Data ──
-        mode           = getIntent().getStringExtra("mode");
-        taskTitle      = getIntent().getStringExtra("taskTitle");
-        taskSkill      = getIntent().getStringExtra("taskSkill");
-        taskLocation   = getIntent().getStringExtra("taskLocation");
-        taskUrgency    = getIntent().getStringExtra("taskUrgency");
-        volSkills      = getIntent().getStringExtra("volSkills");
-        volCity        = getIntent().getStringExtra("volCity");
-        volAvailability= getIntent().getStringExtra("volAvailability");
+        mode            = getIntent().getStringExtra("mode");
+        taskTitle       = getIntent().getStringExtra("taskTitle");
+        taskSkill       = getIntent().getStringExtra("taskSkill");
+        taskLocation    = getIntent().getStringExtra("taskLocation");
+        taskUrgency     = getIntent().getStringExtra("taskUrgency");
+        volSkills       = getIntent().getStringExtra("volSkills");
+        volCity         = getIntent().getStringExtra("volCity");
+        volAvailability = getIntent().getStringExtra("volAvailability");
 
         if (mode == null) mode = "Volunteer";
 
-        // ── Setup ──
-        if (mode.equals("NGO")) {
-            setupNGOMode();
-        } else {
-            setupVolunteerMode();
-        }
+        if (mode.equals("NGO")) setupNGOMode();
+        else setupVolunteerMode();
 
-        // ── Listeners ──
         btnBackMatch.setOnClickListener(v -> finish());
-        btnMatchAll.setOnClickListener(v -> {
-            filterResults("all"); setTabActive(btnMatchAll); });
-        btnMatchExcellent.setOnClickListener(v -> {
-            filterResults("Excellent Match"); setTabActive(btnMatchExcellent); });
-        btnMatchGood.setOnClickListener(v -> {
-            filterResults("Good Match"); setTabActive(btnMatchGood); });
+        btnMatchAll.setOnClickListener(v -> { filterResults("all"); setTabActive(btnMatchAll); });
+        btnMatchExcellent.setOnClickListener(v -> { filterResults("Excellent Match"); setTabActive(btnMatchExcellent); });
+        btnMatchGood.setOnClickListener(v -> { filterResults("Good Match"); setTabActive(btnMatchGood); });
     }
 
     // ═══════════════════════════════════════
-    // NGO MODE — Find volunteers for task
+    // NGO MODE
     // ═══════════════════════════════════════
 
     void setupNGOMode() {
         tvMatchTitle.setText("🧠 Smart Matching");
-        tvMatchSubtitle.setText("Best volunteers for: " + taskTitle);
+        tvMatchSubtitle.setText("📡 Fetching locations...");
 
         List<SmartMatcher.MatchResult> volunteers = new ArrayList<>();
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Amit Sahu", "Raipur, CG",
-                "Medical Help, Food Distribution", "Weekdays", 2));
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Priya Sharma", "Raipur, CG",
-                "Teaching, Medical Help", "Weekends", 2));
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Rahul Verma", "Bilaspur, CG",
-                "Food Distribution, Event Management", "Both", 1));
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Anjali Patel", "Durg, CG",
-                "Social Media, Fundraising", "Weekdays", 3));
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Sonu Kumar", "Korba, CG",
-                "Technical, Event Management", "Weekends", 0));
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Deepika Singh", "Jagdalpur, CG",
-                "Teaching, Social Media", "Both", 1));
+        volunteers.add(new SmartMatcher.MatchResult("Amit Sahu",    "Raipur, CG",   "Medical Help, Food Distribution", "Weekdays", 2));
+        volunteers.add(new SmartMatcher.MatchResult("Priya Sharma", "Raipur, CG",   "Teaching, Medical Help",          "Weekends", 2));
+        volunteers.add(new SmartMatcher.MatchResult("Rahul Verma",  "Bilaspur, CG", "Food Distribution, Event Management", "Both", 1));
+        volunteers.add(new SmartMatcher.MatchResult("Anjali Patel", "Durg, CG",     "Social Media, Fundraising",       "Weekdays", 3));
+        volunteers.add(new SmartMatcher.MatchResult("Sonu Kumar",   "Korba, CG",    "Technical, Event Management",     "Weekends", 0));
+        volunteers.add(new SmartMatcher.MatchResult("Deepika Singh","Jagdalpur, CG","Teaching, Social Media",          "Both",     1));
 
         boolean isUrgent = taskUrgency != null && taskUrgency.contains("Critical");
-        String taskLoc = taskLocation != null ? taskLocation : "Raipur";
+        String taskLoc   = taskLocation != null ? taskLocation : "Raipur";
 
-        // GPS se distance calculate karo
         geocodeAndMatch(taskLoc, volunteers, isUrgent);
     }
 
-    void geocodeAndMatch(String taskLocation,
+    void geocodeAndMatch(String taskLoc,
                          List<SmartMatcher.MatchResult> volunteers,
                          boolean isUrgent) {
-
-        tvMatchSubtitle.setText("📡 Fetching locations...");
-
-        // Task location geocode karo
         new Thread(() -> {
-            double[] taskCoords = geocodeLocation(taskLocation);
+            double[] taskCoords = geocodeLocation(taskLoc);
 
-            if (taskCoords == null) {
-                runOnUiThread(() -> {
-                    tvMatchSubtitle.setText("Location fetch failed — using name match");
-                    volResults = SmartMatcher.matchVolunteersForTask(
-                            taskSkill, taskLocation, "Weekends",
-                            taskUrgency, volunteers);
-                    filteredVolResults = new ArrayList<>(volResults);
-                    updateSummary();
-                    listMatchResults.setAdapter(new VolunteerMatchAdapter());
-                });
-                return;
-            }
-
-            double taskLat = taskCoords[0];
-            double taskLon = taskCoords[1];
-
-            // Har volunteer ki location geocode karo
             for (SmartMatcher.MatchResult vol : volunteers) {
                 double[] volCoords = geocodeLocation(vol.city);
-
-                if (volCoords != null) {
+                if (taskCoords != null && volCoords != null) {
                     double distKm = SmartMatcher.calculateGPSDistance(
-                            taskLat, taskLon, volCoords[0], volCoords[1]);
+                            taskCoords[0], taskCoords[1],
+                            volCoords[0],  volCoords[1]);
+                    vol.distanceKm   = distKm;
+                    vol.distanceText = String.format("%.0f km away", distKm);
 
-                    vol.distanceKm = distKm;
-
-                    // 36hrs urgent rule — 100km se door exclude karo
                     if (isUrgent && distKm > 100) {
-                        vol.matchScore  = 0;
-                        vol.matchLabel  = "Too Far";
-                        vol.matchReason = "⚠️ Urgent task — " +
+                        vol.matchScore   = 0;
+                        vol.matchLabel   = "Too Far";
+                        vol.matchReason  = "⚠️ Urgent task — " +
                                 String.format("%.0f", distKm) + "km away (max 100km)";
                         vol.locationScore = 0;
                     } else {
                         vol.locationScore = SmartMatcher
                                 .getLocationScoreFromDistance(distKm);
-                        vol.distanceText  = String.format("%.0f", distKm) + "km away";
                     }
                 } else {
                     vol.locationScore = 10;
@@ -163,9 +114,8 @@ public class SmartMatchActivity extends AppCompatActivity {
                 }
             }
 
-            // Ab final matching karo with GPS scores
             List<SmartMatcher.MatchResult> matched =
-                    SmartMatcher.matchVolunteersForTaskWithGPS(
+                    SmartMatcher.matchVolunteersWithGPS(
                             taskSkill, taskUrgency, volunteers);
 
             runOnUiThread(() -> {
@@ -175,11 +125,9 @@ public class SmartMatchActivity extends AppCompatActivity {
                 updateSummary();
                 listMatchResults.setAdapter(new VolunteerMatchAdapter());
             });
-
         }).start();
     }
 
-    // ── Geocoding using OpenStreetMap Nominatim (free, no API key) ──
     double[] geocodeLocation(String locationName) {
         try {
             String encoded = android.net.Uri.encode(locationName);
@@ -204,7 +152,6 @@ public class SmartMatchActivity extends AppCompatActivity {
             String json = response.toString();
             if (json.equals("[]")) return null;
 
-            // Parse lat lon manually (no library needed)
             int latIdx = json.indexOf("\"lat\":\"") + 7;
             int latEnd = json.indexOf("\"", latIdx);
             int lonIdx = json.indexOf("\"lon\":\"") + 7;
@@ -214,7 +161,6 @@ public class SmartMatchActivity extends AppCompatActivity {
 
             double lat = Double.parseDouble(json.substring(latIdx, latEnd));
             double lon = Double.parseDouble(json.substring(lonIdx, lonEnd));
-
             return new double[]{lat, lon};
 
         } catch (Exception e) {
@@ -224,39 +170,23 @@ public class SmartMatchActivity extends AppCompatActivity {
     }
 
     // ═══════════════════════════════════════
-    // VOLUNTEER MODE — Find tasks for volunteer
+    // VOLUNTEER MODE
     // ═══════════════════════════════════════
 
     void setupVolunteerMode() {
         tvMatchTitle.setText("🧠 Smart Matching");
         tvMatchSubtitle.setText("Best tasks for your skills");
 
-        // Sample tasks — Firebase teammate real data load karega
         List<SmartMatcher.TaskMatchResult> tasks = new ArrayList<>();
-        tasks.add(new SmartMatcher.TaskMatchResult(
-                "Food Distribution Drive", "Raipur, CG",
-                "Food Distribution", "🔴 Critical (24 hrs)",
-                "Food Distribution", "20/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult(
-                "Free Medical Camp", "Raipur, CG",
-                "Medical Help", "🟡 Moderate (1 week)",
-                "Medical Help", "25/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult(
-                "Tree Plantation Drive", "Bilaspur, CG",
-                "Environment", "🟢 Normal",
-                "Any Skill", "30/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult(
-                "Teaching Underprivileged Kids", "Raipur, CG",
-                "Education", "🟡 Moderate (1 week)",
-                "Teaching", "22/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult(
-                "Social Media Campaign", "Durg, CG",
-                "Awareness", "🟢 Normal",
-                "Social Media", "28/04/2026"));
+        tasks.add(new SmartMatcher.TaskMatchResult("Food Distribution Drive",     "Raipur, CG",   "Food Distribution", "🔴 Critical (24 hrs)", "Food Distribution", "20/04/2026"));
+        tasks.add(new SmartMatcher.TaskMatchResult("Free Medical Camp",            "Raipur, CG",   "Medical Help",      "🟡 Moderate (1 week)", "Medical Help",      "25/04/2026"));
+        tasks.add(new SmartMatcher.TaskMatchResult("Tree Plantation Drive",        "Bilaspur, CG", "Environment",       "🟢 Normal",            "Any Skill",         "30/04/2026"));
+        tasks.add(new SmartMatcher.TaskMatchResult("Teaching Underprivileged Kids","Raipur, CG",   "Education",         "🟡 Moderate (1 week)", "Teaching",          "22/04/2026"));
+        tasks.add(new SmartMatcher.TaskMatchResult("Social Media Campaign",        "Durg, CG",     "Awareness",         "🟢 Normal",            "Social Media",      "28/04/2026"));
 
         taskResults = SmartMatcher.matchTasksForVolunteer(
-                volSkills != null ? volSkills : "Teaching",
-                volCity != null ? volCity : "Raipur",
+                volSkills       != null ? volSkills       : "Teaching",
+                volCity         != null ? volCity         : "Raipur",
                 volAvailability != null ? volAvailability : "Weekends",
                 tasks);
 
@@ -267,14 +197,14 @@ public class SmartMatchActivity extends AppCompatActivity {
         listMatchResults.setOnItemClickListener((parent, view, position, id) -> {
             SmartMatcher.TaskMatchResult task = filteredTaskResults.get(position);
             Intent intent = new Intent(this, TaskDetailActivity.class);
-            intent.putExtra("taskTitle",    task.taskTitle);
-            intent.putExtra("taskLocation", task.taskLocation);
-            intent.putExtra("taskCategory", task.taskCategory);
-            intent.putExtra("taskUrgency",  task.taskUrgency);
-            intent.putExtra("taskSkill",    task.taskSkill);
-            intent.putExtra("taskDate",     task.taskDate);
-            intent.putExtra("taskDesc",     "This task matches your skills and location!");
-            intent.putExtra("taskNGO",      "Smart Seva NGO");
+            intent.putExtra("taskTitle",      task.taskTitle);
+            intent.putExtra("taskLocation",   task.taskLocation);
+            intent.putExtra("taskCategory",   task.taskCategory);
+            intent.putExtra("taskUrgency",    task.taskUrgency);
+            intent.putExtra("taskSkill",      task.taskSkill);
+            intent.putExtra("taskDate",       task.taskDate);
+            intent.putExtra("taskDesc",       "This task matches your skills and location!");
+            intent.putExtra("taskNGO",        "Smart Seva NGO");
             intent.putExtra("taskVolunteers", 5);
             startActivity(intent);
         });
@@ -305,15 +235,13 @@ public class SmartMatchActivity extends AppCompatActivity {
     void updateSummary() {
         List<?> results = mode.equals("NGO") ? volResults : taskResults;
         int total = results.size(), excellent = 0, good = 0;
-
         for (Object r : results) {
             String label = mode.equals("NGO") ?
                     ((SmartMatcher.MatchResult) r).matchLabel :
                     ((SmartMatcher.TaskMatchResult) r).matchLabel;
-            if (label.equals("Excellent Match")) excellent++;
-            else if (label.equals("Good Match")) good++;
+            if ("Excellent Match".equals(label)) excellent++;
+            else if ("Good Match".equals(label)) good++;
         }
-
         tvTotalMatches.setText(String.valueOf(total));
         tvExcellentMatches.setText(String.valueOf(excellent));
         tvGoodMatches.setText(String.valueOf(good));
@@ -330,16 +258,15 @@ public class SmartMatchActivity extends AppCompatActivity {
     }
 
     int getLabelColor(String label) {
-        switch (label) {
-            case "Excellent Match": return Color.parseColor("#2E7D32");
-            case "Good Match":      return Color.parseColor("#1565C0");
-            case "Fair Match":      return Color.parseColor("#F57F17");
-            default:                return Color.parseColor("#888888");
-        }
+        if ("Excellent Match".equals(label)) return Color.parseColor("#2E7D32");
+        if ("Good Match".equals(label))      return Color.parseColor("#1565C0");
+        if ("Fair Match".equals(label))      return Color.parseColor("#F57F17");
+        if ("Too Far".equals(label))         return Color.parseColor("#C62828");
+        return Color.parseColor("#888888");
     }
 
     // ═══════════════════════════════════════
-    // VOLUNTEER MATCH ADAPTER (NGO mode)
+    // ADAPTERS
     // ═══════════════════════════════════════
 
     class VolunteerMatchAdapter extends BaseAdapter {
@@ -354,16 +281,13 @@ public class SmartMatchActivity extends AppCompatActivity {
                         R.layout.item_match_result, parent, false);
 
             SmartMatcher.MatchResult vol = filteredVolResults.get(position);
-            bindMatchView(convertView, vol.matchScore, vol.name,
+            bindView(convertView, vol.matchScore, vol.name,
                     "📍 " + vol.city, "🛠️ " + vol.skills,
-                    vol.matchLabel, vol.matchReason, "View Profile");
+                    vol.matchLabel, vol.matchReason,
+                    "View Profile", vol.distanceText, position);
             return convertView;
         }
     }
-
-    // ═══════════════════════════════════════
-    // TASK MATCH ADAPTER (Volunteer mode)
-    // ═══════════════════════════════════════
 
     class TaskMatchAdapter extends BaseAdapter {
         @Override public int getCount() { return filteredTaskResults.size(); }
@@ -377,42 +301,92 @@ public class SmartMatchActivity extends AppCompatActivity {
                         R.layout.item_match_result, parent, false);
 
             SmartMatcher.TaskMatchResult task = filteredTaskResults.get(position);
-            bindMatchView(convertView, task.matchScore, task.taskTitle,
-                    "📍 " + task.taskLocation, task.taskUrgency + " • " + task.taskSkill,
-                    task.matchLabel, task.matchReason, "View Task");
+            bindView(convertView, task.matchScore, task.taskTitle,
+                    "📍 " + task.taskLocation,
+                    task.taskUrgency + " • " + task.taskSkill,
+                    task.matchLabel, task.matchReason,
+                    "View Task", "", position);
             return convertView;
         }
     }
 
-    // ── Shared bind helper ──
-    void bindMatchView(View v, int score, String name,
-                       String city, String skills,
-                       String label, String reason, String btnText) {
+    void bindView(View v, int score, String name, String city,
+                  String skills, String label, String reason,
+                  String btnText, String distanceText, int position) {
 
         LinearLayout scoreCircle = v.findViewById(R.id.layoutScoreCircle);
-        TextView tvScore    = v.findViewById(R.id.tvMatchScore);
-        TextView tvName     = v.findViewById(R.id.tvMatchName);
-        TextView tvCity     = v.findViewById(R.id.tvMatchCity);
-        TextView tvSkills   = v.findViewById(R.id.tvMatchSkills);
-        TextView tvLabel    = v.findViewById(R.id.tvMatchLabel);
-        TextView tvReason   = v.findViewById(R.id.tvMatchReason);
-        ProgressBar progress= v.findViewById(R.id.progressMatch);
-        TextView tvPercent  = v.findViewById(R.id.tvMatchPercent);
-        Button btnAction    = v.findViewById(R.id.btnMatchAction);
+        TextView tvScore   = v.findViewById(R.id.tvMatchScore);
+        TextView tvName    = v.findViewById(R.id.tvMatchName);
+        TextView tvCity    = v.findViewById(R.id.tvMatchCity);
+        TextView tvDist    = v.findViewById(R.id.tvMatchDistance);
+        TextView tvSkills  = v.findViewById(R.id.tvMatchSkills);
+        TextView tvLabel   = v.findViewById(R.id.tvMatchLabel);
+        TextView tvReason  = v.findViewById(R.id.tvMatchReason);
+        ProgressBar prog   = v.findViewById(R.id.progressMatch);
+        TextView tvPercent = v.findViewById(R.id.tvMatchPercent);
+        Button btnAction   = v.findViewById(R.id.btnMatchAction);
 
         tvScore.setText(String.valueOf(score));
         tvName.setText(name);
         tvCity.setText(city);
+
+        // Distance
+        if (distanceText != null && !distanceText.isEmpty()) {
+            tvDist.setVisibility(View.VISIBLE);
+            tvDist.setText("📏 " + distanceText);
+        } else {
+            tvDist.setVisibility(View.GONE);
+        }
+
         tvSkills.setText(skills);
         tvLabel.setText(label);
         tvReason.setText(reason);
-        progress.setProgress(score);
+        prog.setProgress(score);
         tvPercent.setText(score + "%");
         btnAction.setText(btnText);
 
         int color = getLabelColor(label);
         scoreCircle.setBackgroundColor(color);
         tvLabel.setBackgroundColor(color);
-        progress.setProgressTintList(ColorStateList.valueOf(color));
+        prog.setProgressTintList(ColorStateList.valueOf(color));
+
+        // ── Button click ──
+        btnAction.setTag(position);
+        btnAction.setOnClickListener(btn -> {
+            int pos = (int) btn.getTag();
+            if (mode.equals("NGO")) {
+                if (pos >= filteredVolResults.size()) return;
+                SmartMatcher.MatchResult vol = filteredVolResults.get(pos);
+                Intent intent = new Intent(SmartMatchActivity.this,
+                        VolunteerProfileActivity.class);
+                intent.putExtra("name",         vol.name);
+                intent.putExtra("city",         vol.city);
+                intent.putExtra("skills",       vol.skills);
+                intent.putExtra("availability", vol.availability);
+                intent.putExtra("experience",   vol.experience);
+                intent.putExtra("status",       "Pending");
+                intent.putExtra("languages",    "Hindi, English");
+                intent.putExtra("vehicle",      "Yes");
+                intent.putExtra("travel",       "Yes");
+                intent.putExtra("causes",       "Education, Health");
+                intent.putExtra("idType",       "Aadhaar Card");
+                startActivity(intent);
+            } else {
+                if (pos >= filteredTaskResults.size()) return;
+                SmartMatcher.TaskMatchResult task = filteredTaskResults.get(pos);
+                Intent intent = new Intent(SmartMatchActivity.this,
+                        TaskDetailActivity.class);
+                intent.putExtra("taskTitle",      task.taskTitle);
+                intent.putExtra("taskLocation",   task.taskLocation);
+                intent.putExtra("taskCategory",   task.taskCategory);
+                intent.putExtra("taskUrgency",    task.taskUrgency);
+                intent.putExtra("taskSkill",      task.taskSkill);
+                intent.putExtra("taskDate",       task.taskDate);
+                intent.putExtra("taskDesc",       "This task matches your skills!");
+                intent.putExtra("taskNGO",        "Smart Seva NGO");
+                intent.putExtra("taskVolunteers", 5);
+                startActivity(intent);
+            }
+        });
     }
 }
