@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#1A1A1A"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="16dp">
+
+        <Button
+            android:id="@+id/btnBackMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Back"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1A1A1A"
+            android:textSize="13sp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvMatchTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🧠 Smart Matching"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvMatchSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Best matches for you"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Match Summary Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A1A1A"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tvTotalMatches"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textColor="#FFFFFF"
+                android:textSize="28sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Total" android:textColor="#AAAAAA" android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tvExcellentMatches"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textColor="#4CAF50"
+                android:textSize="28sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Excellent" android:textColor="#AAAAAA" android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tvGoodMatches"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textColor="#FFC107"
+                android:textSize="28sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Good" android:textColor="#AAAAAA" android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Filter Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button android:id="@+id/btnMatchAll"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:text="All"
+            android:textSize="12sp" android:backgroundTint="#1A1A1A"
+            android:textColor="#FFFFFF"/>
+        <Button android:id="@+id/btnMatchExcellent"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:text="Excellent"
+            android:textSize="12sp" android:backgroundTint="#FFFFFF"
+            android:textColor="#888888"/>
+        <Button android:id="@+id/btnMatchGood"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:text="Good"
+            android:textSize="12sp" android:backgroundTint="#FFFFFF"
+            android:textColor="#888888"/>
+    </LinearLayout>
+
+    <!-- Results List -->
+    <ListView
+        android:id="@+id/listMatchResults"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:padding="8dp"/>
+
+</LinearLayout>

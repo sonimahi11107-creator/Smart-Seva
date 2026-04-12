@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#1A1A1A"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="16dp">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Back"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1A1A1A"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Task Details"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tvUrgencyBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔴 Critical"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:background="#C62828"
+            android:padding="6dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Task Image -->
+            <ImageView
+                android:id="@+id/imgTaskDetail"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="#CCCCCC"
+                android:src="@drawable/ic_add_photo"/>
+
+            <!-- Main Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginTop="8dp">
+
+                <!-- Title + Category -->
+                <TextView
+                    android:id="@+id/tvDetailTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Task Title"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/tvDetailCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Category"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF"
+                        android:background="#1565C0"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvDetailSkill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Skill Needed"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF"
+                        android:background="#2E7D32"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#EEEEEE" android:layout_marginBottom="16dp"/>
+
+                <!-- Info Rows -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="📅  Date: " android:textSize="14sp"
+                        android:textColor="#555" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvDetailDate"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="14sp" android:textColor="#1A1A1A"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="👥  Volunteers: " android:textSize="14sp"
+                        android:textColor="#555" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvDetailVolunteers"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="14sp" android:textColor="#1A1A1A"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="🏢  Posted by: " android:textSize="14sp"
+                        android:textColor="#555" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvDetailNGO"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textSize="14sp" android:textColor="#1A1A1A"/>
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#EEEEEE" android:layout_marginBottom="16dp"/>
+
+                <!-- Description -->
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="About This Task"
+                    android:textSize="15sp" android:textStyle="bold"
+                    android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvDetailDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description will appear here."
+                    android:textSize="14sp"
+                    android:textColor="#444444"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="20dp"/>
+            </LinearLayout>
+
+            <!-- Location Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="📍 Task Location"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A"/>
+
+                    <Button
+                        android:id="@+id/btnOpenFullMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="Open in Maps"
+                        android:textSize="11sp"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvDetailLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Location"
+                    android:textSize="13sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- In-App WebView Map -->
+                <android.webkit.WebView
+                    android:id="@+id/webViewMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginBottom="8dp"/>
+
+            </LinearLayout>
+
+            <!-- Apply Status (if already applied) -->
+            <LinearLayout
+                android:id="@+id/layoutAlreadyApplied"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#E8F5E9"
+                android:padding="16dp"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="✅ You have already applied for this task!"
+                    android:textSize="14sp" android:textColor="#2E7D32"
+                    android:textStyle="bold" android:gravity="center"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="The NGO will contact you soon."
+                    android:textSize="12sp" android:textColor="#555"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- Bottom space -->
+            <View android:layout_width="match_parent" android:layout_height="100dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Apply Button - Fixed Bottom -->
+    <LinearLayout
+        android:id="@+id/layoutApplyBar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvApplyTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Interested?"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"/>
+                <TextView
+                    android:id="@+id/tvApplySubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Join this task and make impact"
+                    android:textSize="11sp"
+                    android:textColor="#888888"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnApply"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:text="Apply Now"
+                android:backgroundTint="#1A1A1A"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
