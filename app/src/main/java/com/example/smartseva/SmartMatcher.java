@@ -15,6 +15,60 @@ public class SmartMatcher {
         public String matchReason;   // Why matched
         public int experience;
 
+        public double distanceKm = -1;
+        public String distanceText = "";
+        public int locationScore = 0;
+
+        // GPS location scores already set hain — sirf skills + avail calculate karo
+        public static List<MatchResult> matchVolunteersForTaskWithGPS(
+                String taskSkill,
+                String taskUrgency,
+                List<MatchResult> volunteers) {
+
+            for (MatchResult vol : volunteers) {
+                // Already excluded (Too Far)
+                if (vol.matchLabel != null && vol.matchLabel.equals("Too Far")) continue;
+
+                int score = 0;
+                List<String> reasons = new ArrayList<>();
+
+                // ── Skills (40 pts) ──
+                int skillScore = calculateSkillMatch(taskSkill, vol.skills);
+                score += skillScore;
+                if (skillScore >= 35)      reasons.add("✅ Skills match perfectly");
+                else if (skillScore >= 20) reasons.add("🟡 Skills partially match");
+
+                // ── GPS Location (30 pts) ──
+                score += vol.locationScore;
+                if (vol.locationScore >= 25)      reasons.add("📍 Very nearby (" + vol.distanceText + ")");
+                else if (vol.locationScore >= 15) reasons.add("📍 " + vol.distanceText);
+                else if (vol.locationScore > 0)   reasons.add("📍 Far but reachable (" + vol.distanceText + ")");
+
+                // ── Availability (20 pts) ──
+                int availScore = 15; // default
+                score += availScore;
+                reasons.add("⏰ Available on required days");
+
+                // ── Experience (10 pts) ──
+                int expScore = Math.min(vol.experience * 3, 10);
+                score += expScore;
+                if (expScore > 0) reasons.add("💼 Has experience");
+
+                vol.matchScore  = Math.min(score, 100);
+                vol.matchReason = String.join(" • ", reasons);
+                vol.matchLabel  = getMatchLabel(vol.matchScore);
+            }
+
+            Collections.sort(volunteers, (a, b) -> {
+                // Too Far wale sabse neeche
+                if (a.matchLabel.equals("Too Far") && !b.matchLabel.equals("Too Far")) return 1;
+                if (!a.matchLabel.equals("Too Far") && b.matchLabel.equals("Too Far")) return -1;
+                return b.matchScore - a.matchScore;
+            });
+
+            return volunteers;
+        }
+
         MatchResult(String name, String city, String skills,
                     String availability, int experience) {
             this.name         = name;
@@ -192,33 +246,38 @@ public class SmartMatcher {
 
     static int calculateLocationMatch(String loc1, String loc2) {
         if (loc1 == null || loc2 == null) return 10;
+        if (loc1.toLowerCase().trim().equals(loc2.toLowerCase().trim())) return 30;
+        // Baaki matching as fallback
+        return 15;
+    }
 
-        String l1 = loc1.toLowerCase().trim();
-        String l2 = loc2.toLowerCase().trim();
+    // ── Real GPS distance (Haversine Formula) ──
+    public static double calculateGPSDistance(
+            double lat1, double lon1,
+            double lat2, double lon2) {
 
-        // Exact city match
-        if (l1.contains(l2) || l2.contains(l1)) return 30;
+        final int EARTH_RADIUS = 6371; // km
 
-        // Same state (CG, Chhattisgarh etc.)
-        String[] cgCities = {"raipur","bilaspur","durg","bhilai","korba",
-                "rajnandgaon","jagdalpur","ambikapur","raigarh"};
-        boolean l1CG = false, l2CG = false;
-        for (String city : cgCities) {
-            if (l1.contains(city) || l1.contains("cg") || l1.contains("chhattisgarh")) l1CG = true;
-            if (l2.contains(city) || l2.contains("cg") || l2.contains("chhattisgarh")) l2CG = true;
-        }
-        if (l1CG && l2CG) return 20;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
 
-        // Common words
-        String[] words1 = l1.split("[,\\s]+");
-        String[] words2 = l2.split("[,\\s]+");
-        for (String w1 : words1) {
-            for (String w2 : words2) {
-                if (w1.length() > 3 && w1.equals(w2)) return 25;
-            }
-        }
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) *
+                        Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-        return 5; // Different location but still show
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c; // distance in km
+    }
+
+    // ── Location score from GPS distance ──
+    public static int getLocationScoreFromDistance(double distanceKm) {
+        if (distanceKm <= 10)  return 30; // Same area
+        if (distanceKm <= 30)  return 25; // Very nearby
+        if (distanceKm <= 60)  return 20; // Nearby
+        if (distanceKm <= 100) return 15; // Acceptable
+        return 5;                          // Too far
     }
 
     static int calculateAvailabilityMatch(String required, String available) {

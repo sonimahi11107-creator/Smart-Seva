@@ -60,6 +60,14 @@
                 android:textSize="12sp"
                 android:textColor="#888888"/>
 
+            <TextView
+                android:id="@+id/tvMatchDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📏 Calculating..."
+                android:textSize="12sp"
+                android:textColor="#1565C0"/>
+
             <TextView android:id="@+id/tvMatchSkills"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

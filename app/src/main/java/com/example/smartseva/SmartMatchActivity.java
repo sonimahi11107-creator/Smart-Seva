@@ -82,8 +82,10 @@ public class SmartMatchActivity extends AppCompatActivity {
         tvMatchTitle.setText("🧠 Smart Matching");
         tvMatchSubtitle.setText("Best volunteers for: " + taskTitle);
 
-        // Sample volunteers — Firebase teammate real data load karega
         List<SmartMatcher.MatchResult> volunteers = new ArrayList<>();
+        volunteers.add(new SmartMatcher.MatchResult(
+                "Amit Sahu", "Raipur, CG",
+                "Medical Help, Food Distribution", "Weekdays", 2));
         volunteers.add(new SmartMatcher.MatchResult(
                 "Priya Sharma", "Raipur, CG",
                 "Teaching, Medical Help", "Weekends", 2));
@@ -91,44 +93,134 @@ public class SmartMatchActivity extends AppCompatActivity {
                 "Rahul Verma", "Bilaspur, CG",
                 "Food Distribution, Event Management", "Both", 1));
         volunteers.add(new SmartMatcher.MatchResult(
-                "Anjali Patel", "Raipur, CG",
+                "Anjali Patel", "Durg, CG",
                 "Social Media, Fundraising", "Weekdays", 3));
         volunteers.add(new SmartMatcher.MatchResult(
-                "Sonu Kumar", "Durg, CG",
+                "Sonu Kumar", "Korba, CG",
                 "Technical, Event Management", "Weekends", 0));
         volunteers.add(new SmartMatcher.MatchResult(
-                "Deepika Singh", "Raipur, CG",
+                "Deepika Singh", "Jagdalpur, CG",
                 "Teaching, Social Media", "Both", 1));
-        volunteers.add(new SmartMatcher.MatchResult(
-                "Amit Sahu", "Raipur, CG",
-                "Medical Help, Food Distribution", "Weekdays", 2));
 
-        volResults = SmartMatcher.matchVolunteersForTask(
-                taskSkill != null ? taskSkill : "Any Skill",
-                taskLocation != null ? taskLocation : "Raipur",
-                "Weekends",
-                volunteers);
+        boolean isUrgent = taskUrgency != null && taskUrgency.contains("Critical");
+        String taskLoc = taskLocation != null ? taskLocation : "Raipur";
 
-        filteredVolResults = new ArrayList<>(volResults);
-        updateSummary();
-        listMatchResults.setAdapter(new VolunteerMatchAdapter());
+        // GPS se distance calculate karo
+        geocodeAndMatch(taskLoc, volunteers, isUrgent);
+    }
 
-        listMatchResults.setOnItemClickListener((parent, view, position, id) -> {
-            SmartMatcher.MatchResult vol = filteredVolResults.get(position);
-            Intent intent = new Intent(this, VolunteerProfileActivity.class);
-            intent.putExtra("name",         vol.name);
-            intent.putExtra("city",         vol.city);
-            intent.putExtra("skills",       vol.skills);
-            intent.putExtra("availability", vol.availability);
-            intent.putExtra("experience",   vol.experience);
-            intent.putExtra("status",       "Pending");
-            intent.putExtra("languages",    "Hindi, English");
-            intent.putExtra("vehicle",      "Yes");
-            intent.putExtra("travel",       "Yes");
-            intent.putExtra("causes",       "Education, Health");
-            intent.putExtra("idType",       "Aadhaar Card");
-            startActivity(intent);
-        });
+    void geocodeAndMatch(String taskLocation,
+                         List<SmartMatcher.MatchResult> volunteers,
+                         boolean isUrgent) {
+
+        tvMatchSubtitle.setText("📡 Fetching locations...");
+
+        // Task location geocode karo
+        new Thread(() -> {
+            double[] taskCoords = geocodeLocation(taskLocation);
+
+            if (taskCoords == null) {
+                runOnUiThread(() -> {
+                    tvMatchSubtitle.setText("Location fetch failed — using name match");
+                    volResults = SmartMatcher.matchVolunteersForTask(
+                            taskSkill, taskLocation, "Weekends",
+                            taskUrgency, volunteers);
+                    filteredVolResults = new ArrayList<>(volResults);
+                    updateSummary();
+                    listMatchResults.setAdapter(new VolunteerMatchAdapter());
+                });
+                return;
+            }
+
+            double taskLat = taskCoords[0];
+            double taskLon = taskCoords[1];
+
+            // Har volunteer ki location geocode karo
+            for (SmartMatcher.MatchResult vol : volunteers) {
+                double[] volCoords = geocodeLocation(vol.city);
+
+                if (volCoords != null) {
+                    double distKm = SmartMatcher.calculateGPSDistance(
+                            taskLat, taskLon, volCoords[0], volCoords[1]);
+
+                    vol.distanceKm = distKm;
+
+                    // 36hrs urgent rule — 100km se door exclude karo
+                    if (isUrgent && distKm > 100) {
+                        vol.matchScore  = 0;
+                        vol.matchLabel  = "Too Far";
+                        vol.matchReason = "⚠️ Urgent task — " +
+                                String.format("%.0f", distKm) + "km away (max 100km)";
+                        vol.locationScore = 0;
+                    } else {
+                        vol.locationScore = SmartMatcher
+                                .getLocationScoreFromDistance(distKm);
+                        vol.distanceText  = String.format("%.0f", distKm) + "km away";
+                    }
+                } else {
+                    vol.locationScore = 10;
+                    vol.distanceText  = "Distance unknown";
+                }
+            }
+
+            // Ab final matching karo with GPS scores
+            List<SmartMatcher.MatchResult> matched =
+                    SmartMatcher.matchVolunteersForTaskWithGPS(
+                            taskSkill, taskUrgency, volunteers);
+
+            runOnUiThread(() -> {
+                volResults         = matched;
+                filteredVolResults = new ArrayList<>(volResults);
+                tvMatchSubtitle.setText("Best volunteers for: " + taskTitle);
+                updateSummary();
+                listMatchResults.setAdapter(new VolunteerMatchAdapter());
+            });
+
+        }).start();
+    }
+
+    // ── Geocoding using OpenStreetMap Nominatim (free, no API key) ──
+    double[] geocodeLocation(String locationName) {
+        try {
+            String encoded = android.net.Uri.encode(locationName);
+            String url = "https://nominatim.openstreetmap.org/search?q=" +
+                    encoded + "&format=json&limit=1";
+
+            java.net.URL obj = new java.net.URL(url);
+            java.net.HttpURLConnection con =
+                    (java.net.HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", "SmartSeva-App");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+
+            java.io.BufferedReader in = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(con.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) response.append(line);
+            in.close();
+
+            String json = response.toString();
+            if (json.equals("[]")) return null;
+
+            // Parse lat lon manually (no library needed)
+            int latIdx = json.indexOf("\"lat\":\"") + 7;
+            int latEnd = json.indexOf("\"", latIdx);
+            int lonIdx = json.indexOf("\"lon\":\"") + 7;
+            int lonEnd = json.indexOf("\"", lonIdx);
+
+            if (latIdx < 7 || lonIdx < 7) return null;
+
+            double lat = Double.parseDouble(json.substring(latIdx, latEnd));
+            double lon = Double.parseDouble(json.substring(lonIdx, lonEnd));
+
+            return new double[]{lat, lon};
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // ═══════════════════════════════════════
