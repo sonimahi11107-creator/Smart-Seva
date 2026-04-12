@@ -9,8 +9,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.AuthResult;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
+    StorageReference storageRef;
 
     // ── Tab ──
     Button btnTabNGO, btnTabVolunteer;
@@ -59,6 +71,10 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        storageRef = FirebaseStorage.getInstance().getReference();
 
         // ── Tab ──
         btnTabNGO       = findViewById(R.id.btnTabNGO);
@@ -342,12 +358,51 @@ public class RegisterActivity extends AppCompatActivity {
         if (!checkConfirm(etNGOPassword, etNGOConfirmPassword, errNGOConfirmPassword)) ok = false;
 
         if (ok) {
-            String orgName = etOrgName.getText().toString().trim();
-            String email   = etNGOEmail.getText().toString().trim();
-            String phone   = etNGOPhone.getText().toString().trim();
 
-            // Firebase teammate  auth + Firestore call
-            showCongratulationsAndProceed(orgName, email, phone);
+            String email = etNGOEmail.getText().toString().trim();
+            String password = etNGOPassword.getText().toString().trim();
+
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+
+                        if (task.isSuccessful()) {
+
+                            String userId = mAuth.getCurrentUser().getUid();
+
+                            Map<String, Object> ngo = new HashMap<>();
+                            ngo.put("orgName", etOrgName.getText().toString());
+                            ngo.put("email", email);
+                            ngo.put("phone", etNGOPhone.getText().toString());
+                            ngo.put("type", spinnerNGOType.getSelectedItem().toString());
+                            ngo.put("address", etNGOAddress.getText().toString());
+                            ngo.put("registrationNumber", etRegNo.getText().toString()); // FIX
+
+                            db.collection("NGOs")
+                                    .document(userId)
+                                    .set(ngo)
+                                    .addOnSuccessListener(unused -> {
+                                        showCongratulationsAndProceed(
+                                                etOrgName.getText().toString(),
+                                                email,
+                                                etNGOPhone.getText().toString()
+                                        );
+                                    })
+                                    .addOnFailureListener(e -> {
+
+                                        // 🔥 IMPORTANT FIX
+                                        mAuth.getCurrentUser().delete();
+
+                                        Toast.makeText(this,
+                                                "Firestore failed: " + e.getMessage(),
+                                                Toast.LENGTH_LONG).show();
+                                    });
+
+                        } else {
+                            Toast.makeText(this,
+                                    "Auth failed: " + task.getException().getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
         }
     }
 
@@ -423,12 +478,82 @@ public class RegisterActivity extends AppCompatActivity {
         if (!checkConfirm(etVolPassword, etVolConfirmPassword, errVolConfirmPassword)) ok = false;
 
         if (ok) {
+
             String name  = etVolFullName.getText().toString().trim();
             String email = etVolEmail.getText().toString().trim();
             String phone = etVolPhone.getText().toString().trim();
+            String password = etVolPassword.getText().toString();
 
-            // Firebase teammate auth + Firestore call
-            showCongratulationsAndProceed(name, email, phone);
+            // 🔹 CREATE USER (AUTH)
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+
+                        if (task.isSuccessful()) {
+
+                            String userId = mAuth.getCurrentUser().getUid();
+
+                            // 🔹 COLLECT ALL DATA
+                            Map<String, Object> user = new HashMap<>();
+
+                            // BASIC
+                            user.put("name", name);
+                            user.put("email", email);
+                            user.put("phone", phone);
+                            user.put("gender", spinnerGender.getSelectedItem().toString());
+                            user.put("dob", etVolDOB.getText().toString());
+                            user.put("city", etVolCity.getText().toString());
+                            user.put("state", spinnerVolState.getSelectedItem().toString());
+                            user.put("pincode", etVolPincode.getText().toString());
+
+                            // SKILLS
+                            user.put("teaching", cbTeaching.isChecked());
+                            user.put("medical", cbMedical.isChecked());
+                            user.put("food", cbFood.isChecked());
+                            user.put("event", cbEvent.isChecked());
+                            user.put("fundraising", cbFundraising.isChecked());
+                            user.put("technical", cbTechnical.isChecked());
+                            user.put("socialMedia", cbSocialMedia.isChecked());
+                            user.put("otherSkill", etOtherSkill.getText().toString());
+
+                            // AVAILABILITY
+                            user.put("availableDays", spinnerAvailDays.getSelectedItem().toString());
+                            user.put("availableTime", spinnerAvailTime.getSelectedItem().toString());
+
+                            // CAUSES
+                            user.put("education", cbEducation.isChecked());
+                            user.put("environment", cbEnvironment.isChecked());
+                            user.put("animal", cbAnimal.isChecked());
+                            user.put("women", cbWomen.isChecked());
+                            user.put("health", cbHealth.isChecked());
+                            user.put("disaster", cbDisaster.isChecked());
+
+                            // STEP 3
+                            user.put("languages", etLanguages.getText().toString());
+                            user.put("vehicle", spinnerVehicle.getSelectedItem().toString());
+                            user.put("travel", spinnerTravel.getSelectedItem().toString());
+                            user.put("experience", spinnerExperience.getSelectedItem().toString());
+                            user.put("idType", spinnerIDType.getSelectedItem().toString());
+                            user.put("idNumber", etIDNumber.getText().toString());
+
+                            // 🔹 SAVE TO FIRESTORE
+                            db.collection("volunteers")
+                                    .document(userId)
+                                    .set(user)
+                                    .addOnSuccessListener(unused -> {
+
+                                        Toast.makeText(this, "Volunteer Registered!", Toast.LENGTH_SHORT).show();
+                                        showCongratulationsAndProceed(name, email, phone);
+
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(this, "Firestore Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    });
+
+                        } else {
+                            Toast.makeText(this, "Auth Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                    });
         }
     }
 
