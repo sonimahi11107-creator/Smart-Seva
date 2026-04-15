@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="#1A1A1A">
+
+        <ImageButton
+            android:id="@+id/btnBackDC"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="#FFFFFF"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Community Data Collection"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scan surveys to detect community needs"
+                android:textColor="#AAAAAA"
+                android:textSize="11sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Tab Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:elevation="2dp">
+
+        <Button
+            android:id="@+id/btnTabImage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="📷 Image"
+            android:textSize="12sp"
+            android:backgroundTint="#1A1A1A"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:id="@+id/btnTabCamera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="📸 Camera"
+            android:textSize="12sp"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#888888"/>
+
+        <Button
+            android:id="@+id/btnTabPDF"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="📄 PDF"
+            android:textSize="12sp"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#888888"/>
+
+        <Button
+            android:id="@+id/btnTabText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="✏️ Text"
+            android:textSize="12sp"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#888888"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- IMAGE PANEL -->
+            <LinearLayout
+                android:id="@+id/panelImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/imgSurveyPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/photo_placeholder_bg"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_add_photo"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <Button
+                        android:id="@+id/btnPickGallery"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="Gallery"
+                        android:textSize="13sp"
+                        android:backgroundTint="#444444"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button
+                        android:id="@+id/btnAnalyzeImage"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="🔍 Analyze"
+                        android:textSize="13sp"
+                        android:backgroundTint="#1A1A1A"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- CAMERA PANEL -->
+            <LinearLayout
+                android:id="@+id/panelCamera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/cameraPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnCaptureScan"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="📸 Capture &amp; Scan"
+                    android:backgroundTint="#1A1A1A"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvCameraStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Point camera at survey document"
+                    android:textSize="12sp"
+                    android:textColor="#888888"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp"/>
+            </LinearLayout>
+
+            <!-- PDF PANEL -->
+            <LinearLayout
+                android:id="@+id/panelPDF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/layoutPDFPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_background"
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvPDFName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"/>
+
+                    <TextView
+                        android:id="@+id/tvPDFSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="#888888"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnPickPDF"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="📄 Choose PDF"
+                        android:backgroundTint="#444444"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button
+                        android:id="@+id/btnAnalyzePDF"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="🔍 Analyze"
+                        android:backgroundTint="#1A1A1A"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- TEXT PANEL -->
+            <LinearLayout
+                android:id="@+id/panelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/etManualText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Survey ka text yahan paste karo..."
+                    android:inputType="textMultiLine"
+                    android:minLines="6"
+                    android:background="@drawable/card_background"
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnAnalyzeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="🔍 Analyze Text"
+                    android:backgroundTint="#1A1A1A"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <!-- PROCESSING -->
+            <LinearLayout
+                android:id="@+id/panelProcessing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="32dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:id="@+id/tvProcessingMsg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Analyzing..."
+                    android:textSize="14sp"
+                    android:textColor="#555555"/>
+            </LinearLayout>
+
+            <!-- RESULTS -->
+            <LinearLayout
+                android:id="@+id/panelResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Needs Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🔴 Community Needs Found"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutNeedsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp"/>
+
+                <!-- Tasks Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Suggested Tasks"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
+                    android:id="@+id/layoutSuggestedTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

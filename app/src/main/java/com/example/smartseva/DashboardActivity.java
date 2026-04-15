@@ -145,16 +145,53 @@ public class DashboardActivity extends AppCompatActivity {
         btnNavProfile.setOnClickListener(v -> showVolunteerPanel("profile"));
         btnNavImpact.setOnClickListener(v -> showVolunteerPanel("impact"));
 
+
         // ── Role decide karo ──
         // Firebase teammate yahan role set karega from Firestore
         // Abhi ke liye Intent se role lo
         String role = getIntent().getStringExtra("role");
         if (role != null) userRole = role;
 
+        // Auto-fill from Data Collection
+        if (getIntent().getBooleanExtra("openCreate", false)) {
+            autoFillCreateTask();
+        }
+
         setupDashboard();
 
         findViewById(R.id.btnSmartMatchNGO).setOnClickListener(v -> openSmartMatchNGO());
         findViewById(R.id.btnSmartMatchVol).setOnClickListener(v -> openSmartMatchVolunteer());
+        findViewById(R.id.btnDataCollection).setOnClickListener(v ->
+                startActivity(new Intent(this, DataCollectionActivity.class)));
+
+        // LocalTaskStore se tasks show
+        List<LocalTaskStore.LocalTask> savedTasks =
+                LocalTaskStore.getInstance().getTasks();
+
+        if (!savedTasks.isEmpty()) {
+            //  existing TaskAdapter / RecyclerView use
+            Toast.makeText(this,
+                    savedTasks.size() + " community tasks available!",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void autoFillCreateTask() {
+        showNGOPanel("create");
+
+        String title      = getIntent().getStringExtra("autoFillTitle");
+        String desc       = getIntent().getStringExtra("autoFillDesc");
+        String location   = getIntent().getStringExtra("autoFillLocation");
+        String volunteers = getIntent().getStringExtra("autoFillVolunteers");
+
+        if (title != null)      etTaskTitle.setText(title);
+        if (desc != null)       etTaskDesc.setText(desc);
+        if (location != null)   etTaskLocation.setText(location);
+        if (volunteers != null) etVolunteersRequired.setText(volunteers);
+
+        Toast.makeText(this,
+                "✅ Form auto-filled by AI! Review and submit.",
+                Toast.LENGTH_LONG).show();
     }
 
     void setupDashboard() {
