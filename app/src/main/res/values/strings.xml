@@ -34,5 +34,18 @@
     <string name="profile_image">Profile Image</string>
     <string name="location">Get Current Location</string>
 
+    <!-- Login Screen strings -->
+    <string name="app_tagline">Connecting volunteers with NGOs</string>
+    <string name="login_as">Login as</string>
+    <string name="ngo">NGO</string>
+    <string name="volunteer">Volunteer</string>
+    <string name="email_label">Email address *</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="password_label">Password *</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="login">Login</string>
+    <string name="no_account">Don\'t have an account? </string>
+    <string name="register_here">Register here</string>
     <string name="register">Register</string>
 </resources>

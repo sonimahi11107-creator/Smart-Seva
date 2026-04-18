@@ -370,6 +370,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String userId = mAuth.getCurrentUser().getUid();
 
                             Map<String, Object> ngo = new HashMap<>();
+                            ngo.put("role", "NGO");
                             ngo.put("orgName", etOrgName.getText().toString());
                             ngo.put("email", email);
                             ngo.put("phone", etNGOPhone.getText().toString());
@@ -377,7 +378,7 @@ public class RegisterActivity extends AppCompatActivity {
                             ngo.put("address", etNGOAddress.getText().toString());
                             ngo.put("registrationNumber", etRegNo.getText().toString()); // FIX
 
-                            db.collection("NGOs")
+                            db.collection("ngo_users")   // was "NGOs"
                                     .document(userId)
                                     .set(ngo)
                                     .addOnSuccessListener(unused -> {
@@ -496,6 +497,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Map<String, Object> user = new HashMap<>();
 
                             // BASIC
+                            user.put("role", "Volunteer");
                             user.put("name", name);
                             user.put("email", email);
                             user.put("phone", phone);
@@ -536,7 +538,7 @@ public class RegisterActivity extends AppCompatActivity {
                             user.put("idNumber", etIDNumber.getText().toString());
 
                             // 🔹 SAVE TO FIRESTORE
-                            db.collection("volunteers")
+                            db.collection("volunteer_users")   // was "volunteers"
                                     .document(userId)
                                     .set(user)
                                     .addOnSuccessListener(unused -> {
