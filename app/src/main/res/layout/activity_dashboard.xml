@@ -90,17 +90,30 @@
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:text="Completed" android:textColor="#AAAAAA" android:textSize="12sp"/>
                     </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btnSmartMatchNGO"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:text="🧠 Find Best Volunteers (Smart Match)"
-                        android:backgroundTint="#1565C0"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        android:layout_margin="16dp"/>
                 </LinearLayout>
+
+                <!-- NGO Action Buttons -->
+                <Button
+                    android:id="@+id/btnSmartMatchNGO"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="🧠 Find Best Volunteers (Smart Match)"
+                    android:backgroundTint="#1565C0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnDataCollection"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="📊 AI Data Collection (Scan Survey)"
+                    android:backgroundTint="#C62828"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="16dp"
+                    android:textAllCaps="false"/>
 
                 <!-- Stats Row 2 -->
                 <LinearLayout android:layout_width="match_parent"
