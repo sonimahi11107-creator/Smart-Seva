@@ -332,76 +332,156 @@ public class DashboardActivity extends AppCompatActivity {
     // ═══════════════════════════════════════
 
     void loadStats() {
-        // Firebase teammate yahan Firestore se data fetch karega
-        tvTotalTasks.setText(String.valueOf(taskList.size()));
-        tvCompletedTasks.setText("0");
-        tvUrgentTasks.setText("0");
-        tvTotalVolunteers.setText(String.valueOf(volunteerList.size()));
+        String uid = mAuth.getCurrentUser().getUid();
+
+        // Total tasks count
+        db.collection("tasks")
+                .whereEqualTo("ngoId", uid)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    int total = snap.size();
+                    int urgent = 0, active = 0;
+
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : snap) {
+                        String urgency = doc.getString("urgency");
+                        String status  = doc.getString("status");
+                        if (urgency != null && urgency.contains("Critical")) urgent++;
+                        if ("Active".equals(status)) active++;
+                    }
+
+                    tvTotalTasks.setText(String.valueOf(total));
+                    tvUrgentTasks.setText(String.valueOf(urgent));
+                    tvCompletedTasks.setText(String.valueOf(active));
+                });
+
+        // Total volunteers count
+        db.collection("volunteer_users")
+                .get()
+                .addOnSuccessListener(snap ->
+                        tvTotalVolunteers.setText(String.valueOf(snap.size())));
     }
 
     void loadTasks(String filter) {
-        // Sample data — Firebase teammate real data load karega
-        List<String> filtered = new ArrayList<>();
-        for (String t : taskList) {
-            if (filter.equals("all") || t.toLowerCase().contains(filter)) {
-                filtered.add(t);
-            }
-        }
-        if (filtered.isEmpty()) filtered.add("No tasks found. Create your first task!");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, filtered);
-        listNGOTasks.setAdapter(adapter);
+        String uid = mAuth.getCurrentUser().getUid();
 
-        listNGOTasks.setOnItemClickListener((parent, view, position, id) -> {
-            String selected = filtered.get(position);
-            String[] parts = selected.split("\\|");
+        db.collection("tasks")
+                .whereEqualTo("ngoId", uid)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    taskList.clear();
+                    List<String> taskIds = new ArrayList<>();
 
-            // NGO ke liye → Applicants Screen
-            Intent intent = new Intent(this, ApplicantsActivity.class);
-            intent.putExtra("taskTitle", parts.length > 0 ? parts[0].trim() : "Task");
-            startActivity(intent);
-        });
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : snap) {
+                        String title   = doc.getString("title");
+                        String urgency = doc.getString("urgency");
+                        String loc     = doc.getString("location");
+                        String status  = doc.getString("status");
+
+                        // Filter apply karo
+                        if (!filter.equals("all")) {
+                            if (filter.equals("urgent") &&
+                                    (urgency == null || !urgency.contains("Critical"))) continue;
+                            if (filter.equals("active") &&
+                                    (!"Active".equals(status))) continue;
+                        }
+
+                        taskList.add(title + " | " + urgency + " | " + loc);
+                        taskIds.add(doc.getId());
+                    }
+
+                    if (taskList.isEmpty()) {
+                        taskList.add("No tasks found. Create your first task!");
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                            android.R.layout.simple_list_item_1, taskList);
+                    listNGOTasks.setAdapter(adapter);
+
+                    listNGOTasks.setOnItemClickListener((parent, view, pos, id) -> {
+                        if (pos >= taskIds.size()) return;
+                        Intent intent = new Intent(this, ApplicantsActivity.class);
+                        intent.putExtra("taskTitle", taskList.get(pos).split("\\|")[0].trim());
+                        startActivity(intent);
+                    });
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     void loadVolunteers() {
-        // Firebase teammate yahan Firestore se volunteers fetch karega
-        if (volunteerList.isEmpty()) volunteerList.add("No volunteers registered yet.");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, volunteerList);
-        listVolunteers.setAdapter(adapter);
+        db.collection("volunteer_users")
+                .get()
+                .addOnSuccessListener(snap -> {
+                    volunteerList.clear();
+
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : snap) {
+                        String name   = doc.getString("name");
+                        String city   = doc.getString("city");
+                        String skills = "";
+                        if (Boolean.TRUE.equals(doc.getBoolean("teaching")))  skills += "Teaching, ";
+                        if (Boolean.TRUE.equals(doc.getBoolean("medical")))   skills += "Medical, ";
+                        if (Boolean.TRUE.equals(doc.getBoolean("food")))      skills += "Food, ";
+                        if (Boolean.TRUE.equals(doc.getBoolean("technical"))) skills += "Technical, ";
+                        if (!skills.isEmpty()) skills = skills.substring(0, skills.length() - 2);
+
+                        volunteerList.add(name + " | " + city + " | " + skills);
+                    }
+
+                    if (volunteerList.isEmpty()) {
+                        volunteerList.add("No volunteers registered yet.");
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                            android.R.layout.simple_list_item_1, volunteerList);
+                    listVolunteers.setAdapter(adapter);
+                });
     }
 
     void loadAvailableTasks() {
-        // Sample tasks — Firebase teammate real data load karega
-        List<String> available = new ArrayList<>();
-        available.add("Food Distribution Drive | 🔴 Critical | Raipur");
-        available.add("Tree Plantation | 🟢 Normal | Bilaspur");
-        available.add("Medical Camp | 🟡 Moderate | Durg");
+        db.collection("tasks")
+                .whereEqualTo("status", "Active")
+                .get()
+                .addOnSuccessListener(snap -> {
+                    List<String> available = new ArrayList<>();
+                    List<com.google.firebase.firestore.DocumentSnapshot> docs = snap.getDocuments();
 
-        if (taskList.isEmpty()) taskList.addAll(available);
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : docs) {
+                        String title   = doc.getString("title");
+                        String urgency = doc.getString("urgency");
+                        String loc     = doc.getString("location");
+                        available.add(title + " | " + urgency + " | " + loc);
+                    }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, available);
-        listAvailableTasks.setAdapter(adapter);
+                    if (available.isEmpty()) {
+                        available.add("No tasks available right now.");
+                    }
 
-        // Click → Task Detail
-        listAvailableTasks.setOnItemClickListener((parent, view, position, id) -> {
-            String selected = available.get(position);
-            String[] parts = selected.split("\\|");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                            android.R.layout.simple_list_item_1, available);
+                    listAvailableTasks.setAdapter(adapter);
 
-            Intent intent = new Intent(this, TaskDetailActivity.class);
-            intent.putExtra("taskTitle",      parts[0].trim());
-            intent.putExtra("taskUrgency",    parts.length > 1 ? parts[1].trim() : "Normal");
-            intent.putExtra("taskLocation",   parts.length > 2 ? parts[2].trim() : "Raipur");
-            intent.putExtra("taskDesc",       "Help the community by participating in this important task. Your contribution will make a real difference!");
-            intent.putExtra("taskCategory",   "Community Service");
-            intent.putExtra("taskSkill",      "Any Skill");
-            intent.putExtra("taskDate",       "20/04/2026");
-            intent.putExtra("taskNGO",        "Green Earth Foundation");
-            intent.putExtra("taskVolunteers", 10);
-            intent.putExtra("alreadyApplied", false);
-            startActivity(intent);
-        });
+                    listAvailableTasks.setOnItemClickListener((parent, view, pos, id) -> {
+                        if (pos >= docs.size()) return;
+                        com.google.firebase.firestore.DocumentSnapshot doc = docs.get(pos);
+
+                        Intent intent = new Intent(this, TaskDetailActivity.class);
+                        intent.putExtra("taskTitle",      doc.getString("title"));
+                        intent.putExtra("taskDesc",       doc.getString("description"));
+                        intent.putExtra("taskCategory",   doc.getString("category"));
+                        intent.putExtra("taskUrgency",    doc.getString("urgency"));
+                        intent.putExtra("taskLocation",   doc.getString("location"));
+                        intent.putExtra("taskSkill",      doc.getString("skill"));
+                        intent.putExtra("taskDate",       doc.getString("date"));
+                        intent.putExtra("taskNGO",        "NGO");
+                        intent.putExtra("taskVolunteers", 5);
+                        intent.putExtra("alreadyApplied", false);
+                        startActivity(intent);
+                    });
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error loading tasks: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     void setupSampleData() {
@@ -532,6 +612,8 @@ public class DashboardActivity extends AppCompatActivity {
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
                 .setPositiveButton("Logout", (dialog, which) -> {
+                    mAuth.signOut(); // ✅ YE LINE ADD KARO
+                    LocalTaskStore.getInstance().clear();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 })
