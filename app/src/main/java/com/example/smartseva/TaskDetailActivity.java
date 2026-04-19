@@ -13,8 +13,16 @@ import android.webkit.WebViewClient;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TaskDetailActivity extends AppCompatActivity {
+
+    // Firebase
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     // Views
     ImageView imgTaskDetail;
@@ -56,6 +64,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         btnApply           = findViewById(R.id.btnApply);
         layoutAlreadyApplied = findViewById(R.id.layoutAlreadyApplied);
         layoutApplyBar     = findViewById(R.id.layoutApplyBar);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // ── Get Intent Data ──
         Intent intent = getIntent();
@@ -196,31 +207,67 @@ public class TaskDetailActivity extends AppCompatActivity {
     // ═══════════════════════════════════════
 
     void applyForTask() {
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "Please login to apply", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Apply for Task")
                 .setMessage("Do you want to apply for:\n\n\"" + taskTitle + "\"?\n\n" +
                         "📍 " + taskLocation + "\n📅 " + taskDate)
                 .setPositiveButton("Yes, Apply!", (dialog, which) -> {
-                    // ✅ Firebase teammate yahan Firestore mein application store karega
-                    // aur NGO ko FCM notification bhejega
 
-                    // Local notification show karo
-                    showLocalNotification();
+                    String uid = mAuth.getCurrentUser().getUid();
 
-                    // UI update
-                    alreadyApplied = true;
-                    layoutAlreadyApplied.setVisibility(android.view.View.VISIBLE);
-                    btnApply.setText("Applied ✅");
-                    btnApply.setEnabled(false);
-                    btnApply.setBackgroundTintList(
-                            android.content.res.ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    // 1. Pehle Volunteer ki details fetch karo
+                    db.collection("volunteer_users").document(uid).get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                if (documentSnapshot.exists()) {
+                                    String name = documentSnapshot.getString("name");
+                                    String city = documentSnapshot.getString("city");
+                                    
+                                    // Skills string banao
+                                    StringBuilder skills = new StringBuilder();
+                                    if (Boolean.TRUE.equals(documentSnapshot.getBoolean("teaching"))) skills.append("Teaching, ");
+                                    if (Boolean.TRUE.equals(documentSnapshot.getBoolean("medical"))) skills.append("Medical, ");
+                                    if (Boolean.TRUE.equals(documentSnapshot.getBoolean("food"))) skills.append("Food, ");
+                                    if (Boolean.TRUE.equals(documentSnapshot.getBoolean("event"))) skills.append("Event, ");
+                                    // ... aur bhi skills add kar sakte hain
 
-                    Toast.makeText(this,
-                            "Applied successfully! NGO will contact you. 🎉",
-                            Toast.LENGTH_LONG).show();
+                                    // 2. Application save karo
+                                    Map<String, Object> app = new HashMap<>();
+                                    app.put("volunteerId", uid);
+                                    app.put("taskTitle", taskTitle);
+                                    app.put("name", name != null ? name : "Unknown");
+                                    app.put("city", city != null ? city : "Unknown");
+                                    app.put("skills", skills.length() > 2 ? skills.substring(0, skills.length()-2) : "General");
+                                    app.put("appliedTime", "Just now");
+                                    app.put("status", "Pending");
+                                    app.put("availability", documentSnapshot.getString("availableDays"));
+                                    app.put("experience", 1); // Sample experience
+
+                                    db.collection("applications")
+                                            .add(app)
+                                            .addOnSuccessListener(ref -> {
+                                                showLocalNotification();
+                                                updateUIForApplied();
+                                                Toast.makeText(this, "Applied successfully! 🎉", Toast.LENGTH_LONG).show();
+                                            });
+                                }
+                            });
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    void updateUIForApplied() {
+        alreadyApplied = true;
+        layoutAlreadyApplied.setVisibility(android.view.View.VISIBLE);
+        btnApply.setText("Applied ✅");
+        btnApply.setEnabled(false);
+        btnApply.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
     }
 
     // ═══════════════════════════════════════

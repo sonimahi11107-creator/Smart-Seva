@@ -8,10 +8,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.*;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    // Firebase
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     // Role
     String userRole = "NGO"; // "NGO" or "Volunteer" — Firebase teammate set karega
@@ -79,6 +84,9 @@ public class DashboardActivity extends AppCompatActivity {
         btnNavApplications= findViewById(R.id.btnNavApplications);
         btnNavProfile     = findViewById(R.id.btnNavProfile);
         btnNavImpact      = findViewById(R.id.btnNavImpact);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // ── Stats ──
         tvTotalTasks      = findViewById(R.id.tvTotalTasks);
@@ -480,33 +488,38 @@ public class DashboardActivity extends AppCompatActivity {
         else errTaskDate.setText("");
 
         if (ok) {
-            // ✅ Task data ready
-            String taskTitle    = etTaskTitle.getText().toString().trim();
-            String taskDesc     = etTaskDesc.getText().toString().trim();
-            String category     = spinnerTaskCategory.getSelectedItem().toString();
-            String urgency      = spinnerUrgency.getSelectedItem().toString();
-            String skillNeeded  = spinnerSkillRequired.getSelectedItem().toString();
-            String volunteers   = etVolunteersRequired.getText().toString().trim();
-            String taskLocation = etTaskLocation.getText().toString().trim();
-            String taskDate     = etTaskDate.getText().toString().trim();
-            // selectedTaskImageUri — Firebase teammate storage mein upload karega
+            String userId = mAuth.getCurrentUser().getUid();
 
-            // Local list mein add karo
-            taskList.add(taskTitle + " | " + urgency + " | " + taskLocation);
+            Map<String, Object> task = new HashMap<>();
+            task.put("ngoId", userId);
+            task.put("title", etTaskTitle.getText().toString().trim());
+            task.put("description", etTaskDesc.getText().toString().trim());
+            task.put("category", spinnerTaskCategory.getSelectedItem().toString());
+            task.put("urgency", spinnerUrgency.getSelectedItem().toString());
+            task.put("skill", spinnerSkillRequired.getSelectedItem().toString());
+            task.put("volunteersRequired", etVolunteersRequired.getText().toString().trim());
+            task.put("location", etTaskLocation.getText().toString().trim());
+            task.put("date", etTaskDate.getText().toString().trim());
+            task.put("status", "Active");
+            task.put("timestamp", System.currentTimeMillis());
 
-            // Form clear karo
-            etTaskTitle.setText("");
-            etTaskDesc.setText("");
-            etVolunteersRequired.setText("");
-            etTaskLocation.setText("");
-            etTaskDate.setText("");
-            spinnerTaskCategory.setSelection(0);
-            spinnerUrgency.setSelection(0);
-            imgTaskPreview.setImageResource(R.drawable.ic_add_photo);
-            selectedTaskImageUri = null;
+            db.collection("tasks")
+                    .add(task)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(this, "Task Created Successfully! ✅", Toast.LENGTH_LONG).show();
 
-            Toast.makeText(this, "Task Created Successfully! ✅", Toast.LENGTH_LONG).show();
-            showNGOPanel("tasks");
+                        // Clear form
+                        etTaskTitle.setText("");
+                        etTaskDesc.setText("");
+                        etVolunteersRequired.setText("");
+                        etTaskLocation.setText("");
+                        etTaskDate.setText("");
+
+                        showNGOPanel("tasks");
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to create task: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         }
     }
 

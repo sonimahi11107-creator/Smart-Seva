@@ -9,9 +9,14 @@ import android.text.TextWatcher;
 import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.*;
 
 public class ApplicantsActivity extends AppCompatActivity {
+
+    // Firebase
+    FirebaseFirestore db;
 
     // Views
     TextView tvApplicantsTaskTitle, tvApplicantsCount;
@@ -67,14 +72,15 @@ public class ApplicantsActivity extends AppCompatActivity {
         listApplicants         = findViewById(R.id.listApplicants);
         layoutEmptyApplicants  = findViewById(R.id.layoutEmptyApplicants);
 
+        db = FirebaseFirestore.getInstance();
+
         // ── Intent Data ──
         taskTitle = getIntent().getStringExtra("taskTitle");
         if (taskTitle == null) taskTitle = "Task";
         tvApplicantsTaskTitle.setText(taskTitle);
 
-        // ── Sample Data ──
-        // Firebase teammate yahan Firestore se real applicants load karega
-        loadSampleApplicants();
+        // ── Firestore Data ──
+        loadApplicantsFromFirestore();
 
         // ── Adapter ──
         adapter = new ApplicantListAdapter();
@@ -115,31 +121,37 @@ public class ApplicantsActivity extends AppCompatActivity {
     }
 
     // ═══════════════════════════════════════
-    // SAMPLE DATA
+    // FIRESTORE DATA
     // ═══════════════════════════════════════
 
-    void loadSampleApplicants() {
+    void loadApplicantsFromFirestore() {
         allApplicants.clear();
-        allApplicants.add(new Applicant(
-                "Priya Sharma", "Raipur, CG",
-                "Teaching, Medical Help",
-                "2 hours ago", "Pending", "Weekends", 2));
-        allApplicants.add(new Applicant(
-                "Rahul Verma", "Bilaspur, CG",
-                "Food Distribution, Event Management",
-                "5 hours ago", "Pending", "Both", 1));
-        allApplicants.add(new Applicant(
-                "Anjali Patel", "Durg, CG",
-                "Social Media, Fundraising",
-                "1 day ago", "Accepted", "Weekdays", 3));
-        allApplicants.add(new Applicant(
-                "Sonu Kumar", "Raipur, CG",
-                "Technical, Event Management",
-                "2 days ago", "Rejected", "Weekends", 0));
-        allApplicants.add(new Applicant(
-                "Deepika Singh", "Raipur, CG",
-                "Teaching, Social Media",
-                "3 days ago", "Pending", "Both", 1));
+        // Hum 'applications' collection se fetch karenge jahan taskTitle match ho
+        db.collection("applications")
+                .whereEqualTo("taskTitle", taskTitle)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        allApplicants.add(new Applicant(
+                                doc.getString("name"),
+                                doc.getString("city"),
+                                doc.getString("skills"),
+                                doc.getString("appliedTime"),
+                                doc.getString("status"),
+                                doc.getString("availability"),
+                                doc.getLong("experience").intValue()
+                        ));
+                    }
+                    updateStats();
+                    filterApplicants("all");
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    void loadSampleApplicants() {
+        // Purana sample data function (backup ke liye rakh sakte hain ya remove kar sakte hain)
     }
 
     // ═══════════════════════════════════════
@@ -218,12 +230,20 @@ public class ApplicantsActivity extends AppCompatActivity {
                 .setTitle("Accept Volunteer")
                 .setMessage("Accept " + a.name + " for this task?\n\nThey will be notified via SMS.")
                 .setPositiveButton("Accept", (dialog, which) -> {
-                    // Firebase teammate yahan status update + SMS bhejega
-                    a.status = "Accepted";
-                    updateStats();
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(this,
-                            a.name + " accepted! ✅", Toast.LENGTH_SHORT).show();
+                    // Firestore status update
+                    db.collection("applications")
+                            .whereEqualTo("taskTitle", taskTitle)
+                            .whereEqualTo("name", a.name)
+                            .get()
+                            .addOnSuccessListener(docs -> {
+                                for (QueryDocumentSnapshot d : docs) {
+                                    d.getReference().update("status", "Accepted");
+                                }
+                                a.status = "Accepted";
+                                updateStats();
+                                adapter.notifyDataSetChanged();
+                                Toast.makeText(this, a.name + " accepted! ✅", Toast.LENGTH_SHORT).show();
+                            });
 
                     // SMS to volunteer
                     try {

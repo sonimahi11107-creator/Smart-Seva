@@ -22,6 +22,8 @@ dependencyResolutionManagement {
     }
 }
 
+
+
 rootProject.name = "Smart Seva"
 include(":app")
  

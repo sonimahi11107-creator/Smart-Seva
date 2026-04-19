@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateTaskActivity extends AppCompatActivity {
 
-    EditText etTitle, etDesc, etLocation, etSkills;
+    EditText etTitle, etDesc, etLocation, etSkills, etVolunteers;
+    Spinner spinnerCategory, spinnerUrgency;
     Button btnSubmit;
 
     @Override
@@ -15,30 +16,60 @@ public class CreateTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
 
-        etTitle = findViewById(R.id.etTaskTitle);
-        etDesc = findViewById(R.id.etDescription);
-        etLocation = findViewById(R.id.etLocation);
-        etSkills = findViewById(R.id.etSkills);
-        btnSubmit = findViewById(R.id.btnSubmitTask);
+        // ✅ ALL findViewByIds together
+        etTitle         = findViewById(R.id.etTaskTitle);
+        etDesc          = findViewById(R.id.etDescription);
+        etLocation      = findViewById(R.id.etLocation);
+        etSkills        = findViewById(R.id.etSkills);
+        etVolunteers    = findViewById(R.id.etVolunteers);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+        spinnerUrgency  = findViewById(R.id.spinnerUrgency);
+        btnSubmit       = findViewById(R.id.btnSubmitTask);
 
+        // ✅ Spinner setup OUTSIDE button listener
+        ArrayAdapter<String> catAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                new String[]{"Education", "Health", "Food", "Environment",
+                        "Disaster Relief", "Animal Welfare", "General"});
+        catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(catAdapter);
+
+        ArrayAdapter<String> urgAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                new String[]{"Low", "Moderate", "Critical"});
+        urgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerUrgency.setAdapter(urgAdapter);
+
+        // ✅ Button listener only handles submit logic
         btnSubmit.setOnClickListener(v -> {
-
-            String title = etTitle.getText().toString();
-            String desc = etDesc.getText().toString();
-            String location = etLocation.getText().toString();
+            String title    = etTitle.getText().toString().trim();
+            String desc     = etDesc.getText().toString().trim();
+            String location = etLocation.getText().toString().trim();
+            String skills   = etSkills.getText().toString().trim();
 
             if (title.isEmpty() || desc.isEmpty()) {
                 Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 🔥 Send data to Dashboard
-            Intent intent = new Intent(CreateTaskActivity.this, DashboardActivity.class);
-            intent.putExtra("title", title);
-            intent.putExtra("desc", desc);
-            intent.putExtra("location", location);
+            LocalTaskStore.LocalTask task = new LocalTaskStore.LocalTask(
+                    title,
+                    desc,
+                    spinnerCategory.getSelectedItem().toString(),
+                    spinnerUrgency.getSelectedItem().toString(),
+                    skills,
+                    etVolunteers.getText().toString().isEmpty()
+                            ? "1" : etVolunteers.getText().toString(),
+                    location
+            );
+            LocalTaskStore.getInstance().addTask(task);
 
+            Toast.makeText(this, "Task created! ✅", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(CreateTaskActivity.this, DashboardActivity.class);
+            intent.putExtra("showTasks", true);
             startActivity(intent);
+            finish();
         });
     }
 }
