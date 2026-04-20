@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,6 +54,12 @@ public class DashboardActivity extends AppCompatActivity {
     ImageView imgVolProfile;
     TextView tvProfileName, tvProfileCity, tvProfileEmail, tvProfileSkills;
     TextView tvImpactScore, tvTasksDone, tvHoursContributed;
+
+    // Status tracking
+    TextView tvCountOpen, tvCountAssigned, tvCountProgress, tvCountResolved;
+    Button btnFilterOpen, btnFilterAssigned, btnFilterProgress, btnFilterResolved;
+    ListView listMyTasks;
+    TextView tvMyTasksActive, tvMyTasksDone;
 
     // Sample data
     List<String> taskList = new ArrayList<>();
@@ -125,6 +133,26 @@ public class DashboardActivity extends AppCompatActivity {
         tvTasksDone        = findViewById(R.id.tvTasksDone);
         tvHoursContributed = findViewById(R.id.tvHoursContributed);
 
+        tvCountOpen      = findViewById(R.id.tvCountOpen);
+        tvCountAssigned  = findViewById(R.id.tvCountAssigned);
+        tvCountProgress  = findViewById(R.id.tvCountProgress);
+        tvCountResolved  = findViewById(R.id.tvCountResolved);
+        listMyTasks      = findViewById(R.id.listMyTasks);
+        tvMyTasksActive  = findViewById(R.id.tvMyTasksActive);
+        tvMyTasksDone    = findViewById(R.id.tvMyTasksDone);
+
+// Filter buttons
+        if (findViewById(R.id.btnFilterOpen) != null) {
+            findViewById(R.id.btnFilterOpen).setOnClickListener(v ->
+                    loadTasksByStatus(TaskStatusManager.STATUS_OPEN));
+            findViewById(R.id.btnFilterAssigned).setOnClickListener(v ->
+                    loadTasksByStatus(TaskStatusManager.STATUS_ASSIGNED));
+            findViewById(R.id.btnFilterProgress).setOnClickListener(v ->
+                    loadTasksByStatus(TaskStatusManager.STATUS_IN_PROGRESS));
+            findViewById(R.id.btnFilterResolved).setOnClickListener(v ->
+                    loadTasksByStatus(TaskStatusManager.STATUS_RESOLVED));
+        }
+
         // ── Setup ──
         setupSpinners();
         setupSampleData();
@@ -135,11 +163,18 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnCreateTask).setOnClickListener(v -> validateAndCreateTask());
         findViewById(R.id.btnQuickCreateTask).setOnClickListener(v -> showNGOPanel("create"));
         findViewById(R.id.btnLogout).setOnClickListener(v -> logout());
+        if (findViewById(R.id.btnLogoutProfile) != null) {
+            findViewById(R.id.btnLogoutProfile).setOnClickListener(v -> logout());
+        }
 
         // Filter buttons
         findViewById(R.id.btnFilterAll).setOnClickListener(v -> loadTasks("all"));
-        findViewById(R.id.btnFilterUrgent).setOnClickListener(v -> loadTasks("urgent"));
-        findViewById(R.id.btnFilterActive).setOnClickListener(v -> loadTasks("active"));
+        if (findViewById(R.id.btnFilterUrgent) != null) {
+            findViewById(R.id.btnFilterUrgent).setOnClickListener(v -> loadTasks("urgent"));
+        }
+        if (findViewById(R.id.btnFilterActive) != null) {
+            findViewById(R.id.btnFilterActive).setOnClickListener(v -> loadTasks("active"));
+        }
 
         // Bottom nav - NGO
         btnNavStats.setOnClickListener(v -> showNGOPanel("stats"));
@@ -311,6 +346,7 @@ public class DashboardActivity extends AppCompatActivity {
             case "applications":
                 panelMyApplications.setVisibility(View.VISIBLE);
                 setNavActive(btnNavApplications, true);
+                loadMyTasks();
                 break;
             case "profile":
                 panelProfile.setVisibility(View.VISIBLE);
@@ -385,7 +421,9 @@ public class DashboardActivity extends AppCompatActivity {
                                     (!"Active".equals(status))) continue;
                         }
 
-                        taskList.add(title + " | " + urgency + " | " + loc);
+                        if (title != null && !title.isEmpty()) {
+                            taskList.add(title + " | " + urgency + " | " + loc);
+                        }
                         taskIds.add(doc.getId());
                     }
 
@@ -568,39 +606,126 @@ public class DashboardActivity extends AppCompatActivity {
         else errTaskDate.setText("");
 
         if (ok) {
-            String userId = mAuth.getCurrentUser().getUid();
+            String id = "T" + System.currentTimeMillis();
+            TaskStatusManager.TaskItem newTask =
+                    new TaskStatusManager.TaskItem(
+                            id, title, desc,
+                            spinnerTaskCategory.getSelectedItem().toString(),
+                            spinnerUrgency.getSelectedItem().toString(),
+                            location, date,
+                            spinnerSkillRequired.getSelectedItem().toString(),
+                            Integer.parseInt(volCount));
+            TaskStatusManager.addTask(newTask);
 
-            Map<String, Object> task = new HashMap<>();
-            task.put("ngoId", userId);
-            task.put("title", etTaskTitle.getText().toString().trim());
-            task.put("description", etTaskDesc.getText().toString().trim());
-            task.put("category", spinnerTaskCategory.getSelectedItem().toString());
-            task.put("urgency", spinnerUrgency.getSelectedItem().toString());
-            task.put("skill", spinnerSkillRequired.getSelectedItem().toString());
-            task.put("volunteersRequired", etVolunteersRequired.getText().toString().trim());
-            task.put("location", etTaskLocation.getText().toString().trim());
-            task.put("date", etTaskDate.getText().toString().trim());
-            task.put("status", "Active");
-            task.put("timestamp", System.currentTimeMillis());
+            etTaskTitle.setText("");
+            etTaskDesc.setText("");
+            etVolunteersRequired.setText("");
+            etTaskLocation.setText("");
+            etTaskDate.setText("");
+            spinnerTaskCategory.setSelection(0);
+            spinnerUrgency.setSelection(0);
+            imgTaskPreview.setImageResource(R.drawable.ic_add_photo);
+            selectedTaskImageUri = null;
 
-            db.collection("tasks")
-                    .add(task)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(this, "Task Created Successfully! ✅", Toast.LENGTH_LONG).show();
-
-                        // Clear form
-                        etTaskTitle.setText("");
-                        etTaskDesc.setText("");
-                        etVolunteersRequired.setText("");
-                        etTaskLocation.setText("");
-                        etTaskDate.setText("");
-
-                        showNGOPanel("tasks");
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Failed to create task: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
+            Toast.makeText(this,
+                    "Task Created! ✅", Toast.LENGTH_LONG).show();
+            showNGOPanel("tasks");
         }
+    }
+
+    void loadMyTasks() {
+        List<TaskStatusManager.TaskItem> myTasks =
+                TaskStatusManager.getMyTasks();
+
+        int active = 0, done = 0;
+        for (TaskStatusManager.TaskItem t : myTasks) {
+            if (t.status.equals(TaskStatusManager.STATUS_RESOLVED)) done++;
+            else active++;
+        }
+
+        if (tvMyTasksActive != null) {
+            tvMyTasksActive.setText(String.valueOf(active));
+            tvMyTasksDone.setText(String.valueOf(done));
+        }
+
+        listMyTasks.setAdapter(new MyTaskAdapter(myTasks));
+
+        listMyTasks.setOnItemClickListener((parent, view, position, id) -> {
+            TaskStatusManager.TaskItem task = myTasks.get(position);
+            if (!task.status.equals(TaskStatusManager.STATUS_RESOLVED)) {
+                showVolunteerStatusDialog(task);
+            }
+        });
+    }
+
+    void loadTasksByStatus(String status) {
+        List<TaskStatusManager.TaskItem> all = TaskStatusManager.getMyTasks();
+        List<TaskStatusManager.TaskItem> filtered = new ArrayList<>();
+
+        int open = 0, assigned = 0, inProgress = 0, resolved = 0;
+        for (TaskStatusManager.TaskItem t : all) {
+            if (t.status.equals(status)) filtered.add(t);
+            if (t.status.equals(TaskStatusManager.STATUS_OPEN))        open++;
+            else if (t.status.equals(TaskStatusManager.STATUS_ASSIGNED))   assigned++;
+            else if (t.status.equals(TaskStatusManager.STATUS_IN_PROGRESS)) inProgress++;
+            else if (t.status.equals(TaskStatusManager.STATUS_RESOLVED))   resolved++;
+        }
+
+        if (tvCountOpen != null) {
+            tvCountOpen.setText(String.valueOf(open));
+            tvCountAssigned.setText(String.valueOf(assigned));
+            tvCountProgress.setText(String.valueOf(inProgress));
+            tvCountResolved.setText(String.valueOf(resolved));
+        }
+
+        if (filtered.isEmpty()) {
+            List<String> empty = new ArrayList<>();
+            empty.add("No tasks with status: " + status);
+            listNGOTasks.setAdapter(new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, empty));
+        } else {
+            listNGOTasks.setAdapter(new TaskStatusAdapter(filtered));
+        }
+    }
+
+    void showTaskStatusDialog(TaskStatusManager.TaskItem task) {
+        String nextStatus = TaskStatusManager.getNextStatus(task.status);
+        if (task.status.equals(TaskStatusManager.STATUS_RESOLVED)) {
+            Toast.makeText(this, "Task already resolved! ✅",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Update Task Status")
+                .setMessage("Task: " + task.title +
+                        "\n\nCurrent: " + task.status +
+                        "\n\nMove to: " + nextStatus + "?")
+                .setPositiveButton("Update ✅", (dialog, which) -> {
+                    TaskStatusManager.updateStatus(task.id, nextStatus);
+                    Toast.makeText(this,
+                            "Status updated to: " + nextStatus,
+                            Toast.LENGTH_SHORT).show();
+                    loadTasks("all");
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    void showVolunteerStatusDialog(TaskStatusManager.TaskItem task) {
+        String nextStatus = TaskStatusManager.getNextStatus(task.status);
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Update Your Task")
+                .setMessage("Task: " + task.title +
+                        "\n\nMark as: " + nextStatus + "?")
+                .setPositiveButton("Yes ✅", (dialog, which) -> {
+                    TaskStatusManager.updateStatus(task.id, nextStatus);
+                    Toast.makeText(this,
+                            "Updated to: " + nextStatus + " 🎉",
+                            Toast.LENGTH_SHORT).show();
+                    loadMyTasks();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     // ═══════════════════════════════════════
@@ -619,5 +744,193 @@ public class DashboardActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    // ── NGO Task Status Adapter ──
+    class TaskStatusAdapter extends BaseAdapter {
+        List<TaskStatusManager.TaskItem> tasks;
+        TaskStatusAdapter(List<TaskStatusManager.TaskItem> tasks) {
+            this.tasks = tasks;
+        }
+        @Override public int getCount() { return tasks.size(); }
+        @Override public Object getItem(int pos) { return tasks.get(pos); }
+        @Override public long getItemId(int pos) { return pos; }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null)
+                convertView = getLayoutInflater().inflate(
+                        R.layout.item_task_status, parent, false);
+
+            TaskStatusManager.TaskItem task = tasks.get(position);
+
+            // Status color bar
+            View bar = convertView.findViewById(R.id.viewStatusBar);
+            bar.setBackgroundColor(TaskStatusManager.getStatusColor(task.status));
+
+            // Texts
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusTitle))
+                    .setText(task.title);
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusCategory))
+                    .setText(task.category);
+            ((TextView) convertView.findViewById(R.id.tvTaskUrgencyBadge))
+                    .setText(task.urgency);
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusLocation))
+                    .setText("📍 " + task.location);
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusDate))
+                    .setText("📅 " + task.date);
+
+            // Urgency badge color
+            TextView urgBadge = convertView.findViewById(R.id.tvTaskUrgencyBadge);
+            if (task.urgency.contains("Critical"))
+                urgBadge.setBackgroundColor(Color.parseColor("#C62828"));
+            else if (task.urgency.contains("Moderate"))
+                urgBadge.setBackgroundColor(Color.parseColor("#F57F17"));
+            else
+                urgBadge.setBackgroundColor(Color.parseColor("#2E7D32"));
+
+            // Step indicators
+            updateStepIndicators(convertView, task.status);
+
+            // Assigned volunteer
+            LinearLayout layoutAssigned =
+                    convertView.findViewById(R.id.layoutAssignedVol);
+            if (!task.assignedVolunteer.isEmpty()) {
+                layoutAssigned.setVisibility(View.VISIBLE);
+                ((TextView) convertView.findViewById(R.id.tvAssignedVolName))
+                        .setText(task.assignedVolunteer);
+            } else {
+                layoutAssigned.setVisibility(View.GONE);
+            }
+
+            // Buttons
+            convertView.findViewById(R.id.btnUpdateStatus)
+                    .setOnClickListener(v -> showTaskStatusDialog(task));
+            convertView.findViewById(R.id.btnViewDetails)
+                    .setOnClickListener(v -> {
+                        Intent intent = new Intent(DashboardActivity.this,
+                                TaskDetailActivity.class);
+                        intent.putExtra("taskTitle",      task.title);
+                        intent.putExtra("taskDesc",       task.description);
+                        intent.putExtra("taskCategory",   task.category);
+                        intent.putExtra("taskUrgency",    task.urgency);
+                        intent.putExtra("taskLocation",   task.location);
+                        intent.putExtra("taskDate",       task.date);
+                        intent.putExtra("taskSkill",      task.skill);
+                        intent.putExtra("taskNGO",        "My NGO");
+                        intent.putExtra("taskVolunteers", task.volunteersNeeded);
+                        startActivity(intent);
+                    });
+
+            return convertView;
+        }
+
+        void updateStepIndicators(View v, String status) {
+            int step = TaskStatusManager.getStatusStep(status);
+            int activeColor   = Color.parseColor("#1A1A1A");
+            int inactiveColor = Color.parseColor("#AAAAAA");
+
+            TextView s1 = v.findViewById(R.id.tvStatusOpen);
+            TextView s2 = v.findViewById(R.id.tvStatusAssigned);
+            TextView s3 = v.findViewById(R.id.tvStatusInProgress);
+            TextView s4 = v.findViewById(R.id.tvStatusResolved);
+            View l1 = v.findViewById(R.id.line1Status);
+            View l2 = v.findViewById(R.id.line2Status);
+            View l3 = v.findViewById(R.id.line3Status);
+
+            s1.setBackgroundResource(step >= 1 ?
+                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s2.setBackgroundResource(step >= 2 ?
+                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s3.setBackgroundResource(step >= 3 ?
+                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s4.setBackgroundResource(step >= 4 ?
+                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+
+            s1.setTextColor(step >= 1 ? Color.WHITE : inactiveColor);
+            s2.setTextColor(step >= 2 ? Color.WHITE : inactiveColor);
+            s3.setTextColor(step >= 3 ? Color.WHITE : inactiveColor);
+            s4.setTextColor(step >= 4 ? Color.WHITE : inactiveColor);
+
+            int lineColor = Color.parseColor("#1A1A1A");
+            int lineGray  = Color.parseColor("#CCCCCC");
+            l1.setBackgroundColor(step >= 2 ? lineColor : lineGray);
+            l2.setBackgroundColor(step >= 3 ? lineColor : lineGray);
+            l3.setBackgroundColor(step >= 4 ? lineColor : lineGray);
+        }
+    }
+
+    // ── Volunteer My Tasks Adapter ──
+    class MyTaskAdapter extends BaseAdapter {
+        List<TaskStatusManager.TaskItem> tasks;
+        MyTaskAdapter(List<TaskStatusManager.TaskItem> tasks) {
+            this.tasks = tasks;
+        }
+        @Override public int getCount() { return tasks.size(); }
+        @Override public Object getItem(int pos) { return tasks.get(pos); }
+        @Override public long getItemId(int pos) { return pos; }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null)
+                convertView = getLayoutInflater().inflate(
+                        R.layout.item_task_status, parent, false);
+
+            TaskStatusManager.TaskItem task = tasks.get(position);
+
+            View bar = convertView.findViewById(R.id.viewStatusBar);
+            bar.setBackgroundColor(TaskStatusManager.getStatusColor(task.status));
+
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusTitle))
+                    .setText(task.title);
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusCategory))
+                    .setText(task.category);
+            ((TextView) convertView.findViewById(R.id.tvTaskUrgencyBadge))
+                    .setText(task.urgency);
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusLocation))
+                    .setText("📍 " + task.location);
+            ((TextView) convertView.findViewById(R.id.tvTaskStatusDate))
+                    .setText("📅 " + task.date);
+
+            // Step indicators
+            new TaskStatusAdapter(tasks).updateStepIndicators(convertView, task.status);
+
+            // Update button — volunteer marks progress
+            Button btnUpdate = convertView.findViewById(R.id.btnUpdateStatus);
+            Button btnDetails = convertView.findViewById(R.id.btnViewDetails);
+
+            if (task.status.equals(TaskStatusManager.STATUS_RESOLVED)) {
+                btnUpdate.setText("✅ Completed");
+                btnUpdate.setEnabled(false);
+                btnUpdate.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(
+                                Color.parseColor("#AAAAAA")));
+            } else {
+                btnUpdate.setText("Mark: " +
+                        TaskStatusManager.getNextStatus(task.status));
+                btnUpdate.setEnabled(true);
+                btnUpdate.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(
+                                TaskStatusManager.getStatusColor(
+                                        TaskStatusManager.getNextStatus(task.status))));
+            }
+
+            btnUpdate.setOnClickListener(v -> showVolunteerStatusDialog(task));
+            btnDetails.setOnClickListener(v -> {
+                Intent intent = new Intent(DashboardActivity.this,
+                        TaskDetailActivity.class);
+                intent.putExtra("taskTitle",      task.title);
+                intent.putExtra("taskDesc",       task.description);
+                intent.putExtra("taskCategory",   task.category);
+                intent.putExtra("taskUrgency",    task.urgency);
+                intent.putExtra("taskLocation",   task.location);
+                intent.putExtra("taskDate",       task.date);
+                intent.putExtra("taskNGO",        "NGO");
+                intent.putExtra("taskVolunteers", task.volunteersNeeded);
+                startActivity(intent);
+            });
+
+            return convertView;
+        }
     }
 }
