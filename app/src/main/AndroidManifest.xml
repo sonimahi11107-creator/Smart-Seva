@@ -58,6 +58,8 @@
         <activity android:name=".DataCollectionActivity"
             android:exported="false"/>
 
+        <activity android:name=".LeaderboardActivity" android:exported="false"/>
+
 
     </application>
 
