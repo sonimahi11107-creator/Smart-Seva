@@ -213,6 +213,12 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnLeaderboardVol).setOnClickListener(v ->
                 startActivity(new Intent(this, LeaderboardActivity.class)));
 
+        findViewById(R.id.btnMapView).setOnClickListener(v ->
+                startActivity(new Intent(this, MapViewActivity.class)));
+
+        findViewById(R.id.btnMapViewVol).setOnClickListener(v ->
+                startActivity(new Intent(this, MapViewActivity.class)));
+
         // LocalTaskStore se tasks show
         List<LocalTaskStore.LocalTask> savedTasks =
                 LocalTaskStore.getInstance().getTasks();

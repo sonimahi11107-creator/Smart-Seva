@@ -60,6 +60,8 @@
 
         <activity android:name=".LeaderboardActivity" android:exported="false"/>
 
+        <activity android:name=".MapViewActivity" android:exported="false"/>
+
 
     </application>
 

@@ -137,6 +137,17 @@
                     android:layout_marginBottom="8dp"
                     android:textAllCaps="false"/>
 
+                <Button
+                    android:id="@+id/btnMapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="🗺️ Community Needs Map"
+                    android:backgroundTint="#2E7D32"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
                 <!-- Stats Row 2 -->
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -511,6 +522,17 @@
                     android:layout_height="50dp"
                     android:text="🏆 Community Heroes"
                     android:backgroundTint="#F57F17"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnMapViewVol"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="🗺️ Needs Map"
+                    android:backgroundTint="#2E7D32"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
                     android:layout_marginBottom="8dp"
