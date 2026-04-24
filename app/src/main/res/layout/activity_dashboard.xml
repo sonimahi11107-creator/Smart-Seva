@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="#F5F5F5">
 
     <!-- Top Bar -->
@@ -32,7 +33,18 @@
             android:layout_height="wrap_content"
             android:text="Welcome!"
             android:textColor="#AAAAAA"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#C62828"
+            android:layout_alignParentEnd="true"
+            android:padding="8dp"/>
     </LinearLayout>
 
     <!-- Content Area -->
@@ -115,6 +127,28 @@
                     android:layout_marginBottom="16dp"
                     android:textAllCaps="false"/>
 
+                <Button
+                    android:id="@+id/btnLeaderboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="🏆 Community Heroes Leaderboard"
+                    android:backgroundTint="#F57F17"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnMapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="🗺️ Community Needs Map"
+                    android:backgroundTint="#2E7D32"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
                 <!-- Stats Row 2 -->
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -193,6 +227,7 @@
                         android:textColor="#FFFFFF"/>
                 </LinearLayout>
 
+
                 <!-- Filter Chips -->
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,22 +238,109 @@
                         android:layout_width="wrap_content" android:layout_height="32dp"
                         android:text="All" android:textSize="11sp"
                         android:backgroundTint="#1A1A1A" android:textColor="#FFFFFF"
-                        android:layout_marginEnd="8dp"/>
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button android:id="@+id/btnFilterOpen"
+                        android:layout_width="wrap_content" android:layout_height="32dp"
+                        android:text="🔵 Open" android:textSize="11sp"
+                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button android:id="@+id/btnFilterAssigned"
+                        android:layout_width="wrap_content" android:layout_height="32dp"
+                        android:text="🟠 Assigned" android:textSize="11sp"
+                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button android:id="@+id/btnFilterProgress"
+                        android:layout_width="wrap_content" android:layout_height="32dp"
+                        android:text="🟣 Progress" android:textSize="11sp"
+                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button android:id="@+id/btnFilterResolved"
+                        android:layout_width="wrap_content" android:layout_height="32dp"
+                        android:text="🟢 Done" android:textSize="11sp"
+                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"/>
+                </LinearLayout>
+
+                <!-- Urgency / Activity quick filters -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
                     <Button android:id="@+id/btnFilterUrgent"
                         android:layout_width="wrap_content" android:layout_height="32dp"
                         android:text="🔴 Urgent" android:textSize="11sp"
-                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
-                        android:layout_marginEnd="8dp"/>
+                        android:backgroundTint="#C62828" android:textColor="#FFFFFF"
+                        android:layout_marginEnd="6dp"/>
+
                     <Button android:id="@+id/btnFilterActive"
                         android:layout_width="wrap_content" android:layout_height="32dp"
                         android:text="🟡 Active" android:textSize="11sp"
-                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"/>
+                        android:backgroundTint="#F57F17" android:textColor="#FFFFFF"/>
+                </LinearLayout>
+
+                <!-- Status Summary Row -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:background="#E3F2FD"
+                        android:layout_marginEnd="4dp">
+                        <TextView android:id="@+id/tvCountOpen"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textSize="18sp" android:textStyle="bold"
+                            android:textColor="#1565C0"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Open" android:textSize="10sp" android:textColor="#555"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:background="#FFF3E0"
+                        android:layout_marginEnd="4dp">
+                        <TextView android:id="@+id/tvCountAssigned"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textSize="18sp" android:textStyle="bold"
+                            android:textColor="#F57F17"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Assigned" android:textSize="10sp" android:textColor="#555"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:background="#F3E5F5"
+                        android:layout_marginEnd="4dp">
+                        <TextView android:id="@+id/tvCountProgress"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textSize="18sp" android:textStyle="bold"
+                            android:textColor="#6A1B9A"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Progress" android:textSize="10sp" android:textColor="#555"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:background="#E8F5E9">
+                        <TextView android:id="@+id/tvCountResolved"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textSize="18sp" android:textStyle="bold"
+                            android:textColor="#2E7D32"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Resolved" android:textSize="10sp" android:textColor="#555"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <ListView android:id="@+id/listNGOTasks"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="500dp"
                     android:divider="@null"/>
+
             </LinearLayout>
 
             <!-- NGO: Create Task -->
@@ -395,6 +517,28 @@
                     android:textSize="13sp"
                     android:layout_marginBottom="8dp"/>
 
+                <Button
+                    android:id="@+id/btnLeaderboardVol"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="🏆 Community Heroes"
+                    android:backgroundTint="#F57F17"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnMapViewVol"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="🗺️ Needs Map"
+                    android:backgroundTint="#2E7D32"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
                 <EditText android:id="@+id/etSearchTask"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:hint="🔍 Search tasks..."
@@ -406,7 +550,7 @@
                     android:divider="@null"/>
             </LinearLayout>
 
-            <!-- Volunteer: My Applications -->
+            <!-- Volunteer: My Tasks -->
             <LinearLayout android:id="@+id/panelMyApplications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -414,15 +558,54 @@
                 android:padding="16dp"
                 android:visibility="gone">
 
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="My Applications"
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="My Tasks"
                     android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="16dp"/>
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="4dp"/>
 
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="No applications yet.\nApply for tasks to see them here!"
-                    android:textColor="#888888" android:textSize="13sp"
-                    android:gravity="center" android:padding="32dp"/>
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tasks you applied for and got accepted"
+                    android:textSize="12sp" android:textColor="#888"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Stats -->
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="60dp"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:background="#E3F2FD"
+                        android:layout_marginEnd="8dp">
+                        <TextView android:id="@+id/tvMyTasksActive"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textSize="22sp" android:textStyle="bold"
+                            android:textColor="#1565C0"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Active" android:textSize="11sp" android:textColor="#555"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="60dp"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:background="#E8F5E9">
+                        <TextView android:id="@+id/tvMyTasksDone"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textSize="22sp" android:textStyle="bold"
+                            android:textColor="#2E7D32"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Completed" android:textSize="11sp" android:textColor="#555"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ListView android:id="@+id/listMyTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:divider="@null"/>
+
             </LinearLayout>
 
             <!-- Volunteer: Profile -->
@@ -482,7 +665,7 @@
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Logout -->
-                <Button android:id="@+id/btnLogout"
+                <Button android:id="@+id/btnLogoutProfile"
                     android:layout_width="match_parent" android:layout_height="50dp"
                     android:text="Logout"
                     android:backgroundTint="#E24B4A"
