@@ -425,6 +425,9 @@ public class DataCollectionActivity extends AppCompatActivity {
                                     extractedSkill, extractedVolunteers,
                                     extractedLocation));
 
+                    NotificationHelper.notifyNewTask(this, extractedTitle);
+
+
                     Toast.makeText(this,
                             "✅ Task auto-created from survey!",
                             Toast.LENGTH_LONG).show();

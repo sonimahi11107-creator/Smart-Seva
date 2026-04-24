@@ -71,6 +71,8 @@ dependencies {
 
     implementation("com.google.guava:guava:32.1.3-android")
 
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

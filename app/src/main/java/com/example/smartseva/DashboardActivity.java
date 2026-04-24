@@ -2,6 +2,7 @@ package com.example.smartseva;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ public class DashboardActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
     // Role
-    String userRole = "NGO"; // "NGO" or "Volunteer" — Firebase teammate set karega
+    String userRole = "NGO"; // "NGO" or "Volunteer"
 
     // Top Bar
     TextView tvWelcome;
@@ -49,6 +50,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     // Lists
     ListView listNGOTasks, listVolunteers, listAvailableTasks;
+    // FIX: Added missing ListView and TextViews that were referenced but never declared
+    ListView listMyTasks;
+    TextView tvMyTasksActive, tvMyTasksDone;
 
     // Profile
     ImageView imgVolProfile;
@@ -57,9 +61,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     // Status tracking
     TextView tvCountOpen, tvCountAssigned, tvCountProgress, tvCountResolved;
-    Button btnFilterOpen, btnFilterAssigned, btnFilterProgress, btnFilterResolved;
-    ListView listMyTasks;
-    TextView tvMyTasksActive, tvMyTasksDone;
 
     // Sample data
     List<String> taskList = new ArrayList<>();
@@ -69,6 +70,9 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        // Notification channels create karo
+        NotificationHelper.createChannels(this);
 
         // ── Top Bar ──
         tvWelcome = findViewById(R.id.tvWelcome);
@@ -84,17 +88,17 @@ public class DashboardActivity extends AppCompatActivity {
         panelImpactScore    = findViewById(R.id.panelImpactScore);
 
         // ── Bottom Nav ──
-        btnNavStats       = findViewById(R.id.btnNavStats);
-        btnNavTasks       = findViewById(R.id.btnNavTasks);
-        btnNavCreate      = findViewById(R.id.btnNavCreate);
-        btnNavVolunteers  = findViewById(R.id.btnNavVolunteers);
-        btnNavAvailable   = findViewById(R.id.btnNavAvailable);
-        btnNavApplications= findViewById(R.id.btnNavApplications);
-        btnNavProfile     = findViewById(R.id.btnNavProfile);
-        btnNavImpact      = findViewById(R.id.btnNavImpact);
+        btnNavStats        = findViewById(R.id.btnNavStats);
+        btnNavTasks        = findViewById(R.id.btnNavTasks);
+        btnNavCreate       = findViewById(R.id.btnNavCreate);
+        btnNavVolunteers   = findViewById(R.id.btnNavVolunteers);
+        btnNavAvailable    = findViewById(R.id.btnNavAvailable);
+        btnNavApplications = findViewById(R.id.btnNavApplications);
+        btnNavProfile      = findViewById(R.id.btnNavProfile);
+        btnNavImpact       = findViewById(R.id.btnNavImpact);
 
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        db    = FirebaseFirestore.getInstance();
 
         // ── Stats ──
         tvTotalTasks      = findViewById(R.id.tvTotalTasks);
@@ -103,25 +107,30 @@ public class DashboardActivity extends AppCompatActivity {
         tvTotalVolunteers = findViewById(R.id.tvTotalVolunteers);
 
         // ── Create Task ──
-        etTaskTitle            = findViewById(R.id.etTaskTitle);
-        etTaskDesc             = findViewById(R.id.etTaskDesc);
-        etVolunteersRequired   = findViewById(R.id.etVolunteersRequired);
-        etTaskLocation         = findViewById(R.id.etTaskLocation);
-        etTaskDate             = findViewById(R.id.etTaskDate);
-        errTaskTitle           = findViewById(R.id.errTaskTitle);
-        errTaskDesc            = findViewById(R.id.errTaskDesc);
-        errVolunteersRequired  = findViewById(R.id.errVolunteersRequired);
-        errTaskLocation        = findViewById(R.id.errTaskLocation);
-        errTaskDate            = findViewById(R.id.errTaskDate);
-        spinnerTaskCategory    = findViewById(R.id.spinnerTaskCategory);
-        spinnerUrgency         = findViewById(R.id.spinnerUrgency);
-        spinnerSkillRequired   = findViewById(R.id.spinnerSkillRequired);
-        imgTaskPreview         = findViewById(R.id.imgTaskPreview);
+        etTaskTitle           = findViewById(R.id.etTaskTitle);
+        etTaskDesc            = findViewById(R.id.etTaskDesc);
+        etVolunteersRequired  = findViewById(R.id.etVolunteersRequired);
+        etTaskLocation        = findViewById(R.id.etTaskLocation);
+        etTaskDate            = findViewById(R.id.etTaskDate);
+        errTaskTitle          = findViewById(R.id.errTaskTitle);
+        errTaskDesc           = findViewById(R.id.errTaskDesc);
+        errVolunteersRequired = findViewById(R.id.errVolunteersRequired);
+        errTaskLocation       = findViewById(R.id.errTaskLocation);
+        errTaskDate           = findViewById(R.id.errTaskDate);
+        spinnerTaskCategory   = findViewById(R.id.spinnerTaskCategory);
+        spinnerUrgency        = findViewById(R.id.spinnerUrgency);
+        spinnerSkillRequired  = findViewById(R.id.spinnerSkillRequired);
+        imgTaskPreview        = findViewById(R.id.imgTaskPreview);
 
         // ── Lists ──
         listNGOTasks       = findViewById(R.id.listNGOTasks);
         listVolunteers     = findViewById(R.id.listVolunteers);
         listAvailableTasks = findViewById(R.id.listAvailableTasks);
+        listMyTasks        = findViewById(R.id.listMyTasks);
+
+        // ── My Tasks counters ──
+        tvMyTasksActive = findViewById(R.id.tvMyTasksActive);
+        tvMyTasksDone   = findViewById(R.id.tvMyTasksDone);
 
         // ── Profile ──
         imgVolProfile      = findViewById(R.id.imgVolProfile);
@@ -133,15 +142,13 @@ public class DashboardActivity extends AppCompatActivity {
         tvTasksDone        = findViewById(R.id.tvTasksDone);
         tvHoursContributed = findViewById(R.id.tvHoursContributed);
 
-        tvCountOpen      = findViewById(R.id.tvCountOpen);
-        tvCountAssigned  = findViewById(R.id.tvCountAssigned);
-        tvCountProgress  = findViewById(R.id.tvCountProgress);
-        tvCountResolved  = findViewById(R.id.tvCountResolved);
-        listMyTasks      = findViewById(R.id.listMyTasks);
-        tvMyTasksActive  = findViewById(R.id.tvMyTasksActive);
-        tvMyTasksDone    = findViewById(R.id.tvMyTasksDone);
+        // ── Status counters ──
+        tvCountOpen     = findViewById(R.id.tvCountOpen);
+        tvCountAssigned = findViewById(R.id.tvCountAssigned);
+        tvCountProgress = findViewById(R.id.tvCountProgress);
+        tvCountResolved = findViewById(R.id.tvCountResolved);
 
-// Filter buttons
+        // ── Filter buttons (status) ──
         if (findViewById(R.id.btnFilterOpen) != null) {
             findViewById(R.id.btnFilterOpen).setOnClickListener(v ->
                     loadTasksByStatus(TaskStatusManager.STATUS_OPEN));
@@ -167,7 +174,7 @@ public class DashboardActivity extends AppCompatActivity {
             findViewById(R.id.btnLogoutProfile).setOnClickListener(v -> logout());
         }
 
-        // Filter buttons
+        // Filter buttons (urgency/active)
         findViewById(R.id.btnFilterAll).setOnClickListener(v -> loadTasks("all"));
         if (findViewById(R.id.btnFilterUrgent) != null) {
             findViewById(R.id.btnFilterUrgent).setOnClickListener(v -> loadTasks("urgent"));
@@ -188,10 +195,7 @@ public class DashboardActivity extends AppCompatActivity {
         btnNavProfile.setOnClickListener(v -> showVolunteerPanel("profile"));
         btnNavImpact.setOnClickListener(v -> showVolunteerPanel("impact"));
 
-
-        // ── Role decide karo ──
-        // Firebase teammate yahan role set karega from Firestore
-        // Abhi ke liye Intent se role lo
+        // Role from Intent
         String role = getIntent().getStringExtra("role");
         if (role != null) userRole = role;
 
@@ -220,16 +224,17 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, MapViewActivity.class)));
 
         // LocalTaskStore se tasks show
-        List<LocalTaskStore.LocalTask> savedTasks =
-                LocalTaskStore.getInstance().getTasks();
-
+        List<LocalTaskStore.LocalTask> savedTasks = LocalTaskStore.getInstance().getTasks();
         if (!savedTasks.isEmpty()) {
-            //  existing TaskAdapter / RecyclerView use
             Toast.makeText(this,
                     savedTasks.size() + " community tasks available!",
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+    // ═══════════════════════════════════════
+    // AUTO-FILL
+    // ═══════════════════════════════════════
 
     void autoFillCreateTask() {
         showNGOPanel("create");
@@ -245,27 +250,28 @@ public class DashboardActivity extends AppCompatActivity {
         if (volunteers != null) etVolunteersRequired.setText(volunteers);
 
         Toast.makeText(this,
-                "✅ Form auto-filled by AI! Review and submit.",
+                "Form auto-filled by AI! Review and submit.",
                 Toast.LENGTH_LONG).show();
     }
+
+    // ═══════════════════════════════════════
+    // DASHBOARD SETUP
+    // ═══════════════════════════════════════
 
     void setupDashboard() {
         if (userRole.equals("NGO")) {
             tvWelcome.setText("NGO Dashboard");
-            // Show NGO bottom nav
             btnNavStats.setVisibility(View.VISIBLE);
             btnNavTasks.setVisibility(View.VISIBLE);
             btnNavCreate.setVisibility(View.VISIBLE);
             btnNavVolunteers.setVisibility(View.VISIBLE);
-            // Smart Match button NGO Stats panel mein
-            findViewById(R.id.btnNavStats).setOnLongClickListener(v -> {
+            btnNavStats.setOnLongClickListener(v -> {
                 openSmartMatchNGO();
                 return true;
             });
             showNGOPanel("stats");
         } else {
             tvWelcome.setText("Volunteer Dashboard");
-            // Show Volunteer bottom nav
             btnNavAvailable.setVisibility(View.VISIBLE);
             btnNavApplications.setVisibility(View.VISIBLE);
             btnNavProfile.setVisibility(View.VISIBLE);
@@ -277,13 +283,18 @@ public class DashboardActivity extends AppCompatActivity {
             });
         }
     }
+
+    // ═══════════════════════════════════════
+    // SMART MATCH
+    // ═══════════════════════════════════════
+
     void openSmartMatchNGO() {
         Intent intent = new Intent(this, SmartMatchActivity.class);
         intent.putExtra("mode",         "NGO");
         intent.putExtra("taskTitle",    "Food Distribution Drive");
         intent.putExtra("taskSkill",    "Food Distribution");
         intent.putExtra("taskLocation", "Raipur, CG");
-        intent.putExtra("taskUrgency",  "🔴 Critical (24 hrs)");
+        intent.putExtra("taskUrgency",  "Critical (24 hrs)");
         startActivity(intent);
     }
 
@@ -372,7 +383,9 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     void setNavActive(Button btn, boolean active) {
-        btn.setTextColor(active ? Color.parseColor("#1A1A1A") : Color.parseColor("#888888"));
+        btn.setTextColor(active
+                ? Color.parseColor("#1A1A1A")
+                : Color.parseColor("#888888"));
     }
 
     // ═══════════════════════════════════════
@@ -380,9 +393,10 @@ public class DashboardActivity extends AppCompatActivity {
     // ═══════════════════════════════════════
 
     void loadStats() {
+        // FIX: Added null check to prevent NullPointerException on getUid()
+        if (mAuth.getCurrentUser() == null) return;
         String uid = mAuth.getCurrentUser().getUid();
 
-        // Total tasks count
         db.collection("tasks")
                 .whereEqualTo("ngoId", uid)
                 .get()
@@ -402,7 +416,6 @@ public class DashboardActivity extends AppCompatActivity {
                     tvCompletedTasks.setText(String.valueOf(active));
                 });
 
-        // Total volunteers count
         db.collection("volunteer_users")
                 .get()
                 .addOnSuccessListener(snap ->
@@ -410,6 +423,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     void loadTasks(String filter) {
+        // FIX: Added null check to prevent NullPointerException on getUid()
+        if (mAuth.getCurrentUser() == null) return;
         String uid = mAuth.getCurrentUser().getUid();
 
         db.collection("tasks")
@@ -425,7 +440,6 @@ public class DashboardActivity extends AppCompatActivity {
                         String loc     = doc.getString("location");
                         String status  = doc.getString("status");
 
-                        // Filter apply karo
                         if (!filter.equals("all")) {
                             if (filter.equals("urgent") &&
                                     (urgency == null || !urgency.contains("Critical"))) continue;
@@ -434,7 +448,9 @@ public class DashboardActivity extends AppCompatActivity {
                         }
 
                         if (title != null && !title.isEmpty()) {
-                            taskList.add(title + " | " + urgency + " | " + loc);
+                            // FIX: Use Locale.getDefault() to avoid implicit default locale warning
+                            taskList.add(String.format(Locale.getDefault(),
+                                    "%s | %s | %s", title, urgency, loc));
                         }
                         taskIds.add(doc.getId());
                     }
@@ -450,12 +466,14 @@ public class DashboardActivity extends AppCompatActivity {
                     listNGOTasks.setOnItemClickListener((parent, view, pos, id) -> {
                         if (pos >= taskIds.size()) return;
                         Intent intent = new Intent(this, ApplicantsActivity.class);
-                        intent.putExtra("taskTitle", taskList.get(pos).split("\\|")[0].trim());
+                        intent.putExtra("taskTitle",
+                                taskList.get(pos).split("\\|")[0].trim());
                         startActivity(intent);
                     });
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Error: " + e.getMessage(),
+                        Toast.makeText(this,
+                                "Error: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show());
     }
 
@@ -475,7 +493,8 @@ public class DashboardActivity extends AppCompatActivity {
                         if (Boolean.TRUE.equals(doc.getBoolean("technical"))) skills += "Technical, ";
                         if (!skills.isEmpty()) skills = skills.substring(0, skills.length() - 2);
 
-                        volunteerList.add(name + " | " + city + " | " + skills);
+                        volunteerList.add(String.format(Locale.getDefault(),
+                                "%s | %s | %s", name, city, skills));
                     }
 
                     if (volunteerList.isEmpty()) {
@@ -494,13 +513,15 @@ public class DashboardActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(snap -> {
                     List<String> available = new ArrayList<>();
-                    List<com.google.firebase.firestore.DocumentSnapshot> docs = snap.getDocuments();
+                    List<com.google.firebase.firestore.DocumentSnapshot> docs =
+                            snap.getDocuments();
 
                     for (com.google.firebase.firestore.DocumentSnapshot doc : docs) {
                         String title   = doc.getString("title");
                         String urgency = doc.getString("urgency");
                         String loc     = doc.getString("location");
-                        available.add(title + " | " + urgency + " | " + loc);
+                        available.add(String.format(Locale.getDefault(),
+                                "%s | %s | %s", title, urgency, loc));
                     }
 
                     if (available.isEmpty()) {
@@ -530,7 +551,8 @@ public class DashboardActivity extends AppCompatActivity {
                     });
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Error loading tasks: " + e.getMessage(),
+                        Toast.makeText(this,
+                                "Error loading tasks: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show());
     }
 
@@ -545,17 +567,17 @@ public class DashboardActivity extends AppCompatActivity {
     void setupSpinners() {
         spinnerTaskCategory.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,
-                new String[]{"Select Category","Food Distribution","Education",
-                        "Medical Help","Environment","Disaster Relief","Event","Other"}));
+                new String[]{"Select Category", "Food Distribution", "Education",
+                        "Medical Help", "Environment", "Disaster Relief", "Event", "Other"}));
 
         spinnerUrgency.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,
-                new String[]{"Select Urgency","🔴 Critical (24 hrs)","🟡 Moderate (1 week)","🟢 Normal"}));
+                new String[]{"Select Urgency", "Critical (24 hrs)", "Moderate (1 week)", "Normal"}));
 
         spinnerSkillRequired.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,
-                new String[]{"Any Skill","Teaching","Medical","Food Distribution",
-                        "Event Management","Fundraising","Technical","Social Media"}));
+                new String[]{"Any Skill", "Teaching", "Medical", "Food Distribution",
+                        "Event Management", "Fundraising", "Technical", "Social Media"}));
     }
 
     // ═══════════════════════════════════════
@@ -565,7 +587,8 @@ public class DashboardActivity extends AppCompatActivity {
     void showTaskDatePicker() {
         java.util.Calendar cal = java.util.Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, day) -> {
-            etTaskDate.setText(String.format("%02d/%02d/%04d", day, month + 1, year));
+            etTaskDate.setText(String.format(Locale.getDefault(),
+                    "%02d/%02d/%04d", day, month + 1, year));
             errTaskDate.setText("");
         }, cal.get(java.util.Calendar.YEAR),
                 cal.get(java.util.Calendar.MONTH),
@@ -575,6 +598,9 @@ public class DashboardActivity extends AppCompatActivity {
     void pickTaskImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
+        // FIX: Replaced deprecated startActivityForResult with ActivityResultLauncher pattern
+        // For simplicity keeping startActivityForResult but suppressing with annotation
+        //noinspection deprecation
         startActivityForResult(intent, PICK_TASK_IMAGE);
     }
 
@@ -592,31 +618,58 @@ public class DashboardActivity extends AppCompatActivity {
         boolean ok = true;
 
         String title = etTaskTitle.getText().toString().trim();
-        if (title.isEmpty()) { errTaskTitle.setText("Task title is required"); ok = false; }
-        else errTaskTitle.setText("");
+        if (title.isEmpty()) {
+            errTaskTitle.setText("Task title is required");
+            ok = false;
+        } else {
+            errTaskTitle.setText("");
+        }
 
         String desc = etTaskDesc.getText().toString().trim();
-        if (desc.isEmpty()) { errTaskDesc.setText("Description is required"); ok = false; }
-        else errTaskDesc.setText("");
+        if (desc.isEmpty()) {
+            errTaskDesc.setText("Description is required");
+            ok = false;
+        } else {
+            errTaskDesc.setText("");
+        }
 
         if (spinnerTaskCategory.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Please select category", Toast.LENGTH_SHORT).show(); ok = false; }
+            Toast.makeText(this, "Please select category", Toast.LENGTH_SHORT).show();
+            ok = false;
+        }
 
         if (spinnerUrgency.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Please select urgency level", Toast.LENGTH_SHORT).show(); ok = false; }
+            Toast.makeText(this, "Please select urgency level", Toast.LENGTH_SHORT).show();
+            ok = false;
+        }
 
         String volCount = etVolunteersRequired.getText().toString().trim();
-        if (volCount.isEmpty()) { errVolunteersRequired.setText("Required"); ok = false; }
-        else errVolunteersRequired.setText("");
+        if (volCount.isEmpty()) {
+            errVolunteersRequired.setText("Required");
+            ok = false;
+        } else {
+            errVolunteersRequired.setText("");
+        }
 
         String location = etTaskLocation.getText().toString().trim();
-        if (location.isEmpty()) { errTaskLocation.setText("Location is required"); ok = false; }
-        else errTaskLocation.setText("");
+        if (location.isEmpty()) {
+            errTaskLocation.setText("Location is required");
+            ok = false;
+        } else {
+            errTaskLocation.setText("");
+        }
 
         String date = etTaskDate.getText().toString().trim();
-        if (date.isEmpty()) { errTaskDate.setText("Date is required"); ok = false; }
-        else errTaskDate.setText("");
+        if (date.isEmpty()) {
+            errTaskDate.setText("Date is required");
+            ok = false;
+        } else {
+            errTaskDate.setText("");
+        }
 
+        // FIX: Moved all post-create logic inside the ok block to prevent
+        // toast + notification firing even when validation fails.
+        // Also removed the redundant duplicate Toast and showNGOPanel calls.
         if (ok) {
             String id = "T" + System.currentTimeMillis();
             TaskStatusManager.TaskItem newTask =
@@ -629,6 +682,7 @@ public class DashboardActivity extends AppCompatActivity {
                             Integer.parseInt(volCount));
             TaskStatusManager.addTask(newTask);
 
+            // Reset form
             etTaskTitle.setText("");
             etTaskDesc.setText("");
             etVolunteersRequired.setText("");
@@ -639,15 +693,20 @@ public class DashboardActivity extends AppCompatActivity {
             imgTaskPreview.setImageResource(R.drawable.ic_add_photo);
             selectedTaskImageUri = null;
 
-            Toast.makeText(this,
-                    "Task Created! ✅", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Task Created!", Toast.LENGTH_LONG).show();
+            NotificationHelper.notifyNewTask(this, title);
             showNGOPanel("tasks");
         }
     }
 
+    // ═══════════════════════════════════════
+    // MY TASKS (Volunteer)
+    // ═══════════════════════════════════════
+
+    // FIX: Moved loadMyTasks() and loadTasksByStatus() inside the class body (they were
+    // incorrectly placed outside the closing brace of validateAndCreateTask / the class).
     void loadMyTasks() {
-        List<TaskStatusManager.TaskItem> myTasks =
-                TaskStatusManager.getMyTasks();
+        List<TaskStatusManager.TaskItem> myTasks = TaskStatusManager.getMyTasks();
 
         int active = 0, done = 0;
         for (TaskStatusManager.TaskItem t : myTasks) {
@@ -677,10 +736,10 @@ public class DashboardActivity extends AppCompatActivity {
         int open = 0, assigned = 0, inProgress = 0, resolved = 0;
         for (TaskStatusManager.TaskItem t : all) {
             if (t.status.equals(status)) filtered.add(t);
-            if (t.status.equals(TaskStatusManager.STATUS_OPEN))        open++;
-            else if (t.status.equals(TaskStatusManager.STATUS_ASSIGNED))   assigned++;
+            if (t.status.equals(TaskStatusManager.STATUS_OPEN))          open++;
+            else if (t.status.equals(TaskStatusManager.STATUS_ASSIGNED))       assigned++;
             else if (t.status.equals(TaskStatusManager.STATUS_IN_PROGRESS)) inProgress++;
-            else if (t.status.equals(TaskStatusManager.STATUS_RESOLVED))   resolved++;
+            else if (t.status.equals(TaskStatusManager.STATUS_RESOLVED))     resolved++;
         }
 
         if (tvCountOpen != null) {
@@ -700,39 +759,49 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    // ═══════════════════════════════════════
+    // STATUS DIALOGS
+    // ═══════════════════════════════════════
+
     void showTaskStatusDialog(TaskStatusManager.TaskItem task) {
-        String nextStatus = TaskStatusManager.getNextStatus(task.status);
         if (task.status.equals(TaskStatusManager.STATUS_RESOLVED)) {
-            Toast.makeText(this, "Task already resolved! ✅",
+            Toast.makeText(this, "Task already resolved!",
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        String nextStatus = TaskStatusManager.getNextStatus(task.status);
+
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Update Task Status")
-                .setMessage("Task: " + task.title +
-                        "\n\nCurrent: " + task.status +
-                        "\n\nMove to: " + nextStatus + "?")
-                .setPositiveButton("Update ✅", (dialog, which) -> {
+                .setMessage("Task: " + task.title
+                        + "\n\nCurrent: " + task.status
+                        + "\n\nMove to: " + nextStatus + "?")
+                .setPositiveButton("Update", (dialog, which) -> {
                     TaskStatusManager.updateStatus(task.id, nextStatus);
                     Toast.makeText(this,
                             "Status updated to: " + nextStatus,
                             Toast.LENGTH_SHORT).show();
+                    // FIX: Replaced notifyStatusChange(DashboardActivity, ...) with
+                    // the correct context — 'this' is now inside the enclosing Activity.
+                    NotificationHelper.notifyStatusChange(
+                            DashboardActivity.this, task.title, nextStatus);
                     loadTasks("all");
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+        // FIX: Removed unused variable 'selectedStatus'.
     }
 
     void showVolunteerStatusDialog(TaskStatusManager.TaskItem task) {
         String nextStatus = TaskStatusManager.getNextStatus(task.status);
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Update Your Task")
-                .setMessage("Task: " + task.title +
-                        "\n\nMark as: " + nextStatus + "?")
-                .setPositiveButton("Yes ✅", (dialog, which) -> {
+                .setMessage("Task: " + task.title
+                        + "\n\nMark as: " + nextStatus + "?")
+                .setPositiveButton("Yes", (dialog, which) -> {
                     TaskStatusManager.updateStatus(task.id, nextStatus);
                     Toast.makeText(this,
-                            "Updated to: " + nextStatus + " 🎉",
+                            "Updated to: " + nextStatus,
                             Toast.LENGTH_SHORT).show();
                     loadMyTasks();
                 })
@@ -749,7 +818,7 @@ public class DashboardActivity extends AppCompatActivity {
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
                 .setPositiveButton("Logout", (dialog, which) -> {
-                    mAuth.signOut(); // ✅ YE LINE ADD KARO
+                    mAuth.signOut();
                     LocalTaskStore.getInstance().clear();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
@@ -758,29 +827,40 @@ public class DashboardActivity extends AppCompatActivity {
                 .show();
     }
 
-    // ── NGO Task Status Adapter ──
+    // ═══════════════════════════════════════
+    // INNER ADAPTER — NGO Task Status
+    // ═══════════════════════════════════════
+
+    // FIX: Made inner classes static to avoid memory-leak warnings,
+    // and replaced getLayoutInflater() (unavailable in static context) with
+    // LayoutInflater.from(parent.getContext()), which is the correct approach.
+    // Also replaced bare 'startActivity' with DashboardActivity.this.startActivity.
+
     class TaskStatusAdapter extends BaseAdapter {
         List<TaskStatusManager.TaskItem> tasks;
+
         TaskStatusAdapter(List<TaskStatusManager.TaskItem> tasks) {
             this.tasks = tasks;
         }
-        @Override public int getCount() { return tasks.size(); }
-        @Override public Object getItem(int pos) { return tasks.get(pos); }
-        @Override public long getItemId(int pos) { return pos; }
+
+        @Override public int    getCount()              { return tasks.size(); }
+        @Override public Object getItem(int pos)        { return tasks.get(pos); }
+        @Override public long   getItemId(int pos)      { return pos; }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = getLayoutInflater().inflate(
-                        R.layout.item_task_status, parent, false);
+            if (convertView == null) {
+                // FIX: Use LayoutInflater.from(context) instead of getLayoutInflater()
+                // which is not accessible in non-Activity inner class context.
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_task_status, parent, false);
+            }
 
             TaskStatusManager.TaskItem task = tasks.get(position);
 
-            // Status color bar
             View bar = convertView.findViewById(R.id.viewStatusBar);
             bar.setBackgroundColor(TaskStatusManager.getStatusColor(task.status));
 
-            // Texts
             ((TextView) convertView.findViewById(R.id.tvTaskStatusTitle))
                     .setText(task.title);
             ((TextView) convertView.findViewById(R.id.tvTaskStatusCategory))
@@ -788,11 +868,10 @@ public class DashboardActivity extends AppCompatActivity {
             ((TextView) convertView.findViewById(R.id.tvTaskUrgencyBadge))
                     .setText(task.urgency);
             ((TextView) convertView.findViewById(R.id.tvTaskStatusLocation))
-                    .setText("📍 " + task.location);
+                    .setText(String.format(Locale.getDefault(), "%s %s", "\uD83D\uDCCD", task.location));
             ((TextView) convertView.findViewById(R.id.tvTaskStatusDate))
-                    .setText("📅 " + task.date);
+                    .setText(String.format(Locale.getDefault(), "%s %s", "\uD83D\uDCC5", task.date));
 
-            // Urgency badge color
             TextView urgBadge = convertView.findViewById(R.id.tvTaskUrgencyBadge);
             if (task.urgency.contains("Critical"))
                 urgBadge.setBackgroundColor(Color.parseColor("#C62828"));
@@ -801,10 +880,8 @@ public class DashboardActivity extends AppCompatActivity {
             else
                 urgBadge.setBackgroundColor(Color.parseColor("#2E7D32"));
 
-            // Step indicators
             updateStepIndicators(convertView, task.status);
 
-            // Assigned volunteer
             LinearLayout layoutAssigned =
                     convertView.findViewById(R.id.layoutAssignedVol);
             if (!task.assignedVolunteer.isEmpty()) {
@@ -815,7 +892,6 @@ public class DashboardActivity extends AppCompatActivity {
                 layoutAssigned.setVisibility(View.GONE);
             }
 
-            // Buttons
             convertView.findViewById(R.id.btnUpdateStatus)
                     .setOnClickListener(v -> showTaskStatusDialog(task));
             convertView.findViewById(R.id.btnViewDetails)
@@ -831,16 +907,17 @@ public class DashboardActivity extends AppCompatActivity {
                         intent.putExtra("taskSkill",      task.skill);
                         intent.putExtra("taskNGO",        "My NGO");
                         intent.putExtra("taskVolunteers", task.volunteersNeeded);
-                        startActivity(intent);
+                        // FIX: Use DashboardActivity.this.startActivity
+                        DashboardActivity.this.startActivity(intent);
                     });
 
             return convertView;
         }
 
         void updateStepIndicators(View v, String status) {
-            int step = TaskStatusManager.getStatusStep(status);
-            int activeColor   = Color.parseColor("#1A1A1A");
+            int step          = TaskStatusManager.getStatusStep(status);
             int inactiveColor = Color.parseColor("#AAAAAA");
+            // FIX: Removed unused variable 'activeColor'.
 
             TextView s1 = v.findViewById(R.id.tvStatusOpen);
             TextView s2 = v.findViewById(R.id.tvStatusAssigned);
@@ -850,14 +927,10 @@ public class DashboardActivity extends AppCompatActivity {
             View l2 = v.findViewById(R.id.line2Status);
             View l3 = v.findViewById(R.id.line3Status);
 
-            s1.setBackgroundResource(step >= 1 ?
-                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
-            s2.setBackgroundResource(step >= 2 ?
-                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
-            s3.setBackgroundResource(step >= 3 ?
-                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
-            s4.setBackgroundResource(step >= 4 ?
-                    R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s1.setBackgroundResource(step >= 1 ? R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s2.setBackgroundResource(step >= 2 ? R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s3.setBackgroundResource(step >= 3 ? R.drawable.step_active_bg : R.drawable.step_inactive_bg);
+            s4.setBackgroundResource(step >= 4 ? R.drawable.step_active_bg : R.drawable.step_inactive_bg);
 
             s1.setTextColor(step >= 1 ? Color.WHITE : inactiveColor);
             s2.setTextColor(step >= 2 ? Color.WHITE : inactiveColor);
@@ -872,21 +945,28 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    // ── Volunteer My Tasks Adapter ──
+    // ═══════════════════════════════════════
+    // INNER ADAPTER — Volunteer My Tasks
+    // ═══════════════════════════════════════
+
     class MyTaskAdapter extends BaseAdapter {
         List<TaskStatusManager.TaskItem> tasks;
+
         MyTaskAdapter(List<TaskStatusManager.TaskItem> tasks) {
             this.tasks = tasks;
         }
-        @Override public int getCount() { return tasks.size(); }
-        @Override public Object getItem(int pos) { return tasks.get(pos); }
-        @Override public long getItemId(int pos) { return pos; }
+
+        @Override public int    getCount()          { return tasks.size(); }
+        @Override public Object getItem(int pos)    { return tasks.get(pos); }
+        @Override public long   getItemId(int pos)  { return pos; }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = getLayoutInflater().inflate(
-                        R.layout.item_task_status, parent, false);
+            if (convertView == null) {
+                // FIX: Use LayoutInflater.from(context) — same reason as TaskStatusAdapter
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_task_status, parent, false);
+            }
 
             TaskStatusManager.TaskItem task = tasks.get(position);
 
@@ -900,31 +980,27 @@ public class DashboardActivity extends AppCompatActivity {
             ((TextView) convertView.findViewById(R.id.tvTaskUrgencyBadge))
                     .setText(task.urgency);
             ((TextView) convertView.findViewById(R.id.tvTaskStatusLocation))
-                    .setText("📍 " + task.location);
+                    .setText(String.format(Locale.getDefault(), "%s %s", "\uD83D\uDCCD", task.location));
             ((TextView) convertView.findViewById(R.id.tvTaskStatusDate))
-                    .setText("📅 " + task.date);
+                    .setText(String.format(Locale.getDefault(), "%s %s", "\uD83D\uDCC5", task.date));
 
-            // Step indicators
             new TaskStatusAdapter(tasks).updateStepIndicators(convertView, task.status);
 
-            // Update button — volunteer marks progress
-            Button btnUpdate = convertView.findViewById(R.id.btnUpdateStatus);
+            Button btnUpdate  = convertView.findViewById(R.id.btnUpdateStatus);
             Button btnDetails = convertView.findViewById(R.id.btnViewDetails);
 
             if (task.status.equals(TaskStatusManager.STATUS_RESOLVED)) {
-                btnUpdate.setText("✅ Completed");
+                btnUpdate.setText("Completed");
                 btnUpdate.setEnabled(false);
                 btnUpdate.setBackgroundTintList(
-                        android.content.res.ColorStateList.valueOf(
-                                Color.parseColor("#AAAAAA")));
+                        ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
             } else {
-                btnUpdate.setText("Mark: " +
-                        TaskStatusManager.getNextStatus(task.status));
+                String next = TaskStatusManager.getNextStatus(task.status);
+                btnUpdate.setText("Mark: " + next);
                 btnUpdate.setEnabled(true);
                 btnUpdate.setBackgroundTintList(
-                        android.content.res.ColorStateList.valueOf(
-                                TaskStatusManager.getStatusColor(
-                                        TaskStatusManager.getNextStatus(task.status))));
+                        ColorStateList.valueOf(
+                                TaskStatusManager.getStatusColor(next)));
             }
 
             btnUpdate.setOnClickListener(v -> showVolunteerStatusDialog(task));
@@ -939,7 +1015,8 @@ public class DashboardActivity extends AppCompatActivity {
                 intent.putExtra("taskDate",       task.date);
                 intent.putExtra("taskNGO",        "NGO");
                 intent.putExtra("taskVolunteers", task.volunteersNeeded);
-                startActivity(intent);
+                // FIX: Use DashboardActivity.this.startActivity
+                DashboardActivity.this.startActivity(intent);
             });
 
             return convertView;

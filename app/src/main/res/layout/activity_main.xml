@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp"
+        android:fitsSystemWindows="true"
         android:gravity="center_horizontal">
 
         <!-- Logo / App Name -->

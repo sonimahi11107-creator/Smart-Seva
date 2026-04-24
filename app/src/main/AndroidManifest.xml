@@ -10,6 +10,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <!-- Notification Permission (Android 13+) -->
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"/>
+
+
 
 
 
@@ -62,6 +67,14 @@
 
         <activity android:name=".MapViewActivity" android:exported="false"/>
 
+        <!-- FCM Service -->
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
     </application>
 
