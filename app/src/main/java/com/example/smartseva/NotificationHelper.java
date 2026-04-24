@@ -103,7 +103,11 @@ public class NotificationHelper {
 
             NotificationManagerCompat nm =
                     NotificationManagerCompat.from(context);
-            nm.notify(id, builder.build());
+            if (android.os.Build.VERSION.SDK_INT < 33 ||
+                    androidx.core.content.ContextCompat.checkSelfPermission(context,
+                            android.Manifest.permission.POST_NOTIFICATIONS) == 0) {
+                nm.notify(id, builder.build());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

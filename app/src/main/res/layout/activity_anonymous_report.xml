@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#1A1A1A"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="16dp">
+
+        <Button
+            android:id="@+id/btnBackReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Back"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1A1A1A"
+            android:textSize="13sp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒 Report Urgent Need"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your identity is protected"
+                android:textColor="#AAAAAA"
+                android:textSize="11sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Anonymous Badge -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#E8F5E9"
+                android:padding="12dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🛡️"
+                    android:textSize="24sp"
+                    android:layout_marginEnd="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Anonymous Mode Active"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#2E7D32"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your name and contact will not be shared with anyone."
+                        android:textSize="11sp"
+                        android:textColor="#555555"/>
+                </LinearLayout>
+
+                <!-- Toggle Anonymous -->
+                <Switch
+                    android:id="@+id/switchAnonymous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"/>
+            </LinearLayout>
+
+            <!-- Contact Info (shown when NOT anonymous) -->
+            <LinearLayout
+                android:id="@+id/layoutContactInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Your Contact (Optional)"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Name" android:textSize="12sp" android:textColor="#555"/>
+                <EditText android:id="@+id/etReporterName"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="Your name (optional)"
+                    android:inputType="textPersonName"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Phone" android:textSize="12sp" android:textColor="#555"/>
+                <EditText android:id="@+id/etReporterPhone"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="Your phone (optional)"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:layout_marginBottom="4dp"/>
+            </LinearLayout>
+
+            <!-- Report Form -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="What is the urgent need? *"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Summary -->
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Short Summary *" android:textSize="12sp" android:textColor="#555"/>
+                <EditText android:id="@+id/etNeedSummary"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="e.g. Families need food urgently"
+                    android:inputType="text"
+                    android:layout_marginBottom="4dp"/>
+                <TextView android:id="@+id/errNeedSummary"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="#E24B4A" android:textSize="11sp"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Category -->
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Category *" android:textSize="12sp" android:textColor="#555"/>
+                <Spinner android:id="@+id/spinnerNeedCategory"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Urgency Level 1-5 -->
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Urgency Level *" android:textSize="12sp" android:textColor="#555"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <Button android:id="@+id/btnUrgency1"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1" android:text="1"
+                        android:textSize="13sp" android:backgroundTint="#E0E0E0"
+                        android:textColor="#1A1A1A" android:layout_marginEnd="4dp"/>
+                    <Button android:id="@+id/btnUrgency2"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1" android:text="2"
+                        android:textSize="13sp" android:backgroundTint="#E0E0E0"
+                        android:textColor="#1A1A1A" android:layout_marginEnd="4dp"/>
+                    <Button android:id="@+id/btnUrgency3"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1" android:text="3"
+                        android:textSize="13sp" android:backgroundTint="#E0E0E0"
+                        android:textColor="#1A1A1A" android:layout_marginEnd="4dp"/>
+                    <Button android:id="@+id/btnUrgency4"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1" android:text="4"
+                        android:textSize="13sp" android:backgroundTint="#E0E0E0"
+                        android:textColor="#1A1A1A" android:layout_marginEnd="4dp"/>
+                    <Button android:id="@+id/btnUrgency5"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1" android:text="5"
+                        android:textSize="13sp" android:backgroundTint="#E0E0E0"
+                        android:textColor="#1A1A1A"/>
+                </LinearLayout>
+
+                <TextView android:id="@+id/tvUrgencyLabel"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Select urgency level (1=Low, 5=Critical)"
+                    android:textSize="11sp" android:textColor="#888"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Full Description -->
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Full Description *" android:textSize="12sp" android:textColor="#555"/>
+                <EditText android:id="@+id/etNeedDescription"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="Describe the situation in detail. How many people affected? What exactly is needed?"
+                    android:inputType="textMultiLine"
+                    android:minLines="4"
+                    android:gravity="top"
+                    android:layout_marginBottom="4dp"/>
+                <TextView android:id="@+id/errNeedDescription"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="#E24B4A" android:textSize="11sp"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- People Affected -->
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="People Affected" android:textSize="12sp" android:textColor="#555"/>
+                <EditText android:id="@+id/etPeopleAffected"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="e.g. 50 families, 200 people"
+                    android:inputType="text"
+                    android:layout_marginBottom="12dp"/>
+            </LinearLayout>
+
+            <!-- Location -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Location"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="12dp"/>
+
+                <EditText android:id="@+id/etNeedLocation"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="Area, Street, City"
+                    android:inputType="text"
+                    android:layout_marginBottom="4dp"/>
+                <TextView android:id="@+id/errNeedLocation"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="#E24B4A" android:textSize="11sp"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button android:id="@+id/btnDetectLocation"
+                    android:layout_width="match_parent" android:layout_height="44dp"
+                    android:text="📡 Use My Current Location"
+                    android:backgroundTint="#1565C0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <!-- Photo Evidence -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📷 Photo Evidence (Optional)"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Adding a photo helps NGOs understand the situation better."
+                    android:textSize="12sp"
+                    android:textColor="#888"
+                    android:layout_marginBottom="12dp"/>
+
+                <ImageView android:id="@+id/imgEvidencePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/photo_placeholder_bg"
+                    android:src="@drawable/ic_add_photo"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone"/>
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button android:id="@+id/btnCaptureEvidence"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="📷 Camera"
+                        android:backgroundTint="#1A1A1A"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button android:id="@+id/btnGalleryEvidence"
+                        android:layout_width="0dp" android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="🖼️ Gallery"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Submit Button -->
+            <Button android:id="@+id/btnSubmitReport"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="🚨 Submit Report"
+                android:backgroundTint="#C62828"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🔒 Your report is secure. NGOs will respond within 24 hours for critical needs."
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:gravity="center"
+                android:layout_marginBottom="32dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

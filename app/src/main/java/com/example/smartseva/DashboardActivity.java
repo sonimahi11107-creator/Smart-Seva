@@ -195,6 +195,7 @@ public class DashboardActivity extends AppCompatActivity {
         btnNavProfile.setOnClickListener(v -> showVolunteerPanel("profile"));
         btnNavImpact.setOnClickListener(v -> showVolunteerPanel("impact"));
 
+
         // Role from Intent
         String role = getIntent().getStringExtra("role");
         if (role != null) userRole = role;
@@ -220,8 +221,18 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnMapView).setOnClickListener(v ->
                 startActivity(new Intent(this, MapViewActivity.class)));
 
+
         findViewById(R.id.btnMapViewVol).setOnClickListener(v ->
                 startActivity(new Intent(this, MapViewActivity.class)));
+
+        findViewById(R.id.btnAnonymousReport).setOnClickListener(v ->
+                startActivity(new Intent(this, AnonymousReportActivity.class)));
+
+        findViewById(R.id.btnAnonymousReportVol).setOnClickListener(v ->
+                startActivity(new Intent(this, AnonymousReportActivity.class)));
+
+        findViewById(R.id.btnOperationsCenter).setOnClickListener(v ->
+                startActivity(new Intent(this, OperationsCenterActivity.class)));
 
         // LocalTaskStore se tasks show
         List<LocalTaskStore.LocalTask> savedTasks = LocalTaskStore.getInstance().getTasks();
