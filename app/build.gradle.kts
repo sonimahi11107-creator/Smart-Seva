@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -31,10 +30,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    kotlinOptions {
-        jvmTarget = "11"
-    }
 }
 
 dependencies {
@@ -43,32 +38,23 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+        // CameraX
+        implementation("androidx.camera:camera-core:1.3.4")
+        implementation("androidx.camera:camera-camera2:1.3.4")
+        implementation("androidx.camera:camera-lifecycle:1.3.4")
+        implementation("androidx.camera:camera-view:1.3.4")
+
+        // ML Kit
+        implementation("com.google.mlkit:text-recognition:16.0.1")
+        implementation("com.google.mlkit:text-recognition-devanagari:16.0.1")
+
+    // Firebase (single BOM — no duplicates)
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
-
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
-
-    // Credentials and Auth
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
-
-    //ML Kit
-    implementation("com.google.mlkit:text-recognition:16.0.1")
-    implementation("com.google.mlkit:text-recognition-devanagari:16.0.1")
-
-    // CameraX — real-time camera
-    implementation("androidx.camera:camera-core:1.3.0")
-    implementation("androidx.camera:camera-camera2:1.3.0")
-    implementation("androidx.camera:camera-lifecycle:1.3.0")
-    implementation("androidx.camera:camera-view:1.3.0")
-    implementation("androidx.camera:camera-mlkit-vision:1.3.0")
-
+    implementation("com.google.guava:guava:32.1.3-android")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

@@ -13,6 +13,11 @@ import android.webkit.WebViewClient;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TaskDetailActivity extends AppCompatActivity {
 
@@ -25,19 +30,24 @@ public class TaskDetailActivity extends AppCompatActivity {
     Button btnBack, btnOpenFullMap, btnApply;
     LinearLayout layoutAlreadyApplied, layoutApplyBar;
 
-    // Task Data (Intent se aayega)
-    String taskTitle, taskDesc, taskCategory, taskUrgency;
+    // Task Data
+    String taskId, taskTitle, taskDesc, taskCategory, taskUrgency;
     String taskDate, taskLocation, taskNGO, taskSkill;
     int taskVolunteers;
     boolean alreadyApplied = false;
 
-    // Notification
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
+
     private static final String CHANNEL_ID = "smart_seva_channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
+
+        mAuth = FirebaseAuth.getInstance();
+        db    = FirebaseFirestore.getInstance();
 
         // ── Views ──
         imgTaskDetail      = findViewById(R.id.imgTaskDetail);
@@ -57,8 +67,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         layoutAlreadyApplied = findViewById(R.id.layoutAlreadyApplied);
         layoutApplyBar     = findViewById(R.id.layoutApplyBar);
 
-        // ── Get Intent Data ──
-        Intent intent = getIntent();
+        // ── Intent Data ──
+        Intent intent  = getIntent();
+        taskId         = intent.getStringExtra("taskId");
         taskTitle      = intent.getStringExtra("taskTitle");
         taskDesc       = intent.getStringExtra("taskDesc");
         taskCategory   = intent.getStringExtra("taskCategory");
@@ -70,25 +81,94 @@ public class TaskDetailActivity extends AppCompatActivity {
         taskVolunteers = intent.getIntExtra("taskVolunteers", 1);
         alreadyApplied = intent.getBooleanExtra("alreadyApplied", false);
 
-        // ── Populate UI ──
         populateUI();
-
-        // ── Map ──
         setupMap();
-
-        // ── Listeners ──
-        btnBack.setOnClickListener(v -> finish());
-
-        btnOpenFullMap.setOnClickListener(v -> openInGoogleMaps());
-
-        btnApply.setOnClickListener(v -> applyForTask());
-
-        // ── Notification Channel ──
         createNotificationChannel();
+
+        // ✅ Check if already applied from Firestore
+        checkIfAlreadyApplied();
+
+        btnBack.setOnClickListener(v -> finish());
+        btnOpenFullMap.setOnClickListener(v -> openInGoogleMaps());
+        btnApply.setOnClickListener(v -> applyForTask());
     }
 
     // ═══════════════════════════════════════
-    // POPULATE UI
+    // FIREBASE — Check existing application
+    // ═══════════════════════════════════════
+
+    void checkIfAlreadyApplied() {
+        if (taskId == null || mAuth.getCurrentUser() == null) return;
+
+        String volunteerId = mAuth.getCurrentUser().getUid();
+
+        db.collection("applications")
+                .whereEqualTo("taskId",      taskId)
+                .whereEqualTo("volunteerId", volunteerId)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    if (!snap.isEmpty()) {
+                        alreadyApplied = true;
+                        setAppliedUI();
+                    }
+                });
+    }
+
+    // ═══════════════════════════════════════
+    // FIREBASE — Apply for task
+    // ═══════════════════════════════════════
+
+    void applyForTask() {
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Apply for Task")
+                .setMessage("Do you want to apply for:\n\n\""
+                        + taskTitle + "\"?\n\n📍 "
+                        + taskLocation + "\n📅 " + taskDate)
+                .setPositiveButton("Yes, Apply!", (dialog, which) -> {
+
+                    String volunteerId = mAuth.getCurrentUser().getUid();
+
+                    // ✅ Save application to Firestore
+                    Map<String, Object> application = new HashMap<>();
+                    application.put("taskId",      taskId);
+                    application.put("taskTitle",   taskTitle);
+                    application.put("taskLocation",taskLocation);
+                    application.put("taskCategory",taskCategory);
+                    application.put("volunteerId", volunteerId);
+                    application.put("ngoId",       taskNGO);
+                    application.put("status",      "Pending");
+                    application.put("appliedAt",   FieldValue.serverTimestamp());
+
+                    db.collection("applications")
+                            .add(application)
+                            .addOnSuccessListener(ref -> {
+                                // ✅ Show notification
+                                showLocalNotification();
+
+                                // ✅ Update UI
+                                alreadyApplied = true;
+                                setAppliedUI();
+
+                                Toast.makeText(this,
+                                        "Applied successfully! NGO will contact you. 🎉",
+                                        Toast.LENGTH_LONG).show();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this,
+                                            "Failed to apply: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // ═══════════════════════════════════════
+    // UI HELPERS
     // ═══════════════════════════════════════
 
     void populateUI() {
@@ -99,9 +179,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         tvDetailDate.setText(taskDate != null ? taskDate : "—");
         tvDetailVolunteers.setText(taskVolunteers + " needed");
         tvDetailNGO.setText(taskNGO != null ? taskNGO : "—");
-        tvDetailLocation.setText("📍 " + (taskLocation != null ? taskLocation : "Location not specified"));
+        tvDetailLocation.setText("📍 " + (taskLocation != null
+                ? taskLocation : "Location not specified"));
 
-        // Urgency Badge
         if (taskUrgency != null) {
             tvUrgencyBadge.setText(taskUrgency);
             if (taskUrgency.contains("Critical")) {
@@ -113,18 +193,20 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         }
 
-        // Already applied check
-        if (alreadyApplied) {
-            layoutAlreadyApplied.setVisibility(android.view.View.VISIBLE);
-            btnApply.setText("Applied ✅");
-            btnApply.setEnabled(false);
-            btnApply.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
-        }
+        if (alreadyApplied) setAppliedUI();
+    }
+
+    void setAppliedUI() {
+        layoutAlreadyApplied.setVisibility(android.view.View.VISIBLE);
+        btnApply.setText("Applied ✅");
+        btnApply.setEnabled(false);
+        btnApply.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(
+                        Color.parseColor("#AAAAAA")));
     }
 
     // ═══════════════════════════════════════
-    // MAP SETUP
+    // MAP SETUP (unchanged)
     // ═══════════════════════════════════════
 
     void setupMap() {
@@ -134,7 +216,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         settings.setUseWideViewPort(true);
         webViewMap.setWebViewClient(new WebViewClient());
 
-        // OpenStreetMap (free, no API key needed)
         String location = taskLocation != null ? taskLocation : "Raipur, Chhattisgarh";
         String encodedLocation = Uri.encode(location);
 
@@ -155,12 +236,15 @@ public class TaskDetailActivity extends AppCompatActivity {
                 "    var map=L.map('map').setView([lat,lon],14);" +
                 "    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);" +
                 "    L.marker([lat,lon]).addTo(map)" +
-                "     .bindPopup('<b>" + (taskTitle != null ? taskTitle.replace("'", "\\'") : "Task") + "</b><br>" +
-                (taskLocation != null ? taskLocation.replace("'", "\\'") : "Location") + "')" +
+                "     .bindPopup('<b>" +
+                (taskTitle != null ? taskTitle.replace("'", "\\'") : "Task") +
+                "</b><br>" +
+                (taskLocation != null ? taskLocation.replace("'", "\\'") : "Location") +
+                "')" +
                 "     .openPopup();" +
                 "  } else {" +
                 "    document.getElementById('map').innerHTML=" +
-                "    '<p style=text-align:center;padding:20px>Location not found on map</p>';" +
+                "    '<p style=text-align:center;padding:20px>Location not found</p>';" +
                 "  }" +
                 "})" +
                 ".catch(e=>{" +
@@ -172,10 +256,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         webViewMap.loadDataWithBaseURL(null, mapHtml, "text/html", "UTF-8", null);
     }
 
-    // ═══════════════════════════════════════
-    // OPEN IN GOOGLE MAPS
-    // ═══════════════════════════════════════
-
     void openInGoogleMaps() {
         String location = taskLocation != null ? taskLocation : "Raipur";
         Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(location));
@@ -184,47 +264,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(mapIntent);
         } else {
-            // Google Maps nahi hai toh browser mein kholo
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.google.com/maps/search/?api=1&query=" + Uri.encode(location)));
-            startActivity(browserIntent);
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://www.google.com/maps/search/?api=1&query="
+                            + Uri.encode(location))));
         }
     }
 
     // ═══════════════════════════════════════
-    // APPLY FOR TASK
-    // ═══════════════════════════════════════
-
-    void applyForTask() {
-        new android.app.AlertDialog.Builder(this)
-                .setTitle("Apply for Task")
-                .setMessage("Do you want to apply for:\n\n\"" + taskTitle + "\"?\n\n" +
-                        "📍 " + taskLocation + "\n📅 " + taskDate)
-                .setPositiveButton("Yes, Apply!", (dialog, which) -> {
-                    // ✅ Firebase teammate yahan Firestore mein application store karega
-                    // aur NGO ko FCM notification bhejega
-
-                    // Local notification show karo
-                    showLocalNotification();
-
-                    // UI update
-                    alreadyApplied = true;
-                    layoutAlreadyApplied.setVisibility(android.view.View.VISIBLE);
-                    btnApply.setText("Applied ✅");
-                    btnApply.setEnabled(false);
-                    btnApply.setBackgroundTintList(
-                            android.content.res.ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
-
-                    Toast.makeText(this,
-                            "Applied successfully! NGO will contact you. 🎉",
-                            Toast.LENGTH_LONG).show();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    // ═══════════════════════════════════════
-    // NOTIFICATION
+    // NOTIFICATION (unchanged)
     // ═══════════════════════════════════════
 
     void createNotificationChannel() {
@@ -240,20 +287,21 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     void showLocalNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Application Submitted! ✅")
-                .setContentText("You applied for: " + taskTitle)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("You applied for \"" + taskTitle + "\" at " + taskLocation +
-                                ".\n\nThe NGO will review your application and contact you soon."))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .setContentTitle("Application Submitted! ✅")
+                        .setContentText("You applied for: " + taskTitle)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText("You applied for \"" + taskTitle
+                                        + "\" at " + taskLocation
+                                        + ".\n\nThe NGO will review your application soon."))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true);
 
-        NotificationManager manager =
-                (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-        if (manager != null) {
+        NotificationManager manager = (NotificationManager)
+                getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+        if (manager != null)
             manager.notify((int) System.currentTimeMillis(), builder.build());
-        }
     }
 }

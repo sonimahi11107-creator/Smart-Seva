@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import java.util.*;
 
 public class SmartMatchActivity extends AppCompatActivity {
@@ -15,14 +16,13 @@ public class SmartMatchActivity extends AppCompatActivity {
     TextView tvTotalMatches, tvExcellentMatches, tvGoodMatches;
     Button btnBackMatch, btnMatchAll, btnMatchExcellent, btnMatchGood;
     ListView listMatchResults;
+    ProgressBar progressLoading;
 
-    String mode;
-    String taskTitle, taskSkill, taskLocation, taskUrgency;
-    String volSkills, volCity, volAvailability;
+    String mode, taskTitle, taskSkill, taskLocation, taskUrgency;
 
-    List<SmartMatcher.MatchResult> volResults = new ArrayList<>();
-    List<SmartMatcher.MatchResult> filteredVolResults = new ArrayList<>();
-    List<SmartMatcher.TaskMatchResult> taskResults = new ArrayList<>();
+    List<SmartMatcher.MatchResult>     volResults          = new ArrayList<>();
+    List<SmartMatcher.MatchResult>     filteredVolResults  = new ArrayList<>();
+    List<SmartMatcher.TaskMatchResult> taskResults         = new ArrayList<>();
     List<SmartMatcher.TaskMatchResult> filteredTaskResults = new ArrayList<>();
 
     @Override
@@ -40,52 +40,83 @@ public class SmartMatchActivity extends AppCompatActivity {
         btnMatchExcellent  = findViewById(R.id.btnMatchExcellent);
         btnMatchGood       = findViewById(R.id.btnMatchGood);
         listMatchResults   = findViewById(R.id.listMatchResults);
+        progressLoading    = findViewById(R.id.progressLoading); // add in XML
 
-        mode            = getIntent().getStringExtra("mode");
-        taskTitle       = getIntent().getStringExtra("taskTitle");
-        taskSkill       = getIntent().getStringExtra("taskSkill");
-        taskLocation    = getIntent().getStringExtra("taskLocation");
-        taskUrgency     = getIntent().getStringExtra("taskUrgency");
-        volSkills       = getIntent().getStringExtra("volSkills");
-        volCity         = getIntent().getStringExtra("volCity");
-        volAvailability = getIntent().getStringExtra("volAvailability");
+        mode         = getIntent().getStringExtra("mode");
+        taskTitle    = getIntent().getStringExtra("taskTitle");
+        taskSkill    = getIntent().getStringExtra("taskSkill");
+        taskLocation = getIntent().getStringExtra("taskLocation");
+        taskUrgency  = getIntent().getStringExtra("taskUrgency");
 
         if (mode == null) mode = "Volunteer";
 
-        if (mode.equals("NGO")) setupNGOMode();
-        else setupVolunteerMode();
-
         btnBackMatch.setOnClickListener(v -> finish());
-        btnMatchAll.setOnClickListener(v -> { filterResults("all"); setTabActive(btnMatchAll); });
-        btnMatchExcellent.setOnClickListener(v -> { filterResults("Excellent Match"); setTabActive(btnMatchExcellent); });
-        btnMatchGood.setOnClickListener(v -> { filterResults("Good Match"); setTabActive(btnMatchGood); });
+        btnMatchAll.setOnClickListener(v -> {
+            filterResults("all");
+            setTabActive(btnMatchAll);
+        });
+        btnMatchExcellent.setOnClickListener(v -> {
+            filterResults("Excellent Match");
+            setTabActive(btnMatchExcellent);
+        });
+        btnMatchGood.setOnClickListener(v -> {
+            filterResults("Good Match");
+            setTabActive(btnMatchGood);
+        });
+
+        setTabActive(btnMatchAll);
+
+        // ✅ Load real data from Firebase
+        if (mode.equals("NGO")) {
+            setupNGOMode();
+        } else {
+            setupVolunteerMode();
+        }
     }
 
     // ═══════════════════════════════════════
-    // NGO MODE
+    // NGO MODE — fetch real volunteers
     // ═══════════════════════════════════════
 
     void setupNGOMode() {
         tvMatchTitle.setText("🧠 Smart Matching");
-        tvMatchSubtitle.setText("📡 Fetching locations...");
+        tvMatchSubtitle.setText("📡 Finding best volunteers...");
+        setLoading(true);
 
-        List<SmartMatcher.MatchResult> volunteers = new ArrayList<>();
-        volunteers.add(new SmartMatcher.MatchResult("Amit Sahu",    "Raipur, CG",   "Medical Help, Food Distribution", "Weekdays", 2));
-        volunteers.add(new SmartMatcher.MatchResult("Priya Sharma", "Raipur, CG",   "Teaching, Medical Help",          "Weekends", 2));
-        volunteers.add(new SmartMatcher.MatchResult("Rahul Verma",  "Bilaspur, CG", "Food Distribution, Event Management", "Both", 1));
-        volunteers.add(new SmartMatcher.MatchResult("Anjali Patel", "Durg, CG",     "Social Media, Fundraising",       "Weekdays", 3));
-        volunteers.add(new SmartMatcher.MatchResult("Sonu Kumar",   "Korba, CG",    "Technical, Event Management",     "Weekends", 0));
-        volunteers.add(new SmartMatcher.MatchResult("Deepika Singh","Jagdalpur, CG","Teaching, Social Media",          "Both",     1));
+        String skill    = taskSkill    != null ? taskSkill    : "Any Skill";
+        String location = taskLocation != null ? taskLocation : "";
+        String urgency  = taskUrgency  != null ? taskUrgency  : "Normal";
 
-        boolean isUrgent = taskUrgency != null && taskUrgency.contains("Critical");
-        String taskLoc   = taskLocation != null ? taskLocation : "Raipur";
+        SmartMatcher.fetchAndMatchVolunteers(skill, location, urgency,
+                new SmartMatcher.VolunteerMatchCallback() {
+                    @Override
+                    public void onResult(List<SmartMatcher.MatchResult> results) {
+                        setLoading(false);
 
-        geocodeAndMatch(taskLoc, volunteers, isUrgent);
+                        if (results.isEmpty()) {
+                            tvMatchSubtitle.setText("No volunteers found yet.");
+                            return;
+                        }
+
+                        // Run GPS geocoding in background
+                        geocodeAndMatch(location, results,
+                                urgency.contains("Critical"));
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        setLoading(false);
+                        Toast.makeText(SmartMatchActivity.this,
+                                "Error: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     void geocodeAndMatch(String taskLoc,
                          List<SmartMatcher.MatchResult> volunteers,
                          boolean isUrgent) {
+        tvMatchSubtitle.setText("📡 Calculating distances...");
+
         new Thread(() -> {
             double[] taskCoords = geocodeLocation(taskLoc);
 
@@ -99,14 +130,15 @@ public class SmartMatchActivity extends AppCompatActivity {
                     vol.distanceText = String.format("%.0f km away", distKm);
 
                     if (isUrgent && distKm > 100) {
-                        vol.matchScore   = 0;
-                        vol.matchLabel   = "Too Far";
-                        vol.matchReason  = "⚠️ Urgent task — " +
-                                String.format("%.0f", distKm) + "km away (max 100km)";
+                        vol.matchScore  = 0;
+                        vol.matchLabel  = "Too Far";
+                        vol.matchReason = "⚠️ Urgent task — "
+                                + String.format("%.0f", distKm)
+                                + "km away (max 100km)";
                         vol.locationScore = 0;
                     } else {
-                        vol.locationScore = SmartMatcher
-                                .getLocationScoreFromDistance(distKm);
+                        vol.locationScore =
+                                SmartMatcher.getLocationScoreFromDistance(distKm);
                     }
                 } else {
                     vol.locationScore = 10;
@@ -128,12 +160,72 @@ public class SmartMatchActivity extends AppCompatActivity {
         }).start();
     }
 
+    // ═══════════════════════════════════════
+    // VOLUNTEER MODE — fetch real tasks
+    // ═══════════════════════════════════════
+
+    void setupVolunteerMode() {
+        tvMatchTitle.setText("🧠 Smart Matching");
+        tvMatchSubtitle.setText("📡 Finding best tasks for you...");
+        setLoading(true);
+
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser() != null
+                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                : "";
+
+        if (currentUid.isEmpty()) {
+            setLoading(false);
+            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SmartMatcher.fetchAndMatchTasks(currentUid,
+                new SmartMatcher.TaskMatchCallback() {
+                    @Override
+                    public void onResult(List<SmartMatcher.TaskMatchResult> results) {
+                        setLoading(false);
+                        taskResults         = results;
+                        filteredTaskResults = new ArrayList<>(taskResults);
+                        tvMatchSubtitle.setText("Best tasks matching your profile");
+                        updateSummary();
+                        listMatchResults.setAdapter(new TaskMatchAdapter());
+
+                        listMatchResults.setOnItemClickListener((parent, view, pos, id) -> {
+                            if (pos >= filteredTaskResults.size()) return;
+                            SmartMatcher.TaskMatchResult task = filteredTaskResults.get(pos);
+                            Intent intent = new Intent(SmartMatchActivity.this,
+                                    TaskDetailActivity.class);
+                            intent.putExtra("taskId",       task.taskId);
+                            intent.putExtra("taskTitle",    task.taskTitle);
+                            intent.putExtra("taskLocation", task.taskLocation);
+                            intent.putExtra("taskCategory", task.taskCategory);
+                            intent.putExtra("taskUrgency",  task.taskUrgency);
+                            intent.putExtra("taskSkill",    task.taskSkill);
+                            intent.putExtra("taskDate",     task.taskDate);
+                            intent.putExtra("taskNGO",      task.ngoId);
+                            intent.putExtra("taskDesc",     "This task matches your skills!");
+                            startActivity(intent);
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        setLoading(false);
+                        Toast.makeText(SmartMatchActivity.this,
+                                "Error: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    // ═══════════════════════════════════════
+    // GEOCODING (unchanged)
+    // ═══════════════════════════════════════
+
     double[] geocodeLocation(String locationName) {
         try {
             String encoded = android.net.Uri.encode(locationName);
-            String url = "https://nominatim.openstreetmap.org/search?q=" +
-                    encoded + "&format=json&limit=1";
-
+            String url = "https://nominatim.openstreetmap.org/search?q="
+                    + encoded + "&format=json&limit=1";
             java.net.URL obj = new java.net.URL(url);
             java.net.HttpURLConnection con =
                     (java.net.HttpURLConnection) obj.openConnection();
@@ -141,73 +233,25 @@ public class SmartMatchActivity extends AppCompatActivity {
             con.setRequestProperty("User-Agent", "SmartSeva-App");
             con.setConnectTimeout(5000);
             con.setReadTimeout(5000);
-
             java.io.BufferedReader in = new java.io.BufferedReader(
                     new java.io.InputStreamReader(con.getInputStream()));
             StringBuilder response = new StringBuilder();
             String line;
             while ((line = in.readLine()) != null) response.append(line);
             in.close();
-
             String json = response.toString();
             if (json.equals("[]")) return null;
-
             int latIdx = json.indexOf("\"lat\":\"") + 7;
             int latEnd = json.indexOf("\"", latIdx);
             int lonIdx = json.indexOf("\"lon\":\"") + 7;
             int lonEnd = json.indexOf("\"", lonIdx);
-
             if (latIdx < 7 || lonIdx < 7) return null;
-
             double lat = Double.parseDouble(json.substring(latIdx, latEnd));
             double lon = Double.parseDouble(json.substring(lonIdx, lonEnd));
             return new double[]{lat, lon};
-
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
-    }
-
-    // ═══════════════════════════════════════
-    // VOLUNTEER MODE
-    // ═══════════════════════════════════════
-
-    void setupVolunteerMode() {
-        tvMatchTitle.setText("🧠 Smart Matching");
-        tvMatchSubtitle.setText("Best tasks for your skills");
-
-        List<SmartMatcher.TaskMatchResult> tasks = new ArrayList<>();
-        tasks.add(new SmartMatcher.TaskMatchResult("Food Distribution Drive",     "Raipur, CG",   "Food Distribution", "🔴 Critical (24 hrs)", "Food Distribution", "20/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult("Free Medical Camp",            "Raipur, CG",   "Medical Help",      "🟡 Moderate (1 week)", "Medical Help",      "25/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult("Tree Plantation Drive",        "Bilaspur, CG", "Environment",       "🟢 Normal",            "Any Skill",         "30/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult("Teaching Underprivileged Kids","Raipur, CG",   "Education",         "🟡 Moderate (1 week)", "Teaching",          "22/04/2026"));
-        tasks.add(new SmartMatcher.TaskMatchResult("Social Media Campaign",        "Durg, CG",     "Awareness",         "🟢 Normal",            "Social Media",      "28/04/2026"));
-
-        taskResults = SmartMatcher.matchTasksForVolunteer(
-                volSkills       != null ? volSkills       : "Teaching",
-                volCity         != null ? volCity         : "Raipur",
-                volAvailability != null ? volAvailability : "Weekends",
-                tasks);
-
-        filteredTaskResults = new ArrayList<>(taskResults);
-        updateSummary();
-        listMatchResults.setAdapter(new TaskMatchAdapter());
-
-        listMatchResults.setOnItemClickListener((parent, view, position, id) -> {
-            SmartMatcher.TaskMatchResult task = filteredTaskResults.get(position);
-            Intent intent = new Intent(this, TaskDetailActivity.class);
-            intent.putExtra("taskTitle",      task.taskTitle);
-            intent.putExtra("taskLocation",   task.taskLocation);
-            intent.putExtra("taskCategory",   task.taskCategory);
-            intent.putExtra("taskUrgency",    task.taskUrgency);
-            intent.putExtra("taskSkill",      task.taskSkill);
-            intent.putExtra("taskDate",       task.taskDate);
-            intent.putExtra("taskDesc",       "This task matches your skills and location!");
-            intent.putExtra("taskNGO",        "Smart Seva NGO");
-            intent.putExtra("taskVolunteers", 5);
-            startActivity(intent);
-        });
     }
 
     // ═══════════════════════════════════════
@@ -236,9 +280,9 @@ public class SmartMatchActivity extends AppCompatActivity {
         List<?> results = mode.equals("NGO") ? volResults : taskResults;
         int total = results.size(), excellent = 0, good = 0;
         for (Object r : results) {
-            String label = mode.equals("NGO") ?
-                    ((SmartMatcher.MatchResult) r).matchLabel :
-                    ((SmartMatcher.TaskMatchResult) r).matchLabel;
+            String label = mode.equals("NGO")
+                    ? ((SmartMatcher.MatchResult) r).matchLabel
+                    : ((SmartMatcher.TaskMatchResult) r).matchLabel;
             if ("Excellent Match".equals(label)) excellent++;
             else if ("Good Match".equals(label)) good++;
         }
@@ -247,13 +291,19 @@ public class SmartMatchActivity extends AppCompatActivity {
         tvGoodMatches.setText(String.valueOf(good));
     }
 
+    void setLoading(boolean loading) {
+        progressLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
+        listMatchResults.setVisibility(loading ? View.GONE : View.VISIBLE);
+    }
+
     void setTabActive(Button active) {
         Button[] tabs = {btnMatchAll, btnMatchExcellent, btnMatchGood};
         for (Button b : tabs) {
             b.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
             b.setTextColor(Color.parseColor("#888888"));
         }
-        active.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1A1A1A")));
+        active.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor("#1A1A1A")));
         active.setTextColor(Color.WHITE);
     }
 
@@ -270,16 +320,15 @@ public class SmartMatchActivity extends AppCompatActivity {
     // ═══════════════════════════════════════
 
     class VolunteerMatchAdapter extends BaseAdapter {
-        @Override public int getCount() { return filteredVolResults.size(); }
-        @Override public Object getItem(int pos) { return filteredVolResults.get(pos); }
-        @Override public long getItemId(int pos) { return pos; }
+        @Override public int getCount()            { return filteredVolResults.size(); }
+        @Override public Object getItem(int pos)   { return filteredVolResults.get(pos); }
+        @Override public long getItemId(int pos)   { return pos; }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
                 convertView = getLayoutInflater().inflate(
                         R.layout.item_match_result, parent, false);
-
             SmartMatcher.MatchResult vol = filteredVolResults.get(position);
             bindView(convertView, vol.matchScore, vol.name,
                     "📍 " + vol.city, "🛠️ " + vol.skills,
@@ -290,16 +339,15 @@ public class SmartMatchActivity extends AppCompatActivity {
     }
 
     class TaskMatchAdapter extends BaseAdapter {
-        @Override public int getCount() { return filteredTaskResults.size(); }
-        @Override public Object getItem(int pos) { return filteredTaskResults.get(pos); }
-        @Override public long getItemId(int pos) { return pos; }
+        @Override public int getCount()            { return filteredTaskResults.size(); }
+        @Override public Object getItem(int pos)   { return filteredTaskResults.get(pos); }
+        @Override public long getItemId(int pos)   { return pos; }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
                 convertView = getLayoutInflater().inflate(
                         R.layout.item_match_result, parent, false);
-
             SmartMatcher.TaskMatchResult task = filteredTaskResults.get(position);
             bindView(convertView, task.matchScore, task.taskTitle,
                     "📍 " + task.taskLocation,
@@ -330,7 +378,6 @@ public class SmartMatchActivity extends AppCompatActivity {
         tvName.setText(name);
         tvCity.setText(city);
 
-        // Distance
         if (distanceText != null && !distanceText.isEmpty()) {
             tvDist.setVisibility(View.VISIBLE);
             tvDist.setText("📏 " + distanceText);
@@ -350,7 +397,6 @@ public class SmartMatchActivity extends AppCompatActivity {
         tvLabel.setBackgroundColor(color);
         prog.setProgressTintList(ColorStateList.valueOf(color));
 
-        // ── Button click ──
         btnAction.setTag(position);
         btnAction.setOnClickListener(btn -> {
             int pos = (int) btn.getTag();
@@ -359,32 +405,27 @@ public class SmartMatchActivity extends AppCompatActivity {
                 SmartMatcher.MatchResult vol = filteredVolResults.get(pos);
                 Intent intent = new Intent(SmartMatchActivity.this,
                         VolunteerProfileActivity.class);
+                intent.putExtra("volunteerId",  vol.volunteerId); // ✅ real ID
                 intent.putExtra("name",         vol.name);
                 intent.putExtra("city",         vol.city);
                 intent.putExtra("skills",       vol.skills);
                 intent.putExtra("availability", vol.availability);
                 intent.putExtra("experience",   vol.experience);
-                intent.putExtra("status",       "Pending");
-                intent.putExtra("languages",    "Hindi, English");
-                intent.putExtra("vehicle",      "Yes");
-                intent.putExtra("travel",       "Yes");
-                intent.putExtra("causes",       "Education, Health");
-                intent.putExtra("idType",       "Aadhaar Card");
                 startActivity(intent);
             } else {
                 if (pos >= filteredTaskResults.size()) return;
                 SmartMatcher.TaskMatchResult task = filteredTaskResults.get(pos);
                 Intent intent = new Intent(SmartMatchActivity.this,
                         TaskDetailActivity.class);
-                intent.putExtra("taskTitle",      task.taskTitle);
-                intent.putExtra("taskLocation",   task.taskLocation);
-                intent.putExtra("taskCategory",   task.taskCategory);
-                intent.putExtra("taskUrgency",    task.taskUrgency);
-                intent.putExtra("taskSkill",      task.taskSkill);
-                intent.putExtra("taskDate",       task.taskDate);
-                intent.putExtra("taskDesc",       "This task matches your skills!");
-                intent.putExtra("taskNGO",        "Smart Seva NGO");
-                intent.putExtra("taskVolunteers", 5);
+                intent.putExtra("taskId",       task.taskId);     // ✅ real ID
+                intent.putExtra("taskTitle",    task.taskTitle);
+                intent.putExtra("taskLocation", task.taskLocation);
+                intent.putExtra("taskCategory", task.taskCategory);
+                intent.putExtra("taskUrgency",  task.taskUrgency);
+                intent.putExtra("taskSkill",    task.taskSkill);
+                intent.putExtra("taskDate",     task.taskDate);
+                intent.putExtra("taskNGO",      task.ngoId);
+                intent.putExtra("taskDesc",     "This task matches your skills!");
                 startActivity(intent);
             }
         });

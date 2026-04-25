@@ -668,7 +668,10 @@ public class DataCollectionActivity extends AppCompatActivity {
     // ── SAVE TASK → DASHBOARD ────────────────────────────
 
     void saveTaskAndGoToDashboard(SuggestedTask task, Button btn) {
-        // LocalTaskStore mein save karo
+        btn.setText("⏳ Saving...");
+        btn.setEnabled(false);
+
+        // LocalTaskStore now saves to Firestore automatically
         LocalTaskStore.getInstance().addTask(
                 new LocalTaskStore.LocalTask(
                         task.title, task.description, task.category,
@@ -679,12 +682,11 @@ public class DataCollectionActivity extends AppCompatActivity {
         btn.setText("✅ Saved!");
         btn.setBackgroundTintList(ColorStateList.valueOf(
                 Color.parseColor("#2E7D32")));
-        btn.setEnabled(false);
 
         Toast.makeText(this,
-                "Task dashboard mein add ho gaya! ✅", Toast.LENGTH_SHORT).show();
+                "Task Firestore mein save ho gaya! ✅",
+                Toast.LENGTH_SHORT).show();
 
-        // Dashboard pe jaao
         new android.os.Handler().postDelayed(() -> {
             Intent intent = new Intent(this, DashboardActivity.class);
             intent.putExtra("showTasks", true);
@@ -692,7 +694,6 @@ public class DataCollectionActivity extends AppCompatActivity {
             startActivity(intent);
         }, 800);
     }
-
     // ── DATA MODELS ──────────────────────────────────────
 
     static class CommunityNeed {
