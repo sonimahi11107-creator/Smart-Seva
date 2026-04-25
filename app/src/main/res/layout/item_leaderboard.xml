@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#FFFFFF"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:layout_marginBottom="6dp"
+    android:fitsSystemWindows="true"
+    android:elevation="1dp">
+
+    <!-- Rank Number -->
+    <TextView
+        android:id="@+id/tvRank"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="#4"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/step_active_bg"
+        android:layout_marginEnd="12dp"/>
+
+    <!-- Profile Photo -->
+    <ImageView
+        android:id="@+id/imgHeroPhoto"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/photo_placeholder_bg"
+        android:src="@drawable/ic_add_photo"
+        android:layout_marginEnd="12dp"/>
+
+    <!-- Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvHeroName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volunteer Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"/>
+
+        <TextView
+            android:id="@+id/tvHeroCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📍 City"
+            android:textSize="11sp"
+            android:textColor="#888888"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/tvHeroTasksDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✅ 0 tasks"
+                android:textSize="11sp"
+                android:textColor="#2E7D32"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvHeroBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🌟 Rising Star"
+                android:textSize="11sp"
+                android:textColor="#F57F17"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Score -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvHeroScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pts"
+            android:textSize="10sp"
+            android:textColor="#888"
+            android:gravity="center"/>
+    </LinearLayout>
+
+</LinearLayout>

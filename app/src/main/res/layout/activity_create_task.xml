@@ -1,43 +1,120 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F0F2F5">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="20dp"
         android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_height="wrap_content">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Task"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A2E"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fill in task details for volunteers"
+            android:textSize="13sp"
+            android:textColor="#888888"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Title *" android:textSize="12sp"
+            android:textColor="#555555"/>
         <EditText
             android:id="@+id/etTaskTitle"
-            android:hint="Task Title"
+            android:hint="e.g. Food Distribution Drive"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:inputType="textCapSentences"/>
 
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description *" android:textSize="12sp"
+            android:textColor="#555555"/>
         <EditText
             android:id="@+id/etDescription"
-            android:hint="Description"
+            android:hint="Describe what volunteers need to do..."
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:layout_marginBottom="16dp"/>
 
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Category *" android:textSize="12sp"
+            android:textColor="#555555"/>
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Urgency Level *" android:textSize="12sp"
+            android:textColor="#555555"/>
+        <Spinner
+            android:id="@+id/spinnerUrgency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location *" android:textSize="12sp"
+            android:textColor="#555555"/>
         <EditText
             android:id="@+id/etLocation"
-            android:hint="Location"
+            android:hint="e.g. Raipur, Chhattisgarh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
 
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Skills Required" android:textSize="12sp"
+            android:textColor="#555555"/>
         <EditText
             android:id="@+id/etSkills"
-            android:hint="Required Skills"
+            android:hint="e.g. Teaching, Medical, Food Distribution"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Volunteers Needed" android:textSize="12sp"
+            android:textColor="#555555"/>
+        <EditText
+            android:id="@+id/etVolunteers"
+            android:hint="e.g. 5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="24dp"/>
 
         <Button
             android:id="@+id/btnSubmitTask"
-            android:text="Submit Task"
-            android:layout_marginTop="20dp"
+            android:text="Create Task ✓"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="#1A1A2E"
+            android:textColor="#FFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="50dp"/>
 
         <Spinner
             android:id="@+id/spinnerCategory"
