@@ -13,12 +13,13 @@
         android:background="#1A1A2E"
         android:padding="16dp">
 
+        <!-- Top row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="14dp">
 
             <ImageButton
                 android:id="@+id/btnBackPredictive"
@@ -48,26 +49,40 @@
                     android:id="@+id/tvLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📍 Detecting location..."
+                    android:text="📍 Detecting..."
                     android:textColor="#9E9EB8"
                     android:textSize="11sp"/>
             </LinearLayout>
 
             <Button
                 android:id="@+id/btnRefreshPredictions"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:text="🔄"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:backgroundTint="#2D2D44"
-                android:textColor="#FFFFFF"/>
+                android:textColor="#FFFFFF"
+                android:padding="0dp"/>
         </LinearLayout>
+
+        <!-- Weather info -->
+        <TextView
+            android:id="@+id/tvWeatherInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🌤 Fetching weather..."
+            android:textColor="#9E9EB8"
+            android:textSize="12sp"
+            android:background="#16213E"
+            android:padding="10dp"
+            android:layout_marginBottom="14dp"/>
 
         <!-- Stats row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -141,6 +156,34 @@
                     android:textSize="11sp"/>
             </LinearLayout>
         </LinearLayout>
+
+        <!-- Tabs -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnTabPredictions"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="🔮 Predictions"
+                android:textSize="13sp"
+                android:backgroundTint="#1A1A2E"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnTabWeekly"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="📅 7-Day Forecast"
+                android:textSize="13sp"
+                android:backgroundTint="#F3F4F6"
+                android:textColor="#6B7280"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Info Banner -->
@@ -162,18 +205,35 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Season + Location + Past Data se community needs predict ho rahi hain"
+            android:text="Predicting community needs using Weather + Season + Location + Past Data"
             android:textSize="12sp"
             android:textColor="#F57F17"/>
     </LinearLayout>
 
-    <!-- Predictions List -->
+    <!-- Predictions Panel -->
     <ScrollView
+        android:id="@+id/panelPredictions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/layoutPredictions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"/>
+    </ScrollView>
+
+    <!-- Weekly Panel -->
+    <ScrollView
+        android:id="@+id/panelWeekly"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/layoutWeekly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
