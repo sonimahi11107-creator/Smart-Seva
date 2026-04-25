@@ -170,6 +170,9 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnCreateTask).setOnClickListener(v -> validateAndCreateTask());
         findViewById(R.id.btnQuickCreateTask).setOnClickListener(v -> showNGOPanel("create"));
         findViewById(R.id.btnLogout).setOnClickListener(v -> logout());
+        findViewById(R.id.btnPredictiveAlerts).setOnClickListener(v ->
+                startActivity(new Intent(this,
+                        PredictiveAlertsActivity.class)));
         if (findViewById(R.id.btnLogoutProfile) != null) {
             findViewById(R.id.btnLogoutProfile).setOnClickListener(v -> logout());
         }
