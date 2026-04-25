@@ -25,7 +25,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.SmartSeva.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -65,6 +66,20 @@
         <activity android:name=".OperationsCenterActivity"/>
 
         <activity android:name=".AnonymousReportActivity" android:exported="false"/>
+
+        <!-- Splash as launcher -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SmartSeva.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- MainActivity no longer launcher -->
+
 
         <!-- FCM Service -->
         <service
