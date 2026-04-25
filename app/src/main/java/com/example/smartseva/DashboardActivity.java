@@ -234,6 +234,9 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnOperationsCenter).setOnClickListener(v ->
                 startActivity(new Intent(this, OperationsCenterActivity.class)));
 
+        findViewById(R.id.btnEmergencyMode).setOnClickListener(v ->
+                startActivity(new Intent(this, EmergencyModeActivity.class)));
+
         // LocalTaskStore se tasks show
         List<LocalTaskStore.LocalTask> savedTasks = LocalTaskStore.getInstance().getTasks();
         if (!savedTasks.isEmpty()) {

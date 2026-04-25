@@ -110,19 +110,14 @@ public class OperationsCenterActivity extends AppCompatActivity {
     }
 
     // ── LOAD ALL DATA ─────────────────────────────────────
-
     void loadAllData() {
-        String uid = mAuth.getCurrentUser() != null
-                ? mAuth.getCurrentUser().getUid() : "";
-
-        // Update subtitle with time
+        // Update time
         String time = new SimpleDateFormat("hh:mm a", Locale.getDefault())
                 .format(new Date());
         tvOpsSubtitle.setText("Last updated: " + time);
 
-        // 1. Tasks
+        // ── Tasks — NGO filter hatao, sab tasks lo ──
         db.collection("tasks")
-                .whereEqualTo("ngoId", uid)
                 .get()
                 .addOnSuccessListener(snap -> {
                     int total = snap.size();
@@ -144,47 +139,61 @@ public class OperationsCenterActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Also count from LocalTaskStore
+                    // LocalTaskStore se bhi add karo
                     List<LocalTaskStore.LocalTask> localTasks =
                             LocalTaskStore.getInstance().getTasks();
-                    int localTotal = localTasks.size();
 
-                    tvStatTasks.setText(String.valueOf(total + localTotal));
-                    tvStatCritical.setText(String.valueOf(critical));
-                    tvStatCompleted.setText(String.valueOf(completed));
-                    tvStatPending.setText(String.valueOf(pending + localTotal));
-
-                    // Build chart from both sources
                     for (LocalTaskStore.LocalTask t : localTasks) {
                         if (t.category != null) {
                             categoryCount.put(t.category,
                                     categoryCount.getOrDefault(t.category, 0) + 1);
                         }
+                        if ("Critical".equals(t.urgency)) critical++;
+                        else pending++;
                     }
-                    buildChart(categoryCount, total + localTotal);
+
+                    int grandTotal = total + localTasks.size();
+                    tvStatTasks.setText(String.valueOf(grandTotal));
+                    tvStatCritical.setText(String.valueOf(critical));
+                    tvStatCompleted.setText(String.valueOf(completed));
+                    tvStatPending.setText(String.valueOf(pending));
+
+                    buildChart(categoryCount, grandTotal);
+                })
+                .addOnFailureListener(e -> {
+                    // Firebase fail — sirf local show karo
+                    List<LocalTaskStore.LocalTask> localTasks =
+                            LocalTaskStore.getInstance().getTasks();
+                    tvStatTasks.setText(String.valueOf(localTasks.size()));
+                    tvStatPending.setText(String.valueOf(localTasks.size()));
+
+                    Map<String, Integer> catMap = new LinkedHashMap<>();
+                    for (LocalTaskStore.LocalTask t : localTasks) {
+                        if (t.category != null)
+                            catMap.put(t.category,
+                                    catMap.getOrDefault(t.category, 0) + 1);
+                    }
+                    buildChart(catMap, localTasks.size());
                 });
 
-        // 2. Volunteers
+        // ── Volunteers ──
         db.collection("volunteer_users")
                 .get()
                 .addOnSuccessListener(snap ->
-                        tvStatVolunteers.setText(String.valueOf(snap.size())));
+                        tvStatVolunteers.setText(String.valueOf(snap.size())))
+                .addOnFailureListener(e ->
+                        tvStatVolunteers.setText("—"));
 
-        // 3. Applications
+        // ── Applications — sab lo ──
         db.collection("applications")
-                .whereEqualTo("ngoId", uid)
                 .get()
                 .addOnSuccessListener(snap ->
                         tvStatApplications.setText(String.valueOf(snap.size())))
-                .addOnFailureListener(e -> {
-                    // Try without filter
-                    db.collection("applications").get()
-                            .addOnSuccessListener(snap ->
-                                    tvStatApplications.setText(String.valueOf(snap.size())));
-                });
+                .addOnFailureListener(e ->
+                        tvStatApplications.setText("—"));
 
-        // 4. Activity feed
-        loadActivityFeed(uid);
+        // ── Activity Feed ──
+        loadActivityFeed();
     }
 
     // ── CHART ─────────────────────────────────────────────
@@ -270,14 +279,12 @@ public class OperationsCenterActivity extends AppCompatActivity {
 
     // ── ACTIVITY FEED ─────────────────────────────────────
 
-    void loadActivityFeed(String uid) {
+    void loadActivityFeed() {
         feedItems.clear();
         layoutFeed.removeAllViews();
 
-        // Applications feed
+        // Applications — sab lo, filter mat lagao
         db.collection("applications")
-                .orderBy("appliedTime", Query.Direction.DESCENDING)
-                .limit(20)
                 .get()
                 .addOnSuccessListener(snap -> {
                     for (DocumentSnapshot doc : snap) {
@@ -293,9 +300,56 @@ public class OperationsCenterActivity extends AppCompatActivity {
                                 System.currentTimeMillis()
                         ));
                     }
-                    loadTaskFeed(uid);
+
+                    // Tasks feed
+                    db.collection("tasks")
+                            .get()
+                            .addOnSuccessListener(taskSnap -> {
+                                for (DocumentSnapshot doc : taskSnap) {
+                                    String title  = doc.getString("title");
+                                    String status = doc.getString("status");
+                                    feedItems.add(new ActivityItem(
+                                            "task",
+                                            "Task created: " +
+                                                    (title != null ? title : "New Task"),
+                                            "Task • " + (status != null ? status : "Active"),
+                                            doc.getLong("timestamp") != null
+                                                    ? doc.getLong("timestamp")
+                                                    : System.currentTimeMillis()
+                                    ));
+                                }
+
+                                // LocalTaskStore
+                                for (LocalTaskStore.LocalTask t :
+                                        LocalTaskStore.getInstance().getTasks()) {
+                                    feedItems.add(new ActivityItem(
+                                            "task",
+                                            "Task created: " + t.title,
+                                            "Task • " + t.urgency,
+                                            t.createdAt
+                                    ));
+                                }
+
+                                // Sort newest first
+                                feedItems.sort((a, b) ->
+                                        Long.compare(b.timestamp, a.timestamp));
+
+                                renderFeed();
+                            });
                 })
-                .addOnFailureListener(e -> loadTaskFeed(uid));
+                .addOnFailureListener(e -> {
+                    // Sirf local tasks dikhao
+                    for (LocalTaskStore.LocalTask t :
+                            LocalTaskStore.getInstance().getTasks()) {
+                        feedItems.add(new ActivityItem(
+                                "task",
+                                "Task created: " + t.title,
+                                "Task • " + t.urgency,
+                                t.createdAt
+                        ));
+                    }
+                    renderFeed();
+                });
     }
 
     void loadTaskFeed(String uid) {

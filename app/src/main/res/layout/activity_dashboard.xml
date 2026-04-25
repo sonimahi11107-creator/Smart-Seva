@@ -27,9 +27,11 @@
             android:layout_marginEnd="12dp">
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/splash_logo"/>
+                android:layout_width="52dp"
+                android:layout_height="40dp"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/app_logo" />
         </LinearLayout>
 
         <LinearLayout
@@ -146,6 +148,17 @@
                     android:textSize="14sp"
                     android:layout_marginBottom="16dp"
                     android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnEmergencyMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🚨 Emergency Mode"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#B71C1C"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="10dp"/>
 
                 <Button
                     android:id="@+id/btnLeaderboard"

@@ -113,4 +113,40 @@ public class NotificationHelper {
             e.printStackTrace();
         }
     }
+    public static void sendEmergencyAlert(Context context,
+                                          String type, String message) {
+        try {
+            android.app.PendingIntent pi =
+                    android.app.PendingIntent.getActivity(
+                            context, 999,
+                            new android.content.Intent(context,
+                                    DashboardActivity.class),
+                            android.app.PendingIntent.FLAG_UPDATE_CURRENT
+                                    | android.app.PendingIntent.FLAG_IMMUTABLE);
+
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(context, CHANNEL_APPLY)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("🚨 EMERGENCY ALERT!")
+                            .setContentText(type)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(message))
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setAutoCancel(true)
+                            .setContentIntent(pi);
+
+            NotificationManagerCompat nm =
+                    NotificationManagerCompat.from(context);
+
+            if (android.os.Build.VERSION.SDK_INT < 33 ||
+                    androidx.core.content.ContextCompat
+                            .checkSelfPermission(context,
+                                    android.Manifest.permission.POST_NOTIFICATIONS)
+                            == 0) {
+                nm.notify(9999, builder.build());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
