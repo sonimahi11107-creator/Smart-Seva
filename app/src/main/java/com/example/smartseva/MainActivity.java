@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnLoginNGO, btnLoginVolunteer, btnLogin;
     EditText etLoginEmail, etLoginPassword;
     TextView errLoginEmail, errLoginPassword, tvForgotPassword, tvGoToRegister;
-    ProgressBar progressBar; // add this in your XML layout
+    ProgressBar progressBar;
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;

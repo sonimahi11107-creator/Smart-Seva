@@ -35,7 +35,7 @@
     <string name="location">Get Current Location</string>
 
     <!-- Login Screen strings -->
-    <string name="app_tagline">Connecting volunteers with NGOs</string>
+
     <string name="login_as">Login as</string>
     <string name="ngo">NGO</string>
     <string name="volunteer">Volunteer</string>
@@ -48,4 +48,7 @@
     <string name="no_account">Don\'t have an account? </string>
     <string name="register_here">Register here</string>
     <string name="register">Register</string>
+
+    <string name="app_tagline">Connecting Hearts, Changing Lives</string>
+    <string name="app_description">AI-powered volunteer coordination platform</string>
 </resources>

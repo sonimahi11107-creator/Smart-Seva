@@ -7,43 +7,63 @@
     android:background="#F5F5F5">
 
     <!-- Top Bar -->
+    <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#1A1A1A"
+        android:layout_height="65dp"
+        android:background="@drawable/gradient_bg"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingEnd="16dp"
+        android:elevation="4dp">
 
-        <TextView
-            android:id="@+id/tvAppName"
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_bg"
+            android:gravity="center"
+            android:layout_marginEnd="12dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/splash_logo"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Smart Seva"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvWelcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome!"
-            android:textColor="#AAAAAA"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/tvAppName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Smart Seva"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvWelcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome!"
+                android:textColor="#BBDEFB"
+                android:textSize="12sp"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:text="Logout"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#C62828"
-            android:layout_alignParentEnd="true"
+            android:textSize="11sp"
+            android:textColor="#1565C0"
+            android:backgroundTint="#FFFFFF"
             android:padding="8dp"/>
     </LinearLayout>
 
@@ -148,6 +168,27 @@
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp"
                     android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnAnonymousReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="🚨 Report Urgent Need (Anonymous)"
+                    android:backgroundTint="#6A1B9A"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btnOperationsCenter"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="📊 Operations Center"
+                    android:backgroundTint="#1A1A2E"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginTop="12dp"/>
 
                 <!-- Stats Row 2 -->
                 <LinearLayout android:layout_width="match_parent"
@@ -539,6 +580,17 @@
                     android:layout_marginBottom="8dp"
                     android:textAllCaps="false"/>
 
+                <Button
+                    android:id="@+id/btnAnonymousReportVol"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="🚨 Report Urgent Need"
+                    android:backgroundTint="#6A1B9A"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp"
+                    android:textAllCaps="false"/>
+
                 <EditText android:id="@+id/etSearchTask"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:hint="🔍 Search tasks..."
@@ -748,7 +800,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation -->
+
     <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNav"
@@ -757,90 +809,55 @@
         android:background="#FFFFFF"
         android:orientation="horizontal"
         android:elevation="8dp"
-        android:paddingBottom="30dp"
-        android:paddingTop="4dp">
+        android:paddingBottom="24dp"
+        android:paddingTop="6dp">
 
-        <!-- NGO Bottom Nav -->
         <Button android:id="@+id/btnNavStats"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="📊 Stats"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#1A1A1A"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="📊"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/primary" android:visibility="gone"/>
 
         <Button android:id="@+id/btnNavTasks"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="📋 Tasks"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#888888"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="📋"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/text_hint" android:visibility="gone"/>
 
         <Button android:id="@+id/btnNavCreate"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="➕ Create"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#888888"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="➕"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/text_hint" android:visibility="gone"/>
 
         <Button android:id="@+id/btnNavVolunteers"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="👥 Volunteers"
-            android:textSize="9sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#888888"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="👥"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/text_hint" android:visibility="gone"/>
 
-        <!-- Volunteer Bottom Nav -->
         <Button android:id="@+id/btnNavAvailable"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="📋 Tasks"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#1A1A1A"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="📋"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/primary" android:visibility="gone"/>
 
         <Button android:id="@+id/btnNavApplications"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="📝 Applied"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#888888"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="📝"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/text_hint" android:visibility="gone"/>
 
         <Button android:id="@+id/btnNavProfile"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="👤 Profile"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#888888"
-            android:visibility="gone"/>
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="👤"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/text_hint" android:visibility="gone"/>
 
         <Button android:id="@+id/btnNavImpact"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="⭐ Impact"
-            android:textSize="10sp"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="#888888"
-            android:visibility="gone"/>
-
+            android:layout_width="0dp" android:layout_height="48dp"
+            android:layout_weight="1" android:text="⭐"
+            android:textSize="18sp" android:backgroundTint="#FFFFFF"
+            android:textColor="@color/text_hint" android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>
