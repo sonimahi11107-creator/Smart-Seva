@@ -148,6 +148,17 @@
                     android:textAllCaps="false"/>
 
                 <Button
+                    android:id="@+id/btnEmergencyMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🚨 Emergency Mode"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#B71C1C"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="10dp"/>
+
+                <Button
                     android:id="@+id/btnLeaderboard"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
