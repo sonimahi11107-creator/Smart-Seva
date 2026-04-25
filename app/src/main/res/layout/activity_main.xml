@@ -8,7 +8,7 @@
     <!-- Header Blue Section -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="240dp"
         android:background="@drawable/gradient_bg"
         android:orientation="vertical"
         android:gravity="center"
@@ -23,9 +23,11 @@
             android:layout_marginBottom="16dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/splash_logo"/>
+                android:layout_width="124dp"
+                android:layout_height="97dp"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/app_logo" />
         </LinearLayout>
 
         <TextView
@@ -63,7 +65,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-40dp"
+                android:layout_marginTop="-20dp"
                 android:background="@drawable/card_white"
                 android:elevation="8dp"
                 android:orientation="vertical"
@@ -73,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Welcome Back! 👋"
+                    android:text="Welcome Back! "
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -108,7 +110,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:backgroundTint="@color/primary"
-                        android:text="🏢 NGO"
+                        android:text="NGO"
                         android:textColor="#FFFFFF"
                         android:textSize="13sp" />
 
@@ -118,7 +120,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:backgroundTint="@color/accent_light"
-                        android:text="🙋 Volunteer"
+                        android:text="Volunteer"
                         android:textColor="@color/primary"
                         android:textSize="13sp" />
                 </LinearLayout>
