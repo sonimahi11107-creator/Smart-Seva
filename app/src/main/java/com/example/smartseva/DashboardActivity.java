@@ -718,31 +718,37 @@ public class DashboardActivity extends AppCompatActivity {
         // toast + notification firing even when validation fails.
         // Also removed the redundant duplicate Toast and showNGOPanel calls.
         if (ok) {
-            String id = "T" + System.currentTimeMillis();
-            TaskStatusManager.TaskItem newTask =
-                    new TaskStatusManager.TaskItem(
-                            id, title, desc,
-                            spinnerTaskCategory.getSelectedItem().toString(),
-                            spinnerUrgency.getSelectedItem().toString(),
-                            location, date,
-                            spinnerSkillRequired.getSelectedItem().toString(),
-                            Integer.parseInt(volCount));
-            TaskStatusManager.addTask(newTask);
+            String uid = mAuth.getCurrentUser().getUid();
 
-            // Reset form
-            etTaskTitle.setText("");
-            etTaskDesc.setText("");
-            etVolunteersRequired.setText("");
-            etTaskLocation.setText("");
-            etTaskDate.setText("");
-            spinnerTaskCategory.setSelection(0);
-            spinnerUrgency.setSelection(0);
-            imgTaskPreview.setImageResource(R.drawable.ic_add_photo);
-            selectedTaskImageUri = null;
+            Map<String, Object> taskData = new HashMap<>();
+            taskData.put("title",            title);
+            taskData.put("description",      desc);
+            taskData.put("category",
+                    spinnerTaskCategory.getSelectedItem().toString());
+            taskData.put("urgency",
+                    spinnerUrgency.getSelectedItem().toString());
+            taskData.put("location",         location);
+            taskData.put("date",             date);
+            taskData.put("skill",
+                    spinnerSkillRequired.getSelectedItem().toString());
+            taskData.put("volunteersNeeded",
+                    Integer.parseInt(volCount));
+            taskData.put("status",           "Active");
+            taskData.put("ngoId",            uid);
+            taskData.put("timestamp",
+                    System.currentTimeMillis());
 
-            Toast.makeText(this, "Task Created!", Toast.LENGTH_LONG).show();
-            NotificationHelper.notifyNewTask(this, title);
-            showNGOPanel("tasks");
+            db.collection("tasks").add(taskData)
+                    .addOnSuccessListener(ref -> {
+                        Toast.makeText(this,
+                                "Task Created! ✅", Toast.LENGTH_SHORT).show();
+                        NotificationHelper.notifyNewTask(this, title);
+                        showNGOPanel("tasks");
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this,
+                                    "Error: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show());
         }
     }
 

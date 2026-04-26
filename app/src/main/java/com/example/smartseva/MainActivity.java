@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +32,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String token = task.getResult();
+                        Log.d("FCM", "Token: " + token);
+                        // Token automatically Firestore mein save hoga
+                        // jab onNewToken() call hoga — manually chahiye to:
+                        // new MyFirebaseMessagingService().saveFCMToken(token);
+                    } else {
+                        Log.w("FCM", "Token fetch failed", task.getException());
+                    }
+                });
 
         // Firebase instances
         mAuth = FirebaseAuth.getInstance();

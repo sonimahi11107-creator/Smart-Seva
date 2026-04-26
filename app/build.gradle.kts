@@ -93,8 +93,9 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:1.4.0")
 
     implementation("com.google.guava:guava:32.1.3-android")
-
+    implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.firebase:firebase-messaging:23.4.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
 
     testImplementation(libs.junit)
