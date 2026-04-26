@@ -3,27 +3,19 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.android)
+}
+
+// Load local.properties ONCE at top
+val localProps = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    localProps.load(localPropsFile.inputStream())
 }
 
 android {
     namespace = "com.example.smartseva"
     compileSdk = 35
-
-    packaging {
-            resources {
-                excludes += "META-INF/NOTICE.md"
-                excludes += "META-INF/LICENSE.md"
-                excludes += "META-INF/NOTICE"
-                excludes += "META-INF/LICENSE"
-            }
-        }
-
-    val localPropsFile = rootProject.file("local.properties")
-    val weatherApiKey = if (localPropsFile.exists()) {
-        val props = Properties()
-        props.load(localPropsFile.inputStream())
-        props.getProperty("WEATHER_API_KEY", "")
-    } else ""
 
     defaultConfig {
         applicationId = "com.example.smartseva"
@@ -33,9 +25,11 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "WEATHER_API_KEY", "\"$weatherApiKey\"")
-
-         }
+        buildConfigField("String", "WEATHER_API_KEY",
+            "\"${localProps.getProperty("WEATHER_API_KEY", "")}\"")
+        buildConfigField("String", "GEMINI_API_KEY",
+            "\"${localProps.getProperty("GEMINI_API_KEY", "")}\"")
+    }
 
     buildTypes {
         release {
@@ -52,6 +46,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
     buildFeatures {
         buildConfig = true
     }
@@ -63,29 +61,24 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-storage")
-    implementation("com.sun.mail:android-mail:1.6.7")
-    implementation("com.sun.mail:android-activation:1.6.7")
 
-
-    // Firebase
+    // Firebase — sirf ek BOM
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging")
 
     // Credentials and Auth
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    //ML Kit
+    // ML Kit
     implementation("com.google.mlkit:text-recognition:16.0.1")
     implementation("com.google.mlkit:text-recognition-devanagari:16.0.1")
 
-    // CameraX — real-time camera
+    // CameraX
     implementation("androidx.camera:camera-core:1.4.0")
     implementation("androidx.camera:camera-camera2:1.4.0")
     implementation("androidx.camera:camera-lifecycle:1.4.0")
@@ -93,10 +86,6 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:1.4.0")
 
     implementation("com.google.guava:guava:32.1.3-android")
-    implementation("com.google.firebase:firebase-messaging")
-    implementation("com.google.firebase:firebase-messaging:23.4.0")
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
