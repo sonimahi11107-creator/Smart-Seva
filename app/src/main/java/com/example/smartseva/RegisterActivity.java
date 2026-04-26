@@ -610,7 +610,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // ✅ Send welcome email from your Gmail
 
-        EmailSender.sendWelcomeEmail(email, name);
+        //EmailSender.sendWelcomeEmail(email, name);
 
         // Firebase verification email
         if (mAuth.getCurrentUser() != null) {

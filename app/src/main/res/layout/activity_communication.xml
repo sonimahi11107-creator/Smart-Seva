@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F0F2F5">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="#1A1A2E">
+
+        <ImageButton
+            android:id="@+id/btnBackComm"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="#2D2D44"
+            android:tint="#FFFFFF"
+            android:padding="8dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💬 Communication"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chat • Announcements • Comments"
+                android:textColor="#9E9EB8"
+                android:textSize="11sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Tabs -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnTabChat"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="💬 Chat"
+            android:textSize="12sp"
+            android:backgroundTint="#1A1A2E"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnTabAnnouncements"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="📢 Announce"
+            android:textSize="12sp"
+            android:backgroundTint="#F3F4F6"
+            android:textColor="#6B7280"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnTabComments"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="🗨️ Comments"
+            android:textSize="12sp"
+            android:backgroundTint="#F3F4F6"
+            android:textColor="#6B7280"/>
+    </LinearLayout>
+
+    <!-- CHAT PANEL -->
+    <LinearLayout
+        android:id="@+id/panelChat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ScrollView
+            android:id="@+id/scrollChat"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/layoutMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
+
+        <!-- Input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/etChatMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Type a message..."
+                android:background="@drawable/card_background"
+                android:padding="12dp"
+                android:maxLines="3"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnSendChat"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="➤"
+                android:textSize="18sp"
+                android:backgroundTint="#1A1A2E"
+                android:textColor="#FFFFFF"
+                android:padding="0dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ANNOUNCEMENTS PANEL -->
+    <LinearLayout
+        android:id="@+id/panelAnnouncements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ScrollView
+            android:id="@+id/scrollAnnouncements"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/layoutAnnouncements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
+
+        <!-- NGO only input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📢 Send Announcement (NGO only)"
+                android:textSize="12sp"
+                android:textColor="#6B7280"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/etAnnouncement"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Write announcement..."
+                    android:background="@drawable/card_background"
+                    android:padding="12dp"
+                    android:maxLines="3"
+                    android:layout_marginEnd="8dp"/>
+
+                <Button
+                    android:id="@+id/btnSendAnnouncement"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="➤"
+                    android:textSize="18sp"
+                    android:backgroundTint="#1A1A2E"
+                    android:textColor="#FFFFFF"
+                    android:padding="0dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- COMMENTS PANEL -->
+    <LinearLayout
+        android:id="@+id/panelComments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Task selector -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#FFFFFF"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Task: "
+                android:textSize="13sp"
+                android:textColor="#374151"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollComments"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/layoutComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
+
+        <!-- Comment input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/etComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Add a comment..."
+                android:background="@drawable/card_background"
+                android:padding="12dp"
+                android:maxLines="2"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnSendComment"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="➤"
+                android:textSize="18sp"
+                android:backgroundTint="#1A1A2E"
+                android:textColor="#FFFFFF"
+                android:padding="0dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

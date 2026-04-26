@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.kotlin.android)
+
 }
 
 // Load local.properties ONCE at top
@@ -46,9 +46,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
 
     buildFeatures {
         buildConfig = true
@@ -86,6 +84,8 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:1.4.0")
 
     implementation("com.google.guava:guava:32.1.3-android")
+
+    implementation("com.google.firebase:firebase-database")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

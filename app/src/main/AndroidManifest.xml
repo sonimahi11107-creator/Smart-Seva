@@ -84,6 +84,8 @@
 
         <activity android:name=".DynamicAllocationActivity"/>
 
+        <activity android:name=".CommunicationActivity"/>
+
         <!-- MainActivity no longer launcher -->
 
 

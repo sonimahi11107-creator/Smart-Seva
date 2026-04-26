@@ -174,6 +174,9 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnPredictiveAlerts).setOnClickListener(v ->
                 startActivity(new Intent(this,
                         PredictiveAlertsActivity.class)));
+        findViewById(R.id.btnCommunication).setOnClickListener(v ->
+                startActivity(new Intent(this,
+                        CommunicationActivity.class)));
         if (findViewById(R.id.btnLogoutProfile) != null) {
             findViewById(R.id.btnLogoutProfile).setOnClickListener(v -> logout());
         }
