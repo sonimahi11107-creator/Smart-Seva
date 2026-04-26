@@ -6,16 +6,16 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+// FIX: Load local.properties ONCE at top — both keys se
+val localProps = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    localProps.load(localPropsFile.inputStream())
+}
+
 android {
     namespace = "com.example.smartseva"
     compileSdk = 35
-
-    val localPropsFile = rootProject.file("local.properties")
-    val weatherApiKey = if (localPropsFile.exists()) {
-        val props = Properties()
-        props.load(localPropsFile.inputStream())
-        props.getProperty("WEATHER_API_KEY", "")
-    } else ""
 
     defaultConfig {
         applicationId = "com.example.smartseva"
@@ -25,9 +25,12 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "WEATHER_API_KEY", "\"$weatherApiKey\"")
-
-         }
+        // FIX: Correct Kotlin DSL syntax — getProperty() use karo
+        buildConfigField("String", "WEATHER_API_KEY",
+            "\"${localProps.getProperty("WEATHER_API_KEY", "")}\"")
+        buildConfigField("String", "GEMINI_API_KEY",
+            "\"${localProps.getProperty("GEMINI_API_KEY", "")}\"")
+    }
 
     buildTypes {
         release {
@@ -59,26 +62,23 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-storage")
 
-    // Firebase
+    // FIX: Duplicate Firebase BOM hata diya — sirf ek rakhna chahiye
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation("com.google.firebase:firebase-storage")
 
     // Credentials and Auth
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    //ML Kit
+    // ML Kit
     implementation("com.google.mlkit:text-recognition:16.0.1")
     implementation("com.google.mlkit:text-recognition-devanagari:16.0.1")
 
-    // CameraX — real-time camera
+    // CameraX
     implementation("androidx.camera:camera-core:1.4.0")
     implementation("androidx.camera:camera-camera2:1.4.0")
     implementation("androidx.camera:camera-lifecycle:1.4.0")
@@ -88,7 +88,6 @@ dependencies {
     implementation("com.google.guava:guava:32.1.3-android")
 
     implementation("com.google.firebase:firebase-messaging:23.4.0")
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

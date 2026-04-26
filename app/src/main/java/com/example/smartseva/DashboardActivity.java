@@ -168,7 +168,8 @@ public class DashboardActivity extends AppCompatActivity {
         etTaskDate.setOnClickListener(v -> showTaskDatePicker());
         findViewById(R.id.btnUploadTaskImage).setOnClickListener(v -> pickTaskImage());
         findViewById(R.id.btnCreateTask).setOnClickListener(v -> validateAndCreateTask());
-        findViewById(R.id.btnQuickCreateTask).setOnClickListener(v -> showNGOPanel("create"));
+        findViewById(R.id.btnQuickCreateTask).setOnClickListener(v ->
+                startActivity(new Intent(this, CreateTaskActivity.class)));
         findViewById(R.id.btnLogout).setOnClickListener(v -> logout());
         findViewById(R.id.btnPredictiveAlerts).setOnClickListener(v ->
                 startActivity(new Intent(this,
@@ -189,7 +190,8 @@ public class DashboardActivity extends AppCompatActivity {
         // Bottom nav - NGO
         btnNavStats.setOnClickListener(v -> showNGOPanel("stats"));
         btnNavTasks.setOnClickListener(v -> showNGOPanel("tasks"));
-        btnNavCreate.setOnClickListener(v -> showNGOPanel("create"));
+        btnNavCreate.setOnClickListener(v ->
+                startActivity(new Intent(this, CreateTaskActivity.class)));
         btnNavVolunteers.setOnClickListener(v -> showNGOPanel("volunteers"));
 
         // Bottom nav - Volunteer
