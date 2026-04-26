@@ -486,6 +486,33 @@ public class DashboardActivity extends AppCompatActivity {
                         intent.putExtra("taskTitle",
                                 taskList.get(pos).split("\\|")[0].trim());
                         startActivity(intent);
+
+                        // Smart Allocation button add karo
+                        new android.app.AlertDialog.Builder(this)
+                                .setTitle("Task Options")
+                                .setItems(new String[]{
+                                        "👥 View Applicants",
+                                        "🎯 Smart Allocate Volunteers"
+                                }, (d, which) -> {
+                                    if (which == 0) {
+                                        Intent intent = new Intent(this,
+                                                ApplicantsActivity.class);
+                                        intent.putExtra("taskTitle",
+                                                taskList.get(pos).split("\\|")[0].trim());
+                                        startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent(this,
+                                                DynamicAllocationActivity.class);
+                                        intent.putExtra("taskTitle",
+                                                taskList.get(pos).split("\\|")[0].trim());
+                                        intent.putExtra("taskSkill", "Medical Help");
+                                        intent.putExtra("taskLocation", "Raipur");
+                                        intent.putExtra("taskUrgency",
+                                                taskList.get(pos).split("\\|")[1].trim());
+                                        startActivity(intent);
+                                    }
+                                })
+                                .show();
                     });
                 })
                 .addOnFailureListener(e ->
