@@ -161,6 +161,16 @@
                     android:layout_marginTop="10dp"/>
 
                 <Button
+                    android:id="@+id/btnPredictiveAlerts"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text=" Predictive Need Alerts"
+                    android:textSize="14sp"
+                    android:backgroundTint="#4A148C"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="10dp"/>
+
+                <Button
                     android:id="@+id/btnLeaderboard"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"

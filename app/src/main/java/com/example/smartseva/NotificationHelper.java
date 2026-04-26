@@ -77,6 +77,14 @@ public class NotificationHelper {
                 DashboardActivity.class);
     }
 
+    public static void notifyPredictiveAlert(Context context,
+                                             String title, String description) {
+        send(context, CHANNEL_TASKS, 2001,
+                "🔮 Predicted Need: " + title,
+                description,
+                DashboardActivity.class);
+    }
+
     // ── Internal send helper ─────────────────────────────
     private static void send(Context context, String channel,
                              int id, String title, String message, Class<?> target) {

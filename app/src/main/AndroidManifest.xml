@@ -80,6 +80,10 @@
 
         <activity android:name=".EmergencyModeActivity"/>
 
+        <activity android:name=".PredictiveAlertsActivity"/>
+
+        <activity android:name=".DynamicAllocationActivity"/>
+
         <!-- MainActivity no longer launcher -->
 
 

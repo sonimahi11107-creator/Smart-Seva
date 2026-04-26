@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
@@ -8,6 +10,13 @@ android {
     namespace = "com.example.smartseva"
     compileSdk = 35
 
+    val localPropsFile = rootProject.file("local.properties")
+    val weatherApiKey = if (localPropsFile.exists()) {
+        val props = Properties()
+        props.load(localPropsFile.inputStream())
+        props.getProperty("WEATHER_API_KEY", "")
+    } else ""
+
     defaultConfig {
         applicationId = "com.example.smartseva"
         minSdk = 23
@@ -15,7 +24,10 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+
+        buildConfigField("String", "WEATHER_API_KEY", "\"$weatherApiKey\"")
+
+         }
 
     buildTypes {
         release {
@@ -34,6 +46,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
