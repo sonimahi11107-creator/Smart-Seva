@@ -608,26 +608,24 @@ public class RegisterActivity extends AppCompatActivity {
 
     void showCongratulationsAndProceed(String name, String email, String phone) {
 
-        // ── SMS sending ──
-        try {
-            android.telephony.SmsManager sms = android.telephony.SmsManager.getDefault();
-            String smsText = "Congratulations " + name + "! You have successfully registered on Smart Seva. Welcome to the community!";
-            sms.sendTextMessage("+91" + phone, null, smsText, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // ✅ Send welcome email from your Gmail
+
+        EmailSender.sendWelcomeEmail(email, name);
+
+        // Firebase verification email
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.getCurrentUser().sendEmailVerification();
         }
 
-        // ── Congratulations Dialog ──
         new android.app.AlertDialog.Builder(this)
                 .setTitle("🎉 Registration Successful!")
                 .setMessage("Welcome, " + name + "!\n\n" +
-                        "✅ A confirmation has been sent to:\n" +
-                        "📧 " + email + "\n" +
-                        "📱 " + phone + "\n\n" +
-                        "Please login to continue.")
+                        "✅ A welcome email has been sent to:\n📧 " + email +
+                        "\n\nPlease verify your email and login.")
                 .setCancelable(false)
                 .setPositiveButton("Go to Login", (dialog, which) -> {
                     dialog.dismiss();
+                    mAuth.signOut();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 })

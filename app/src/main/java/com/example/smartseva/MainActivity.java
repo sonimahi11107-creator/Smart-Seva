@@ -136,14 +136,48 @@ public class MainActivity extends AppCompatActivity {
      * Volunteers → "volunteer_users/{uid}"
      */
     void verifyUserRole(String uid) {
-        String collection = selectedRole.equals("NGO") ? "ngo_users" : "volunteer_users";
+
+        // ✅ Check email verified first
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null && !user.isEmailVerified()) {
+            setLoading(false);
+            mAuth.signOut();
+            new AlertDialog.Builder(this)
+                    .setTitle("📧 Email Not Verified")
+                    .setMessage("Please verify your email first.\n\nCheck your inbox and click the verification link sent to:\n" + user.getEmail())
+                    .setPositiveButton("Resend Email", (dialog, which) -> {
+                        // Sign in temporarily to resend
+                        String email    = etLoginEmail.getText().toString().trim();
+                        String password = etLoginPassword.getText().toString().trim();
+                        mAuth.signInWithEmailAndPassword(email, password)
+                                .addOnSuccessListener(t -> {
+                                    if (mAuth.getCurrentUser() != null) {
+                                        mAuth.getCurrentUser().sendEmailVerification()
+                                                .addOnSuccessListener(unused ->
+                                                        Toast.makeText(this,
+                                                                "Verification email resent! Check inbox. ✅",
+                                                                Toast.LENGTH_LONG).show())
+                                                .addOnFailureListener(e ->
+                                                        Toast.makeText(this,
+                                                                "Failed to resend: " + e.getMessage(),
+                                                                Toast.LENGTH_SHORT).show());
+                                    }
+                                    mAuth.signOut();
+                                });
+                    })
+                    .setNegativeButton("OK", null)
+                    .show();
+            return; // ← stops login
+        }
+
+        // ── rest of your existing code unchanged ──
+        String collection      = selectedRole.equals("NGO") ? "ngo_users" : "volunteer_users";
         String wrongCollection = selectedRole.equals("NGO") ? "volunteer_users" : "ngo_users";
 
         db.collection(collection).document(uid).get()
                 .addOnSuccessListener(document -> {
                     setLoading(false);
                     if (document.exists()) {
-                        // ✅ Correct role — navigate to dashboard
                         Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(this, DashboardActivity.class);
                         intent.putExtra("role", selectedRole);
@@ -151,10 +185,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        // ❌ User logged in but wrong role selected — check other collection
                         db.collection(wrongCollection).document(uid).get()
                                 .addOnSuccessListener(doc2 -> {
-                                    mAuth.signOut(); // sign out to avoid stale session
+                                    mAuth.signOut();
                                     if (doc2.exists()) {
                                         String actualRole = selectedRole.equals("NGO")
                                                 ? "Volunteer" : "NGO";
