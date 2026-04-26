@@ -13,7 +13,6 @@ firebaseBom = "33.5.1"
 credentials = "1.5.0"
 googleid = "1.2.0"
 coreKtx = "1.15.0"
-kotlin = "2.2.10"
 camerax = "1.4.0"
 
 
@@ -38,4 +37,3 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

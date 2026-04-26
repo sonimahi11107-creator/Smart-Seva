@@ -413,10 +413,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     void validateStep1() {
         boolean ok = true;
-        if (selectedProfileUri == null) {
-            Toast.makeText(this, "Please upload your profile photo", Toast.LENGTH_SHORT).show();
-            ok = false;
-        }
+
         String name = etVolFullName.getText().toString().trim();
         if (name.isEmpty()) { errVolFullName.setText("Full name is required"); ok = false; }
         else if (!name.matches("[a-zA-Z ]+")) { errVolFullName.setText("Name should contain letters only"); ok = false; }
@@ -479,84 +476,109 @@ public class RegisterActivity extends AppCompatActivity {
         if (!checkConfirm(etVolPassword, etVolConfirmPassword, errVolConfirmPassword)) ok = false;
 
         if (ok) {
-
-            String name  = etVolFullName.getText().toString().trim();
-            String email = etVolEmail.getText().toString().trim();
-            String phone = etVolPhone.getText().toString().trim();
+            String name     = etVolFullName.getText().toString().trim();
+            String email    = etVolEmail.getText().toString().trim();
+            String phone    = etVolPhone.getText().toString().trim();
             String password = etVolPassword.getText().toString();
 
-            // 🔹 CREATE USER (AUTH)
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
-
                         if (task.isSuccessful()) {
-
                             String userId = mAuth.getCurrentUser().getUid();
 
-                            // 🔹 COLLECT ALL DATA
-                            Map<String, Object> user = new HashMap<>();
+                            // ✅ Upload profile photo first, then save data
+                            if (selectedProfileUri != null) {
+                                StorageReference photoRef = storageRef
+                                        .child("volunteer_photos/" + userId + ".jpg");
 
-                            // BASIC
-                            user.put("role", "Volunteer");
-                            user.put("name", name);
-                            user.put("email", email);
-                            user.put("phone", phone);
-                            user.put("gender", spinnerGender.getSelectedItem().toString());
-                            user.put("dob", etVolDOB.getText().toString());
-                            user.put("city", etVolCity.getText().toString());
-                            user.put("state", spinnerVolState.getSelectedItem().toString());
-                            user.put("pincode", etVolPincode.getText().toString());
-
-                            // SKILLS
-                            user.put("teaching", cbTeaching.isChecked());
-                            user.put("medical", cbMedical.isChecked());
-                            user.put("food", cbFood.isChecked());
-                            user.put("event", cbEvent.isChecked());
-                            user.put("fundraising", cbFundraising.isChecked());
-                            user.put("technical", cbTechnical.isChecked());
-                            user.put("socialMedia", cbSocialMedia.isChecked());
-                            user.put("otherSkill", etOtherSkill.getText().toString());
-
-                            // AVAILABILITY
-                            user.put("availableDays", spinnerAvailDays.getSelectedItem().toString());
-                            user.put("availableTime", spinnerAvailTime.getSelectedItem().toString());
-
-                            // CAUSES
-                            user.put("education", cbEducation.isChecked());
-                            user.put("environment", cbEnvironment.isChecked());
-                            user.put("animal", cbAnimal.isChecked());
-                            user.put("women", cbWomen.isChecked());
-                            user.put("health", cbHealth.isChecked());
-                            user.put("disaster", cbDisaster.isChecked());
-
-                            // STEP 3
-                            user.put("languages", etLanguages.getText().toString());
-                            user.put("vehicle", spinnerVehicle.getSelectedItem().toString());
-                            user.put("travel", spinnerTravel.getSelectedItem().toString());
-                            user.put("experience", spinnerExperience.getSelectedItem().toString());
-                            user.put("idType", spinnerIDType.getSelectedItem().toString());
-                            user.put("idNumber", etIDNumber.getText().toString());
-
-                            // 🔹 SAVE TO FIRESTORE
-                            db.collection("volunteer_users")   // was "volunteers"
-                                    .document(userId)
-                                    .set(user)
-                                    .addOnSuccessListener(unused -> {
-
-                                        Toast.makeText(this, "Volunteer Registered!", Toast.LENGTH_SHORT).show();
-                                        showCongratulationsAndProceed(name, email, phone);
-
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Toast.makeText(this, "Firestore Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    });
+                                photoRef.putFile(selectedProfileUri)
+                                        .addOnSuccessListener(taskSnapshot ->
+                                                photoRef.getDownloadUrl()
+                                                        .addOnSuccessListener(uri ->
+                                                                saveVolunteerToFirestore(userId, name, email, phone, uri.toString())
+                                                        )
+                                        )
+                                        .addOnFailureListener(e -> {
+                                            // Photo upload failed — save without photo URL
+                                            Toast.makeText(this,
+                                                    "Photo upload failed, saving without photo: " + e.getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                            saveVolunteerToFirestore(userId, name, email, phone, "");
+                                        });
+                            } else {
+                                // No photo selected — save without photo URL
+                                saveVolunteerToFirestore(userId, name, email, phone, "");
+                            }
 
                         } else {
-                            Toast.makeText(this, "Auth Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(this,
+                                    "Auth Error: " + task.getException().getMessage(),
+                                    Toast.LENGTH_LONG).show();
                         }
-
                     });
         }
+
+    }
+
+    void saveVolunteerToFirestore(String userId, String name, String email,
+                                  String phone, String photoUrl) {
+
+        Map<String, Object> user = new HashMap<>();
+
+        // BASIC
+        user.put("role", "Volunteer");
+        user.put("name", name);
+        user.put("email", email);
+        user.put("phone", phone);
+        user.put("profilePhotoUrl", photoUrl); // ✅ photo URL stored here
+        user.put("gender", spinnerGender.getSelectedItem().toString());
+        user.put("dob", etVolDOB.getText().toString());
+        user.put("city", etVolCity.getText().toString());
+        user.put("state", spinnerVolState.getSelectedItem().toString());
+        user.put("pincode", etVolPincode.getText().toString());
+
+        // SKILLS
+        user.put("teaching", cbTeaching.isChecked());
+        user.put("medical", cbMedical.isChecked());
+        user.put("food", cbFood.isChecked());
+        user.put("event", cbEvent.isChecked());
+        user.put("fundraising", cbFundraising.isChecked());
+        user.put("technical", cbTechnical.isChecked());
+        user.put("socialMedia", cbSocialMedia.isChecked());
+        user.put("otherSkill", etOtherSkill.getText().toString());
+
+        // AVAILABILITY
+        user.put("availableDays", spinnerAvailDays.getSelectedItem().toString());
+        user.put("availableTime", spinnerAvailTime.getSelectedItem().toString());
+
+        // CAUSES
+        user.put("education", cbEducation.isChecked());
+        user.put("environment", cbEnvironment.isChecked());
+        user.put("animal", cbAnimal.isChecked());
+        user.put("women", cbWomen.isChecked());
+        user.put("health", cbHealth.isChecked());
+        user.put("disaster", cbDisaster.isChecked());
+
+        // STEP 3
+        user.put("languages", etLanguages.getText().toString());
+        user.put("vehicle", spinnerVehicle.getSelectedItem().toString());
+        user.put("travel", spinnerTravel.getSelectedItem().toString());
+        user.put("experience", spinnerExperience.getSelectedItem().toString());
+        user.put("idType", spinnerIDType.getSelectedItem().toString());
+        user.put("idNumber", etIDNumber.getText().toString());
+
+        db.collection("volunteer_users")
+                .document(userId)
+                .set(user)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Volunteer Registered!", Toast.LENGTH_SHORT).show();
+                    showCongratulationsAndProceed(name, email, phone);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this,
+                            "Firestore Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
     }
 
     // ═══════════════════════════════════════
@@ -586,26 +608,24 @@ public class RegisterActivity extends AppCompatActivity {
 
     void showCongratulationsAndProceed(String name, String email, String phone) {
 
-        // ── SMS sending ──
-        try {
-            android.telephony.SmsManager sms = android.telephony.SmsManager.getDefault();
-            String smsText = "Congratulations " + name + "! You have successfully registered on Smart Seva. Welcome to the community!";
-            sms.sendTextMessage("+91" + phone, null, smsText, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // ✅ Send welcome email from your Gmail
+
+        EmailSender.sendWelcomeEmail(email, name);
+
+        // Firebase verification email
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.getCurrentUser().sendEmailVerification();
         }
 
-        // ── Congratulations Dialog ──
         new android.app.AlertDialog.Builder(this)
                 .setTitle("🎉 Registration Successful!")
                 .setMessage("Welcome, " + name + "!\n\n" +
-                        "✅ A confirmation has been sent to:\n" +
-                        "📧 " + email + "\n" +
-                        "📱 " + phone + "\n\n" +
-                        "Please login to continue.")
+                        "✅ A welcome email has been sent to:\n📧 " + email +
+                        "\n\nPlease verify your email and login.")
                 .setCancelable(false)
                 .setPositiveButton("Go to Login", (dialog, which) -> {
                     dialog.dismiss();
+                    mAuth.signOut();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 })

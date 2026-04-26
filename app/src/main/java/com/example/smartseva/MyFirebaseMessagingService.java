@@ -8,47 +8,85 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    private static final String TAG          = "FCMService";
     private static final String CHANNEL_ID   = "SmartSeva_Channel";
     private static final String CHANNEL_NAME = "Smart Seva Notifications";
 
+    // ── 1. Message receive ───────────────────────────────
     @Override
-    public void onMessageReceived(RemoteMessage message) {
+    public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
-        String title = "Smart Seva";
-        String body  = "Aapke liye ek update hai!";
+        String title  = "Smart Seva";
+        String body   = "Aapke liye ek update hai!";
+        String screen = null;
 
+        // Notification payload
         if (message.getNotification() != null) {
-            title = message.getNotification().getTitle();
-            body  = message.getNotification().getBody();
+            if (message.getNotification().getTitle() != null)
+                title = message.getNotification().getTitle();
+            if (message.getNotification().getBody() != null)
+                body = message.getNotification().getBody();
         }
 
-        // Data payload bhi check karo
-        if (message.getData().size() > 0) {
-            if (message.getData().containsKey("title"))
-                title = message.getData().get("title");
-            if (message.getData().containsKey("body"))
-                body = message.getData().get("body");
+        // Data payload overrides notification payload
+        Map<String, String> data = message.getData();
+        if (!data.isEmpty()) {
+            if (data.containsKey("title"))  title  = data.get("title");
+            if (data.containsKey("body"))   body   = data.get("body");
+            if (data.containsKey("screen")) screen = data.get("screen");
         }
 
-        sendNotification(title, body, message.getData().get("screen"));
+        sendNotification(title, body, screen);
     }
 
+    // ── 2. Token refresh — Firestore mein save karo ──────
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        // Token ko Firebase mein save karo — teammate handle karega
-        // saveFCMToken(token);
+        Log.d(TAG, "FCM Token refreshed: " + token);
+        saveFCMToken(token);
     }
 
+    // ── 3. Token Firestore mein save karo ────────────────
+    private void saveFCMToken(String token) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Log.w(TAG, "User not logged in — token not saved");
+            return;
+        }
+
+        Map<String, Object> update = new HashMap<>();
+        update.put("fcmToken", token);
+        update.put("tokenUpdatedAt", com.google.firebase.Timestamp.now());
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(user.getUid())
+                .update(update)
+                .addOnSuccessListener(v -> Log.d(TAG, "Token saved to Firestore"))
+                .addOnFailureListener(e -> Log.e(TAG, "Token save failed", e));
+    }
+
+    // ── 4. Notification show karo ────────────────────────
     void sendNotification(String title, String body, String screen) {
-        // Click pe kaunsi screen khulegi
+        // Screen routing
         Intent intent;
         if ("dashboard".equals(screen)) {
             intent = new Intent(this, DashboardActivity.class);
@@ -59,8 +97,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+        // Unique ID so notifications stack instead of replacing each other
+        int notifId = (int) System.currentTimeMillis();
+
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, intent,
+                this, notifId, intent,
                 PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         Uri soundUri = RingtoneManager.getDefaultUri(
@@ -79,8 +120,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager manager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager == null) return; // null safety
 
-        // Android 8+ ke liye channel zaroori hai
+        // Channel — Android 8+ ke liye (ideally app start pe banao)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID, CHANNEL_NAME,
@@ -89,6 +131,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             manager.createNotificationChannel(channel);
         }
 
-        manager.notify(0, builder.build());
+        manager.notify(notifId, builder.build());
     }
 }

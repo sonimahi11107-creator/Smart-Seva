@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-// FIX: Load local.properties ONCE at top — both keys se
+// Load local.properties ONCE at top
 val localProps = Properties()
 val localPropsFile = rootProject.file("local.properties")
 if (localPropsFile.exists()) {
@@ -25,7 +25,6 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // FIX: Correct Kotlin DSL syntax — getProperty() use karo
         buildConfigField("String", "WEATHER_API_KEY",
             "\"${localProps.getProperty("WEATHER_API_KEY", "")}\"")
         buildConfigField("String", "GEMINI_API_KEY",
@@ -63,11 +62,12 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // FIX: Duplicate Firebase BOM hata diya — sirf ek rakhna chahiye
+    // Firebase — sirf ek BOM
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging")
 
     // Credentials and Auth
     implementation(libs.androidx.credentials)
@@ -86,8 +86,6 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:1.4.0")
 
     implementation("com.google.guava:guava:32.1.3-android")
-
-    implementation("com.google.firebase:firebase-messaging:23.4.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
