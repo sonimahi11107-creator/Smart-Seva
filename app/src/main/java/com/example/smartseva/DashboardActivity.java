@@ -170,6 +170,9 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnCreateTask).setOnClickListener(v -> validateAndCreateTask());
         findViewById(R.id.btnQuickCreateTask).setOnClickListener(v -> showNGOPanel("create"));
         findViewById(R.id.btnLogout).setOnClickListener(v -> logout());
+        findViewById(R.id.btnPredictiveAlerts).setOnClickListener(v ->
+                startActivity(new Intent(this,
+                        PredictiveAlertsActivity.class)));
         if (findViewById(R.id.btnLogoutProfile) != null) {
             findViewById(R.id.btnLogoutProfile).setOnClickListener(v -> logout());
         }
@@ -233,6 +236,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         findViewById(R.id.btnOperationsCenter).setOnClickListener(v ->
                 startActivity(new Intent(this, OperationsCenterActivity.class)));
+
+        findViewById(R.id.btnEmergencyMode).setOnClickListener(v ->
+                startActivity(new Intent(this, EmergencyModeActivity.class)));
 
         // LocalTaskStore se tasks show
         List<LocalTaskStore.LocalTask> savedTasks = LocalTaskStore.getInstance().getTasks();
@@ -434,7 +440,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     void loadTasks(String filter) {
-        // FIX: Added null check to prevent NullPointerException on getUid()
         if (mAuth.getCurrentUser() == null) return;
         String uid = mAuth.getCurrentUser().getUid();
 
@@ -459,7 +464,6 @@ public class DashboardActivity extends AppCompatActivity {
                         }
 
                         if (title != null && !title.isEmpty()) {
-                            // FIX: Use Locale.getDefault() to avoid implicit default locale warning
                             taskList.add(String.format(Locale.getDefault(),
                                     "%s | %s | %s", title, urgency, loc));
                         }
@@ -474,12 +478,44 @@ public class DashboardActivity extends AppCompatActivity {
                             android.R.layout.simple_list_item_1, taskList);
                     listNGOTasks.setAdapter(adapter);
 
+                    // FIX 1: Sirf EK listener — nested aur duplicate hata diya
+                    // FIX 2: pehle dialog dikhao, andar se startActivity karo
                     listNGOTasks.setOnItemClickListener((parent, view, pos, id) -> {
                         if (pos >= taskIds.size()) return;
-                        Intent intent = new Intent(this, ApplicantsActivity.class);
-                        intent.putExtra("taskTitle",
-                                taskList.get(pos).split("\\|")[0].trim());
-                        startActivity(intent);
+
+                        // FIX 3: Lambda variables alag naam se — conflict avoid
+                        String selectedTitle  = taskList.get(pos).split("\\|")[0].trim();
+                        String selectedUrgency = taskList.get(pos).split("\\|").length > 1
+                                ? taskList.get(pos).split("\\|")[1].trim() : "";
+                        String selectedTaskId = taskIds.get(pos);
+
+                        new android.app.AlertDialog.Builder(this)
+                                .setTitle("Task Options")
+                                .setItems(new String[]{
+                                        "👥 View Applicants",
+                                        "🎯 Smart Allocate Volunteers"
+                                }, (dlg, which) -> {
+                                    if (which == 0) {
+                                        // View Applicants
+                                        Intent intentApplicants = new Intent(
+                                                DashboardActivity.this,
+                                                ApplicantsActivity.class);
+                                        intentApplicants.putExtra("taskTitle", selectedTitle);
+                                        startActivity(intentApplicants);
+                                    } else {
+                                        // Smart Allocate
+                                        Intent intentAlloc = new Intent(
+                                                DashboardActivity.this,
+                                                DynamicAllocationActivity.class);
+                                        intentAlloc.putExtra("taskTitle",    selectedTitle);
+                                        intentAlloc.putExtra("taskSkill",    "Medical Help");
+                                        intentAlloc.putExtra("taskLocation", "Raipur");
+                                        intentAlloc.putExtra("taskUrgency",  selectedUrgency);
+                                        intentAlloc.putExtra("taskId",       selectedTaskId);
+                                        startActivity(intentAlloc);
+                                    }
+                                })
+                                .show();
                     });
                 })
                 .addOnFailureListener(e ->
