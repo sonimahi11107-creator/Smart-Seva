@@ -144,7 +144,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3"
+                    android:text="4"
                     android:textColor="#FFA726"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
@@ -157,7 +157,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Tabs -->
+        <!-- Tabs — 3 tabs now -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -168,35 +168,33 @@
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:text="🔮 Predictions"
+                android:text="Predictions"
                 android:textSize="11sp"
                 android:backgroundTint="#1A1A2E"
                 android:textColor="#FFFFFF"
-                android:layout_marginEnd="4dp"
-                android:padding="0dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnTabWeekly"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:text="📅 Weekly"
+                android:text="📅 7-Day"
                 android:textSize="11sp"
                 android:backgroundTint="#F3F4F6"
                 android:textColor="#6B7280"
-                android:layout_marginEnd="4dp"
-                android:padding="0dp"/>
+                android:layout_marginEnd="6dp"/>
 
+            <!-- NEW: AI Tab -->
             <Button
                 android:id="@+id/btnTabAiInsight"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:text="✨ AI Insight"
+                android:text="🤖 AI Alerts"
                 android:textSize="11sp"
-                android:backgroundTint="#F3F4F6"
-                android:textColor="#6B7280"
-                android:padding="0dp"/>
+                android:backgroundTint="#6200EE"
+                android:textColor="#FFFFFF"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -219,7 +217,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Predicting community needs using Weather + Season + Location + Past Data"
+            android:text="Predicting using Weather + Season + Location + Past Data + Gemini AI"
             android:textSize="12sp"
             android:textColor="#F57F17"/>
     </LinearLayout>
@@ -254,7 +252,7 @@
             android:padding="16dp"/>
     </ScrollView>
 
-    <!-- AI Insight Panel -->
+    <!-- NEW: AI Panel -->
     <ScrollView
         android:id="@+id/panelAiInsight"
         android:layout_width="match_parent"
