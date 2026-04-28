@@ -144,7 +144,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3"
+                    android:text="4"
                     android:textColor="#FFA726"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
@@ -157,7 +157,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Tabs -->
+        <!-- Tabs — 3 tabs now -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -168,21 +168,33 @@
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:text="🔮 Predictions"
-                android:textSize="13sp"
+                android:text="Predictions"
+                android:textSize="11sp"
                 android:backgroundTint="#1A1A2E"
                 android:textColor="#FFFFFF"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnTabWeekly"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:text="📅 7-Day Forecast"
-                android:textSize="13sp"
+                android:text="📅 7-Day"
+                android:textSize="11sp"
                 android:backgroundTint="#F3F4F6"
-                android:textColor="#6B7280"/>
+                android:textColor="#6B7280"
+                android:layout_marginEnd="6dp"/>
+
+            <!-- NEW: AI Tab -->
+            <Button
+                android:id="@+id/btnTabAiInsight"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="🤖 AI Alerts"
+                android:textSize="11sp"
+                android:backgroundTint="#6200EE"
+                android:textColor="#FFFFFF"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -205,7 +217,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Predicting community needs using Weather + Season + Location + Past Data"
+            android:text="Predicting using Weather + Season + Location + Past Data + Gemini AI"
             android:textSize="12sp"
             android:textColor="#F57F17"/>
     </LinearLayout>
@@ -238,6 +250,68 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"/>
+    </ScrollView>
+
+    <!-- NEW: AI Panel -->
+    <ScrollView
+        android:id="@+id/panelAiInsight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Ask Gemini Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🤖 AI Smart Analysis"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A2E"
+                    android:layout_marginBottom="8dp"/>
+
+                <Button
+                    android:id="@+id/btnGenerateAiInsight"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="🤖 Generate AI Insight"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#6200EE"
+                    android:layout_marginBottom="8dp"/>
+
+                <ProgressBar
+                    android:id="@+id/progressAiInsight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvAiInsightText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="#374151"
+                    android:lineSpacingMultiplier="1.4"
+                    android:padding="8dp"
+                    android:text="Click the button above to generate AI-driven insights for your location."/>
+            </LinearLayout>
+
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
