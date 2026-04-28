@@ -169,20 +169,34 @@
                 android:layout_height="42dp"
                 android:layout_weight="1"
                 android:text="🔮 Predictions"
-                android:textSize="13sp"
+                android:textSize="11sp"
                 android:backgroundTint="#1A1A2E"
                 android:textColor="#FFFFFF"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="4dp"
+                android:padding="0dp"/>
 
             <Button
                 android:id="@+id/btnTabWeekly"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:text="📅 7-Day Forecast"
-                android:textSize="13sp"
+                android:text="📅 Weekly"
+                android:textSize="11sp"
                 android:backgroundTint="#F3F4F6"
-                android:textColor="#6B7280"/>
+                android:textColor="#6B7280"
+                android:layout_marginEnd="4dp"
+                android:padding="0dp"/>
+
+            <Button
+                android:id="@+id/btnTabAiInsight"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="✨ AI Insight"
+                android:textSize="11sp"
+                android:backgroundTint="#F3F4F6"
+                android:textColor="#6B7280"
+                android:padding="0dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -238,6 +252,47 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"/>
+    </ScrollView>
+
+    <!-- AI Insight Panel -->
+    <ScrollView
+        android:id="@+id/panelAiInsight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/btnGenerateAiInsight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Generate AI Insight"
+                android:backgroundTint="#1A1A2E"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="16dp"/>
+
+            <ProgressBar
+                android:id="@+id/progressAiInsight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/tvAiInsightText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Click the button above to generate AI-powered insights for your area."
+                android:textColor="#374151"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp"/>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

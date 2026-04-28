@@ -148,6 +148,8 @@ public class DashboardActivity extends AppCompatActivity {
         tvCountProgress = findViewById(R.id.tvCountProgress);
         tvCountResolved = findViewById(R.id.tvCountResolved);
 
+
+
         // ── Filter buttons (status) ──
         if (findViewById(R.id.btnFilterOpen) != null) {
             findViewById(R.id.btnFilterOpen).setOnClickListener(v ->
@@ -177,6 +179,8 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnCommunication).setOnClickListener(v ->
                 startActivity(new Intent(this,
                         CommunicationActivity.class)));
+        findViewById(R.id.fabChatbot).setOnClickListener(v ->
+                startActivity(new Intent(this, ChatbotActivity.class)));
         if (findViewById(R.id.btnLogoutProfile) != null) {
             findViewById(R.id.btnLogoutProfile).setOnClickListener(v -> logout());
         }
@@ -498,7 +502,8 @@ public class DashboardActivity extends AppCompatActivity {
                                 .setTitle("Task Options")
                                 .setItems(new String[]{
                                         "👥 View Applicants",
-                                        "🎯 Smart Allocate Volunteers"
+                                        "🎯 Smart Allocate Volunteers",
+                                        "📋 Task Proof"
                                 }, (dlg, which) -> {
                                     if (which == 0) {
                                         // View Applicants
@@ -507,7 +512,8 @@ public class DashboardActivity extends AppCompatActivity {
                                                 ApplicantsActivity.class);
                                         intentApplicants.putExtra("taskTitle", selectedTitle);
                                         startActivity(intentApplicants);
-                                    } else {
+
+                                    } else if (which == 1) {
                                         // Smart Allocate
                                         Intent intentAlloc = new Intent(
                                                 DashboardActivity.this,
@@ -518,6 +524,15 @@ public class DashboardActivity extends AppCompatActivity {
                                         intentAlloc.putExtra("taskUrgency",  selectedUrgency);
                                         intentAlloc.putExtra("taskId",       selectedTaskId);
                                         startActivity(intentAlloc);
+
+                                    } else if (which == 2) {
+                                        // Task Proof
+                                        Intent intentProof = new Intent(
+                                                DashboardActivity.this,
+                                                TaskProofActivity.class); // ya jo bhi activity hai
+                                        intentProof.putExtra("taskTitle", selectedTitle);
+                                        intentProof.putExtra("taskId",    selectedTaskId);
+                                        startActivity(intentProof);
                                     }
                                 })
                                 .show();

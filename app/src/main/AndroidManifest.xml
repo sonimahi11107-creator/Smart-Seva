@@ -86,6 +86,10 @@
 
         <activity android:name=".CommunicationActivity"/>
 
+        <activity android:name=".TaskProofActivity"/>
+
+        <activity android:name=".ChatbotActivity"/>
+
         <!-- MainActivity no longer launcher -->
 
 

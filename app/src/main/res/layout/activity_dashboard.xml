@@ -1,896 +1,878 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- FIX: Root LinearLayout ko FrameLayout mein wrap kiya — FAB ke liye -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    android:background="#F5F5F5">
+    android:layout_height="match_parent">
 
-    <!-- Top Bar -->
-    <!-- Top Bar -->
+    <!-- Original Dashboard Content -->
     <LinearLayout
-        android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:background="@drawable/gradient_bg"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:elevation="4dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        android:background="#F5F5F5">
 
+        <!-- Top Bar -->
         <LinearLayout
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/circle_bg"
-            android:gravity="center"
-            android:layout_marginEnd="12dp">
-
-            <ImageView
-                android:layout_width="52dp"
-                android:layout_height="40dp"
-                android:padding="4dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/app_logo" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvAppName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Smart Seva"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvWelcome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome!"
-                android:textColor="#BBDEFB"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="Logout"
-            android:textSize="11sp"
-            android:textColor="#1565C0"
-            android:backgroundTint="#FFFFFF"
-            android:padding="8dp"/>
-    </LinearLayout>
-
-    <!-- Content Area -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
+            android:id="@+id/topBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="65dp"
+            android:background="@drawable/gradient_bg"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:elevation="4dp">
 
-            <!-- ═══ NGO PANELS ═══ -->
+            <LinearLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circle_bg"
+                android:gravity="center"
+                android:layout_marginEnd="12dp">
 
-            <!-- NGO: Analytics -->
-            <LinearLayout android:id="@+id/panelNGOStats"
+                <ImageView
+                    android:layout_width="52dp"
+                    android:layout_height="40dp"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/app_logo" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAppName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Smart Seva"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvWelcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome!"
+                    android:textColor="#BBDEFB"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Logout"
+                android:textSize="11sp"
+                android:textColor="#1565C0"
+                android:backgroundTint="#FFFFFF"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Content Area -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
+                android:orientation="vertical">
 
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Analytics Overview"
-                    android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="16dp"/>
+                <!-- ═══ NGO PANELS ═══ -->
 
-                <!-- Stats Row 1 -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#1A1A1A"
-                        android:layout_marginEnd="8dp">
-                        <TextView android:id="@+id/tvTotalTasks"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textColor="#FFFFFF"
-                            android:textSize="32sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Total Tasks" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                    </LinearLayout>
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#2E7D32"
-                        android:layout_marginStart="8dp">
-                        <TextView android:id="@+id/tvCompletedTasks"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textColor="#FFFFFF"
-                            android:textSize="32sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Completed" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- NGO Action Buttons -->
-                <Button
-                    android:id="@+id/btnSmartMatchNGO"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:text="🧠 Find Best Volunteers (Smart Match)"
-                    android:backgroundTint="#1565C0"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnDataCollection"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:text="📊 AI Data Collection (Scan Survey)"
-                    android:backgroundTint="#C62828"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="16dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnEmergencyMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="🚨 Emergency Mode"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:backgroundTint="#B71C1C"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="10dp"/>
-
-                <Button
-                    android:id="@+id/btnPredictiveAlerts"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text=" Predictive Need Alerts"
-                    android:textSize="14sp"
-                    android:backgroundTint="#4A148C"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="10dp"/>
-
-                <Button
-                    android:id="@+id/btnCommunication"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="💬 Communication"
-                    android:textSize="14sp"
-                    android:backgroundTint="#0277BD"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="10dp"/>
-
-                <Button
-                    android:id="@+id/btnLeaderboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:text="🏆 Community Heroes Leaderboard"
-                    android:backgroundTint="#F57F17"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnMapView"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:text="🗺️ Community Needs Map"
-                    android:backgroundTint="#2E7D32"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnAnonymousReport"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:text="🚨 Report Urgent Need (Anonymous)"
-                    android:backgroundTint="#6A1B9A"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnOperationsCenter"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="📊 Operations Center"
-                    android:backgroundTint="#1A1A2E"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginTop="12dp"/>
-
-                <!-- Stats Row 2 -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#C62828"
-                        android:layout_marginEnd="8dp">
-                        <TextView android:id="@+id/tvUrgentTasks"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textColor="#FFFFFF"
-                            android:textSize="32sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Urgent" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                    </LinearLayout>
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#1565C0"
-                        android:layout_marginStart="8dp">
-                        <TextView android:id="@+id/tvTotalVolunteers"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textColor="#FFFFFF"
-                            android:textSize="32sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Volunteers" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Recent Activity -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Recent Activity"
-                    android:textSize="15sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginTop="8dp"
-                    android:layout_marginBottom="12dp"/>
-
-                <LinearLayout android:id="@+id/layoutRecentActivity"
+                <!-- NGO: Analytics -->
+                <LinearLayout android:id="@+id/panelNGOStats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
 
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="No recent activity yet.\nCreate your first task!"
-                        android:textColor="#888888" android:textSize="13sp"
-                        android:gravity="center" android:padding="24dp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- NGO: My Tasks -->
-            <LinearLayout android:id="@+id/panelNGOTasks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="My Tasks"
+                        android:text="Analytics Overview"
                         android:textSize="18sp" android:textStyle="bold"
-                        android:textColor="#1A1A1A"/>
+                        android:textColor="#1A1A1A" android:layout_marginBottom="16dp"/>
 
-                    <Button android:id="@+id/btnQuickCreateTask"
-                        android:layout_width="wrap_content" android:layout_height="36dp"
-                        android:text="+ Create"
-                        android:textSize="12sp"
-                        android:backgroundTint="#1A1A1A"
-                        android:textColor="#FFFFFF"/>
-                </LinearLayout>
+                    <!-- Stats Row 1 -->
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
 
+                        <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#1A1A1A"
+                            android:layout_marginEnd="8dp">
+                            <TextView android:id="@+id/tvTotalTasks"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#FFFFFF"
+                                android:textSize="32sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Total Tasks" android:textColor="#AAAAAA" android:textSize="12sp"/>
+                        </LinearLayout>
 
-                <!-- Filter Chips -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <Button android:id="@+id/btnFilterAll"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="All" android:textSize="11sp"
-                        android:backgroundTint="#1A1A1A" android:textColor="#FFFFFF"
-                        android:layout_marginEnd="6dp"/>
-
-                    <Button android:id="@+id/btnFilterOpen"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="🔵 Open" android:textSize="11sp"
-                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
-                        android:layout_marginEnd="6dp"/>
-
-                    <Button android:id="@+id/btnFilterAssigned"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="🟠 Assigned" android:textSize="11sp"
-                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
-                        android:layout_marginEnd="6dp"/>
-
-                    <Button android:id="@+id/btnFilterProgress"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="🟣 Progress" android:textSize="11sp"
-                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
-                        android:layout_marginEnd="6dp"/>
-
-                    <Button android:id="@+id/btnFilterResolved"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="🟢 Done" android:textSize="11sp"
-                        android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"/>
-                </LinearLayout>
-
-                <!-- Urgency / Activity quick filters -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <Button android:id="@+id/btnFilterUrgent"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="🔴 Urgent" android:textSize="11sp"
-                        android:backgroundTint="#C62828" android:textColor="#FFFFFF"
-                        android:layout_marginEnd="6dp"/>
-
-                    <Button android:id="@+id/btnFilterActive"
-                        android:layout_width="wrap_content" android:layout_height="32dp"
-                        android:text="🟡 Active" android:textSize="11sp"
-                        android:backgroundTint="#F57F17" android:textColor="#FFFFFF"/>
-                </LinearLayout>
-
-                <!-- Status Summary Row -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#E3F2FD"
-                        android:layout_marginEnd="4dp">
-                        <TextView android:id="@+id/tvCountOpen"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="#1565C0"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Open" android:textSize="10sp" android:textColor="#555"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#2E7D32"
+                            android:layout_marginStart="8dp">
+                            <TextView android:id="@+id/tvCompletedTasks"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#FFFFFF"
+                                android:textSize="32sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Completed" android:textColor="#AAAAAA" android:textSize="12sp"/>
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#FFF3E0"
-                        android:layout_marginEnd="4dp">
-                        <TextView android:id="@+id/tvCountAssigned"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="#F57F17"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Assigned" android:textSize="10sp" android:textColor="#555"/>
+                    <!-- NGO Action Buttons -->
+                    <Button
+                        android:id="@+id/btnSmartMatchNGO"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:text="🧠 Find Best Volunteers (Smart Match)"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <Button
+                        android:id="@+id/btnDataCollection"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:text="📊 AI Data Collection (Scan Survey)"
+                        android:backgroundTint="#C62828"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="16dp"
+                        android:textAllCaps="false"/>
+
+                    <Button
+                        android:id="@+id/btnEmergencyMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="🚨 Emergency Mode"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="#B71C1C"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="10dp"/>
+
+                    <Button
+                        android:id="@+id/btnPredictiveAlerts"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="🔮 Predictive Need Alerts"
+                        android:textSize="14sp"
+                        android:backgroundTint="#4A148C"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="10dp"/>
+
+                    <Button
+                        android:id="@+id/btnCommunication"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="💬 Communication"
+                        android:textSize="14sp"
+                        android:backgroundTint="#0277BD"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="10dp"/>
+
+                    <Button
+                        android:id="@+id/btnLeaderboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:text="🏆 Community Heroes Leaderboard"
+                        android:backgroundTint="#F57F17"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <Button
+                        android:id="@+id/btnMapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:text="🗺️ Community Needs Map"
+                        android:backgroundTint="#2E7D32"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <Button
+                        android:id="@+id/btnAnonymousReport"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:text="🚨 Report Urgent Need (Anonymous)"
+                        android:backgroundTint="#6A1B9A"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <Button
+                        android:id="@+id/btnOperationsCenter"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="📊 Operations Center"
+                        android:backgroundTint="#1A1A2E"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:layout_marginTop="12dp"/>
+
+                    <!-- Stats Row 2 -->
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#C62828"
+                            android:layout_marginEnd="8dp">
+                            <TextView android:id="@+id/tvUrgentTasks"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#FFFFFF"
+                                android:textSize="32sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Urgent" android:textColor="#AAAAAA" android:textSize="12sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="100dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#1565C0"
+                            android:layout_marginStart="8dp">
+                            <TextView android:id="@+id/tvTotalVolunteers"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#FFFFFF"
+                                android:textSize="32sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Volunteers" android:textColor="#AAAAAA" android:textSize="12sp"/>
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#F3E5F5"
-                        android:layout_marginEnd="4dp">
-                        <TextView android:id="@+id/tvCountProgress"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="#6A1B9A"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Progress" android:textSize="10sp" android:textColor="#555"/>
-                    </LinearLayout>
+                    <!-- Recent Activity -->
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Recent Activity"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginTop="8dp"
+                        android:layout_marginBottom="12dp"/>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#E8F5E9">
-                        <TextView android:id="@+id/tvCountResolved"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="#2E7D32"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Resolved" android:textSize="10sp" android:textColor="#555"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ListView android:id="@+id/listNGOTasks"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:divider="@null"/>
-
-            </LinearLayout>
-
-            <!-- NGO: Create Task -->
-            <LinearLayout android:id="@+id/panelCreateTask"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Create New Task"
-                    android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="20dp"/>
-
-                <!-- Task Title -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Task Title *" android:textSize="12sp" android:textColor="#555"/>
-                <EditText android:id="@+id/etTaskTitle"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="e.g. Food Distribution Drive"
-                    android:inputType="text" android:layout_marginBottom="4dp"/>
-                <TextView android:id="@+id/errTaskTitle" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:textColor="#E24B4A"
-                    android:textSize="11sp" android:layout_marginBottom="12dp"/>
-
-                <!-- Task Description -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Description *" android:textSize="12sp" android:textColor="#555"/>
-                <EditText android:id="@+id/etTaskDesc"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="Describe the task in detail..."
-                    android:inputType="textMultiLine" android:minLines="3"
-                    android:layout_marginBottom="4dp"/>
-                <TextView android:id="@+id/errTaskDesc" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:textColor="#E24B4A"
-                    android:textSize="11sp" android:layout_marginBottom="12dp"/>
-
-                <!-- Category -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Category *" android:textSize="12sp" android:textColor="#555"/>
-                <Spinner android:id="@+id/spinnerTaskCategory"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"/>
-
-                <!-- Urgency -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Urgency Level *" android:textSize="12sp" android:textColor="#555"/>
-                <Spinner android:id="@+id/spinnerUrgency"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"/>
-
-                <!-- Volunteers Required -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Volunteers Required *" android:textSize="12sp" android:textColor="#555"/>
-                <EditText android:id="@+id/etVolunteersRequired"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="e.g. 5"
-                    android:inputType="number" android:layout_marginBottom="4dp"/>
-                <TextView android:id="@+id/errVolunteersRequired" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:textColor="#E24B4A"
-                    android:textSize="11sp" android:layout_marginBottom="12dp"/>
-
-                <!-- Location -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Task Location *" android:textSize="12sp" android:textColor="#555"/>
-                <EditText android:id="@+id/etTaskLocation"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="e.g. Raipur, Chhattisgarh"
-                    android:inputType="text" android:layout_marginBottom="4dp"/>
-                <TextView android:id="@+id/errTaskLocation" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:textColor="#E24B4A"
-                    android:textSize="11sp" android:layout_marginBottom="12dp"/>
-
-                <!-- Date -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Task Date *" android:textSize="12sp" android:textColor="#555"/>
-                <EditText android:id="@+id/etTaskDate"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="DD/MM/YYYY"
-                    android:focusable="false" android:clickable="true"
-                    android:layout_marginBottom="4dp"/>
-                <TextView android:id="@+id/errTaskDate" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:textColor="#E24B4A"
-                    android:textSize="11sp" android:layout_marginBottom="12dp"/>
-
-                <!-- Skills Required -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Skills Required" android:textSize="12sp" android:textColor="#555"/>
-                <Spinner android:id="@+id/spinnerSkillRequired"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"/>
-
-                <!-- Task Image -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Task Image (Optional)" android:textSize="12sp" android:textColor="#555"
-                    android:layout_marginBottom="8dp"/>
-
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="20dp">
-
-                    <ImageView android:id="@+id/imgTaskPreview"
-                        android:layout_width="100dp" android:layout_height="80dp"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/photo_placeholder_bg"
-                        android:src="@drawable/ic_add_photo"
-                        android:layout_marginEnd="16dp"/>
-
-                    <Button android:id="@+id/btnUploadTaskImage"
-                        android:layout_width="wrap_content" android:layout_height="40dp"
-                        android:text="Upload Image"
-                        android:textSize="12sp"
-                        android:backgroundTint="#1A1A1A"
-                        android:textColor="#FFFFFF"/>
-                </LinearLayout>
-
-                <Button android:id="@+id/btnCreateTask"
-                    android:layout_width="match_parent" android:layout_height="50dp"
-                    android:text="Create Task"
-                    android:backgroundTint="#1A1A1A"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="16dp"/>
-            </LinearLayout>
-
-            <!-- NGO: Volunteer List -->
-            <LinearLayout android:id="@+id/panelVolunteerList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Registered Volunteers"
-                    android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
-
-                <EditText android:id="@+id/etSearchVolunteer"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="🔍 Search by name or skill..."
-                    android:inputType="text" android:layout_marginBottom="12dp"/>
-
-                <ListView android:id="@+id/listVolunteers"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:divider="@null"/>
-            </LinearLayout>
-
-            <!-- ═══ VOLUNTEER PANELS ═══ -->
-
-            <!-- Volunteer: Available Tasks -->
-            <LinearLayout android:id="@+id/panelAvailableTasks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Available Tasks Near You"
-                    android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
-
-                <Button
-                    android:id="@+id/btnSmartMatchVol"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="🧠 Find Best Tasks For Me (Smart Match)"
-                    android:backgroundTint="#1565C0"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <Button
-                    android:id="@+id/btnLeaderboardVol"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="🏆 Community Heroes"
-                    android:backgroundTint="#F57F17"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnMapViewVol"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="🗺️ Needs Map"
-                    android:backgroundTint="#2E7D32"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <Button
-                    android:id="@+id/btnAnonymousReportVol"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="🚨 Report Urgent Need"
-                    android:backgroundTint="#6A1B9A"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp"
-                    android:textAllCaps="false"/>
-
-                <EditText android:id="@+id/etSearchTask"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:hint="🔍 Search tasks..."
-                    android:inputType="text" android:layout_marginBottom="12dp"/>
-
-                <ListView android:id="@+id/listAvailableTasks"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:divider="@null"/>
-            </LinearLayout>
-
-            <!-- Volunteer: My Tasks -->
-            <LinearLayout android:id="@+id/panelMyApplications"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <TextView android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="My Tasks"
-                    android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A"
-                    android:layout_marginBottom="4dp"/>
-
-                <TextView android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tasks you applied for and got accepted"
-                    android:textSize="12sp" android:textColor="#888"
-                    android:layout_marginBottom="16dp"/>
-
-                <!-- Stats -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="60dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#E3F2FD"
-                        android:layout_marginEnd="8dp">
-                        <TextView android:id="@+id/tvMyTasksActive"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textSize="22sp" android:textStyle="bold"
-                            android:textColor="#1565C0"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Active" android:textSize="11sp" android:textColor="#555"/>
-                    </LinearLayout>
-
-                    <LinearLayout android:layout_width="0dp" android:layout_height="60dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#E8F5E9">
-                        <TextView android:id="@+id/tvMyTasksDone"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textSize="22sp" android:textStyle="bold"
-                            android:textColor="#2E7D32"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Completed" android:textSize="11sp" android:textColor="#555"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ListView android:id="@+id/listMyTasks"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:divider="@null"/>
-
-            </LinearLayout>
-
-            <!-- Volunteer: Profile -->
-            <LinearLayout android:id="@+id/panelProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <!-- Profile Header -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:background="#FFFFFF"
-                    android:layout_marginBottom="16dp">
-
-                    <ImageView android:id="@+id/imgVolProfile"
-                        android:layout_width="72dp" android:layout_height="72dp"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/photo_placeholder_bg"
-                        android:src="@drawable/ic_add_photo"
-                        android:layout_marginEnd="16dp"/>
-
-                    <LinearLayout android:layout_width="wrap_content"
+                    <LinearLayout android:id="@+id/layoutRecentActivity"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView android:id="@+id/tvProfileName"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Volunteer Name"
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="No recent activity yet.\nCreate your first task!"
+                            android:textColor="#888888" android:textSize="13sp"
+                            android:gravity="center" android:padding="24dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- NGO: My Tasks -->
+                <LinearLayout android:id="@+id/panelNGOTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="My Tasks"
                             android:textSize="18sp" android:textStyle="bold"
                             android:textColor="#1A1A1A"/>
-                        <TextView android:id="@+id/tvProfileCity"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="City, State"
-                            android:textSize="13sp" android:textColor="#888888"/>
-                        <TextView android:id="@+id/tvProfileEmail"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="email@example.com"
-                            android:textSize="12sp" android:textColor="#888888"/>
+
+                        <Button android:id="@+id/btnQuickCreateTask"
+                            android:layout_width="wrap_content" android:layout_height="36dp"
+                            android:text="+ Create"
+                            android:textSize="12sp"
+                            android:backgroundTint="#1A1A1A"
+                            android:textColor="#FFFFFF"/>
                     </LinearLayout>
-                </LinearLayout>
 
-                <!-- Skills -->
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="My Skills"
-                    android:textSize="15sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
-                <TextView android:id="@+id/tvProfileSkills"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="—"
-                    android:textSize="13sp" android:textColor="#555"
-                    android:background="#FFFFFF" android:padding="12dp"
-                    android:layout_marginBottom="16dp"/>
-
-                <!-- Logout -->
-                <Button android:id="@+id/btnLogoutProfile"
-                    android:layout_width="match_parent" android:layout_height="50dp"
-                    android:text="Logout"
-                    android:backgroundTint="#E24B4A"
-                    android:textColor="#FFFFFF"/>
-            </LinearLayout>
-
-            <!-- Volunteer: Impact Score -->
-            <LinearLayout android:id="@+id/panelImpactScore"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="My Impact Score"
-                    android:textSize="18sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="20dp"/>
-
-                <!-- Score Circle -->
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:gravity="center"
-                    android:background="#1A1A1A"
-                    android:layout_marginBottom="20dp">
-
-                    <LinearLayout android:layout_width="wrap_content"
+                    <!-- Filter Chips -->
+                    <LinearLayout android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
 
-                        <TextView android:id="@+id/tvImpactScore"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="#FFFFFF"
-                            android:textSize="56sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Impact Points"
-                            android:textColor="#AAAAAA" android:textSize="14sp"/>
+                        <Button android:id="@+id/btnFilterAll"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="All" android:textSize="11sp"
+                            android:backgroundTint="#1A1A1A" android:textColor="#FFFFFF"
+                            android:layout_marginEnd="6dp"/>
+
+                        <Button android:id="@+id/btnFilterOpen"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="🔵 Open" android:textSize="11sp"
+                            android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
+                            android:layout_marginEnd="6dp"/>
+
+                        <Button android:id="@+id/btnFilterAssigned"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="🟠 Assigned" android:textSize="11sp"
+                            android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
+                            android:layout_marginEnd="6dp"/>
+
+                        <Button android:id="@+id/btnFilterProgress"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="🟣 Progress" android:textSize="11sp"
+                            android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"
+                            android:layout_marginEnd="6dp"/>
+
+                        <Button android:id="@+id/btnFilterResolved"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="🟢 Done" android:textSize="11sp"
+                            android:backgroundTint="#E0E0E0" android:textColor="#1A1A1A"/>
                     </LinearLayout>
+
+                    <!-- Urgency filters -->
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <Button android:id="@+id/btnFilterUrgent"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="🔴 Urgent" android:textSize="11sp"
+                            android:backgroundTint="#C62828" android:textColor="#FFFFFF"
+                            android:layout_marginEnd="6dp"/>
+
+                        <Button android:id="@+id/btnFilterActive"
+                            android:layout_width="wrap_content" android:layout_height="32dp"
+                            android:text="🟡 Active" android:textSize="11sp"
+                            android:backgroundTint="#F57F17" android:textColor="#FFFFFF"/>
+                    </LinearLayout>
+
+                    <!-- Status Summary Row -->
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#E3F2FD"
+                            android:layout_marginEnd="4dp">
+                            <TextView android:id="@+id/tvCountOpen"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="#1565C0"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Open" android:textSize="10sp" android:textColor="#555"/>
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#FFF3E0"
+                            android:layout_marginEnd="4dp">
+                            <TextView android:id="@+id/tvCountAssigned"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="#F57F17"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Assigned" android:textSize="10sp" android:textColor="#555"/>
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#F3E5F5"
+                            android:layout_marginEnd="4dp">
+                            <TextView android:id="@+id/tvCountProgress"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="#6A1B9A"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Progress" android:textSize="10sp" android:textColor="#555"/>
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="50dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#E8F5E9">
+                            <TextView android:id="@+id/tvCountResolved"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="#2E7D32"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Resolved" android:textSize="10sp" android:textColor="#555"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ListView android:id="@+id/listNGOTasks"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:divider="@null"/>
                 </LinearLayout>
 
-                <!-- Impact Stats -->
-                <LinearLayout android:layout_width="match_parent"
+                <!-- NGO: Create Task -->
+                <LinearLayout android:id="@+id/panelCreateTask"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="80dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#FFFFFF"
-                        android:layout_marginEnd="8dp">
-                        <TextView android:id="@+id/tvTasksDone"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textColor="#1A1A1A"
-                            android:textSize="24sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Tasks Done" android:textColor="#888" android:textSize="11sp"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Create New Task"
+                        android:textSize="18sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginBottom="20dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Task Title *" android:textSize="12sp" android:textColor="#555"/>
+                    <EditText android:id="@+id/etTaskTitle"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="e.g. Food Distribution Drive"
+                        android:inputType="text" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/errTaskTitle" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:textColor="#E24B4A"
+                        android:textSize="11sp" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Description *" android:textSize="12sp" android:textColor="#555"/>
+                    <EditText android:id="@+id/etTaskDesc"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="Describe the task in detail..."
+                        android:inputType="textMultiLine" android:minLines="3"
+                        android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/errTaskDesc" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:textColor="#E24B4A"
+                        android:textSize="11sp" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Category *" android:textSize="12sp" android:textColor="#555"/>
+                    <Spinner android:id="@+id/spinnerTaskCategory"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Urgency Level *" android:textSize="12sp" android:textColor="#555"/>
+                    <Spinner android:id="@+id/spinnerUrgency"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Volunteers Required *" android:textSize="12sp" android:textColor="#555"/>
+                    <EditText android:id="@+id/etVolunteersRequired"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="e.g. 5"
+                        android:inputType="number" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/errVolunteersRequired" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:textColor="#E24B4A"
+                        android:textSize="11sp" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Task Location *" android:textSize="12sp" android:textColor="#555"/>
+                    <EditText android:id="@+id/etTaskLocation"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="e.g. Raipur, Chhattisgarh"
+                        android:inputType="text" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/errTaskLocation" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:textColor="#E24B4A"
+                        android:textSize="11sp" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Task Date *" android:textSize="12sp" android:textColor="#555"/>
+                    <EditText android:id="@+id/etTaskDate"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="DD/MM/YYYY"
+                        android:focusable="false" android:clickable="true"
+                        android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/errTaskDate" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:textColor="#E24B4A"
+                        android:textSize="11sp" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Skills Required" android:textSize="12sp" android:textColor="#555"/>
+                    <Spinner android:id="@+id/spinnerSkillRequired"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Task Image (Optional)" android:textSize="12sp" android:textColor="#555"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="20dp">
+
+                        <ImageView android:id="@+id/imgTaskPreview"
+                            android:layout_width="100dp" android:layout_height="80dp"
+                            android:scaleType="centerCrop"
+                            android:background="@drawable/photo_placeholder_bg"
+                            android:src="@drawable/ic_add_photo"
+                            android:layout_marginEnd="16dp"/>
+
+                        <Button android:id="@+id/btnUploadTaskImage"
+                            android:layout_width="wrap_content" android:layout_height="40dp"
+                            android:text="Upload Image"
+                            android:textSize="12sp"
+                            android:backgroundTint="#1A1A1A"
+                            android:textColor="#FFFFFF"/>
                     </LinearLayout>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="80dp"
-                        android:layout_weight="1" android:orientation="vertical"
-                        android:gravity="center" android:background="#FFFFFF"
-                        android:layout_marginStart="8dp">
-                        <TextView android:id="@+id/tvHoursContributed"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="0" android:textColor="#1A1A1A"
-                            android:textSize="24sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Hours Given" android:textColor="#888" android:textSize="11sp"/>
-                    </LinearLayout>
+                    <Button android:id="@+id/btnCreateTask"
+                        android:layout_width="match_parent" android:layout_height="50dp"
+                        android:text="Create Task"
+                        android:backgroundTint="#1A1A1A"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginBottom="16dp"/>
                 </LinearLayout>
 
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="Complete tasks to earn impact points!"
-                    android:textColor="#888888" android:textSize="13sp"
-                    android:gravity="center" android:padding="16dp"/>
+                <!-- NGO: Volunteer List -->
+                <LinearLayout android:id="@+id/panelVolunteerList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Registered Volunteers"
+                        android:textSize="18sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
+
+                    <EditText android:id="@+id/etSearchVolunteer"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="🔍 Search by name or skill..."
+                        android:inputType="text" android:layout_marginBottom="12dp"/>
+
+                    <ListView android:id="@+id/listVolunteers"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:divider="@null"/>
+                </LinearLayout>
+
+                <!-- ═══ VOLUNTEER PANELS ═══ -->
+
+                <!-- Volunteer: Available Tasks -->
+                <LinearLayout android:id="@+id/panelAvailableTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Available Tasks Near You"
+                        android:textSize="18sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
+
+                    <Button android:id="@+id/btnSmartMatchVol"
+                        android:layout_width="match_parent" android:layout_height="50dp"
+                        android:text="🧠 Find Best Tasks For Me (Smart Match)"
+                        android:backgroundTint="#1565C0" android:textColor="#FFFFFF"
+                        android:textSize="13sp" android:layout_marginBottom="8dp"/>
+
+                    <Button android:id="@+id/btnLeaderboardVol"
+                        android:layout_width="match_parent" android:layout_height="50dp"
+                        android:text="🏆 Community Heroes"
+                        android:backgroundTint="#F57F17" android:textColor="#FFFFFF"
+                        android:textSize="13sp" android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <Button android:id="@+id/btnMapViewVol"
+                        android:layout_width="match_parent" android:layout_height="50dp"
+                        android:text="🗺️ Needs Map"
+                        android:backgroundTint="#2E7D32" android:textColor="#FFFFFF"
+                        android:textSize="13sp" android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <Button android:id="@+id/btnAnonymousReportVol"
+                        android:layout_width="match_parent" android:layout_height="50dp"
+                        android:text="🚨 Report Urgent Need"
+                        android:backgroundTint="#6A1B9A" android:textColor="#FFFFFF"
+                        android:textSize="13sp" android:layout_marginBottom="8dp"
+                        android:textAllCaps="false"/>
+
+                    <EditText android:id="@+id/etSearchTask"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="🔍 Search tasks..."
+                        android:inputType="text" android:layout_marginBottom="12dp"/>
+
+                    <ListView android:id="@+id/listAvailableTasks"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:divider="@null"/>
+                </LinearLayout>
+
+                <!-- Volunteer: My Tasks -->
+                <LinearLayout android:id="@+id/panelMyApplications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="My Tasks"
+                        android:textSize="18sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginBottom="4dp"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Tasks you applied for and got accepted"
+                        android:textSize="12sp" android:textColor="#888"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="60dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#E3F2FD"
+                            android:layout_marginEnd="8dp">
+                            <TextView android:id="@+id/tvMyTasksActive"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textSize="22sp" android:textStyle="bold"
+                                android:textColor="#1565C0"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Active" android:textSize="11sp" android:textColor="#555"/>
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="60dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#E8F5E9">
+                            <TextView android:id="@+id/tvMyTasksDone"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textSize="22sp" android:textStyle="bold"
+                                android:textColor="#2E7D32"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Completed" android:textSize="11sp" android:textColor="#555"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ListView android:id="@+id/listMyTasks"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:divider="@null"/>
+                </LinearLayout>
+
+                <!-- Volunteer: Profile -->
+                <LinearLayout android:id="@+id/panelProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:background="#FFFFFF"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView android:id="@+id/imgVolProfile"
+                            android:layout_width="72dp" android:layout_height="72dp"
+                            android:scaleType="centerCrop"
+                            android:background="@drawable/photo_placeholder_bg"
+                            android:src="@drawable/ic_add_photo"
+                            android:layout_marginEnd="16dp"/>
+
+                        <LinearLayout android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView android:id="@+id/tvProfileName"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Volunteer Name"
+                                android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="#1A1A1A"/>
+                            <TextView android:id="@+id/tvProfileCity"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="City, State"
+                                android:textSize="13sp" android:textColor="#888888"/>
+                            <TextView android:id="@+id/tvProfileEmail"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="email@example.com"
+                                android:textSize="12sp" android:textColor="#888888"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="My Skills"
+                        android:textSize="15sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
+                    <TextView android:id="@+id/tvProfileSkills"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textSize="13sp" android:textColor="#555"
+                        android:background="#FFFFFF" android:padding="12dp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <Button android:id="@+id/btnLogoutProfile"
+                        android:layout_width="match_parent" android:layout_height="50dp"
+                        android:text="Logout"
+                        android:backgroundTint="#E24B4A"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+
+                <!-- Volunteer: Impact Score -->
+                <LinearLayout android:id="@+id/panelImpactScore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="My Impact Score"
+                        android:textSize="18sp" android:textStyle="bold"
+                        android:textColor="#1A1A1A" android:layout_marginBottom="20dp"/>
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:gravity="center"
+                        android:background="#1A1A1A"
+                        android:layout_marginBottom="20dp">
+
+                        <LinearLayout android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView android:id="@+id/tvImpactScore"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#FFFFFF"
+                                android:textSize="56sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Impact Points"
+                                android:textColor="#AAAAAA" android:textSize="14sp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="80dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#FFFFFF"
+                            android:layout_marginEnd="8dp">
+                            <TextView android:id="@+id/tvTasksDone"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#1A1A1A"
+                                android:textSize="24sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Tasks Done" android:textColor="#888" android:textSize="11sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="0dp" android:layout_height="80dp"
+                            android:layout_weight="1" android:orientation="vertical"
+                            android:gravity="center" android:background="#FFFFFF"
+                            android:layout_marginStart="8dp">
+                            <TextView android:id="@+id/tvHoursContributed"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="0" android:textColor="#1A1A1A"
+                                android:textSize="24sp" android:textStyle="bold"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Hours Given" android:textColor="#888" android:textSize="11sp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Complete tasks to earn impact points!"
+                        android:textColor="#888888" android:textSize="13sp"
+                        android:gravity="center" android:padding="16dp"/>
+                </LinearLayout>
+
             </LinearLayout>
+        </ScrollView>
 
+        <!-- Bottom Navigation -->
+        <LinearLayout
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:orientation="horizontal"
+            android:elevation="8dp"
+            android:paddingBottom="24dp"
+            android:paddingTop="6dp">
+
+            <Button android:id="@+id/btnNavStats"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="📊"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/primary" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavTasks"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="📋"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/text_hint" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavCreate"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="➕"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/text_hint" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavVolunteers"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="👥"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/text_hint" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavAvailable"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="📋"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/primary" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavApplications"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="📝"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/text_hint" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavProfile"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="👤"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/text_hint" android:visibility="gone"/>
+
+            <Button android:id="@+id/btnNavImpact"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:text="⭐"
+                android:textSize="18sp" android:backgroundTint="#FFFFFF"
+                android:textColor="@color/text_hint" android:visibility="gone"/>
         </LinearLayout>
-    </ScrollView>
 
-
-    <!-- Bottom Navigation -->
-    <LinearLayout
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:orientation="horizontal"
-        android:elevation="8dp"
-        android:paddingBottom="24dp"
-        android:paddingTop="6dp">
-
-        <Button android:id="@+id/btnNavStats"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="📊"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/primary" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavTasks"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="📋"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/text_hint" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavCreate"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="➕"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/text_hint" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavVolunteers"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="👥"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/text_hint" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavAvailable"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="📋"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/primary" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavApplications"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="📝"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/text_hint" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavProfile"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="👤"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/text_hint" android:visibility="gone"/>
-
-        <Button android:id="@+id/btnNavImpact"
-            android:layout_width="0dp" android:layout_height="48dp"
-            android:layout_weight="1" android:text="⭐"
-            android:textSize="18sp" android:backgroundTint="#FFFFFF"
-            android:textColor="@color/text_hint" android:visibility="gone"/>
     </LinearLayout>
-</LinearLayout>
+
+    <!-- FIX: Floating Chatbot Button — FrameLayout ki wajah se possible hua -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabChatbot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="80dp"
+        android:src="@android:drawable/ic_dialog_info"
+        android:backgroundTint="#6200EE"
+        android:tint="#FFFFFF"
+        android:contentDescription="AI Chatbot"
+        android:elevation="6dp"/>
+
+</FrameLayout>
