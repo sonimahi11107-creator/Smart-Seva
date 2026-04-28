@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F0F2F5">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#1A1A2E"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBackChatbot"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="#2D2D44"
+            android:tint="#FFFFFF"
+            android:padding="8dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:text="🤖 SmartSeva AI Assistant"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <!-- Language Toggle -->
+        <Button
+            android:id="@+id/btnLangEnglish"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="EN"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1A1A2E"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnLangHindi"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="HI"
+            android:textSize="12sp"
+            android:textColor="#6B7280"
+            android:backgroundTint="#F3F4F6"/>
+
+    </LinearLayout>
+
+    <!-- Online indicator -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#E8F5E9"
+        android:padding="8dp">
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="#4CAF50"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AI Assistant Online • Powered by Gemini"
+            android:textSize="11sp"
+            android:textColor="#2E7D32"/>
+    </LinearLayout>
+
+    <!-- Chat Messages -->
+    <ScrollView
+        android:id="@+id/scrollChatbot"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/layoutChatMessages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <!-- Typing Indicator -->
+    <TextView
+        android:id="@+id/tvTypingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🤖 AI is typing..."
+        android:textSize="12sp"
+        android:textColor="#6B7280"
+        android:padding="8dp"
+        android:paddingStart="16dp"
+        android:visibility="gone"/>
+
+    <!-- Quick Replies -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="4dp">
+
+        <LinearLayout
+            android:id="@+id/layoutQuickReplies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp"/>
+    </HorizontalScrollView>
+
+    <!-- Input Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/etChatbotMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Ask me anything..."
+            android:background="@null"
+            android:textSize="14sp"
+            android:maxLines="3"
+            android:inputType="textMultiLine"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnChatbotSend"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="➤"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1A1A2E"
+            android:padding="0dp"/>
+    </LinearLayout>
+
+</LinearLayout>

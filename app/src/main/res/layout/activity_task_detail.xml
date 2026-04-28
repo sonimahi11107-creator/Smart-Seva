@@ -3,26 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <!-- Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#1A1A1A"
+        android:background="@drawable/gradient_bg"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="8dp"
         android:paddingEnd="16dp">
 
-        <Button
-            android:id="@+id/btnBack"
+        <Button android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="← Back"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#1A1A1A"
+            android:backgroundTint="@color/primary"
             android:textSize="13sp"/>
 
         <TextView
@@ -35,15 +33,17 @@
             android:textStyle="bold"
             android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/tvUrgencyBadge"
+        <TextView android:id="@+id/tvUrgencyBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🔴 Critical"
             android:textColor="#FFFFFF"
-            android:textSize="11sp"
-            android:background="#C62828"
-            android:padding="6dp"/>
+            android:textSize="10sp"
+            android:background="@color/error"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
     </LinearLayout>
 
     <ScrollView
@@ -57,128 +57,178 @@
             android:orientation="vertical">
 
             <!-- Task Image -->
-            <ImageView
-                android:id="@+id/imgTaskDetail"
+            <ImageView android:id="@+id/imgTaskDetail"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
-                android:background="#CCCCCC"
+                android:background="@color/accent_light"
                 android:src="@drawable/ic_add_photo"/>
 
-            <!-- Main Card -->
+            <!-- Main Info Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#FFFFFF"
-                android:padding="16dp"
-                android:layout_marginTop="8dp">
+                android:background="@drawable/card_white"
+                android:padding="20dp"
+                android:layout_margin="12dp"
+                android:elevation="4dp">
 
-                <!-- Title + Category -->
-                <TextView
-                    android:id="@+id/tvDetailTitle"
+                <TextView android:id="@+id/tvDetailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Task Title"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="#1A1A1A"
-                    android:layout_marginBottom="8dp"/>
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="12dp"/>
 
+                <!-- Badges Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:id="@+id/tvDetailCategory"
+                    <TextView android:id="@+id/tvDetailCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Category"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:textColor="#FFFFFF"
-                        android:background="#1565C0"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:background="@color/primary"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:layout_marginEnd="8dp"/>
 
-                    <TextView
-                        android:id="@+id/tvDetailSkill"
+                    <TextView android:id="@+id/tvDetailSkill"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Skill Needed"
-                        android:textSize="12sp"
+                        android:text="Skill"
+                        android:textSize="11sp"
                         android:textColor="#FFFFFF"
-                        android:background="#2E7D32"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"/>
+                        android:background="@color/success"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"/>
                 </LinearLayout>
 
                 <!-- Divider -->
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="#EEEEEE" android:layout_marginBottom="16dp"/>
+                    android:background="@color/divider" android:layout_marginBottom="16dp"/>
 
                 <!-- Info Rows -->
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginBottom="12dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="📅  Date: " android:textSize="14sp"
-                        android:textColor="#555" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvDetailDate"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="—" android:textSize="14sp" android:textColor="#1A1A1A"/>
+                    <LinearLayout android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/circle_bg"
+                        android:gravity="center"
+                        android:layout_marginEnd="12dp">
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📅" android:textSize="14sp"/>
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Date"
+                            android:textSize="11sp" android:textColor="@color/text_hint"/>
+                        <TextView android:id="@+id/tvDetailDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="14sp" android:textColor="@color/text_primary"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginBottom="12dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="👥  Volunteers: " android:textSize="14sp"
-                        android:textColor="#555" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvDetailVolunteers"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="—" android:textSize="14sp" android:textColor="#1A1A1A"/>
+                    <LinearLayout android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/circle_bg"
+                        android:gravity="center"
+                        android:layout_marginEnd="12dp">
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="👥" android:textSize="14sp"/>
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Volunteers Needed"
+                            android:textSize="11sp" android:textColor="@color/text_hint"/>
+                        <TextView android:id="@+id/tvDetailVolunteers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="14sp" android:textColor="@color/text_primary"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="🏢  Posted by: " android:textSize="14sp"
-                        android:textColor="#555" android:textStyle="bold"/>
-                    <TextView android:id="@+id/tvDetailNGO"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="—" android:textSize="14sp" android:textColor="#1A1A1A"/>
+                    <LinearLayout android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/circle_bg"
+                        android:gravity="center"
+                        android:layout_marginEnd="12dp">
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🏢" android:textSize="14sp"/>
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Posted By"
+                            android:textSize="11sp" android:textColor="@color/text_hint"/>
+                        <TextView android:id="@+id/tvDetailNGO"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="14sp" android:textColor="@color/text_primary"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <!-- Divider -->
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="#EEEEEE" android:layout_marginBottom="16dp"/>
+                    android:background="@color/divider" android:layout_marginBottom="16dp"/>
 
                 <!-- Description -->
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="About This Task"
                     android:textSize="15sp" android:textStyle="bold"
-                    android:textColor="#1A1A1A" android:layout_marginBottom="8dp"/>
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="8dp"/>
 
-                <TextView
-                    android:id="@+id/tvDetailDesc"
+                <TextView android:id="@+id/tvDetailDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Description will appear here."
+                    android:text="Description"
                     android:textSize="14sp"
-                    android:textColor="#444444"
-                    android:lineSpacingExtra="4dp"
-                    android:layout_marginBottom="20dp"/>
+                    android:textColor="@color/text_secondary"
+                    android:lineSpacingExtra="4dp"/>
             </LinearLayout>
 
             <!-- Location Card -->
@@ -186,12 +236,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#FFFFFF"
-                android:padding="16dp"
-                android:layout_marginTop="8dp">
+                android:background="@drawable/card_white"
+                android:padding="20dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="4dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <LinearLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
@@ -201,70 +253,62 @@
                         android:layout_weight="1"
                         android:text="📍 Task Location"
                         android:textSize="15sp" android:textStyle="bold"
-                        android:textColor="#1A1A1A"/>
+                        android:textColor="@color/text_primary"/>
 
-                    <Button
-                        android:id="@+id/btnOpenFullMap"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="Open in Maps"
+                    <Button android:id="@+id/btnOpenFullMap"
+                        android:layout_width="wrap_content" android:layout_height="34dp"
+                        android:text="Open Maps"
                         android:textSize="11sp"
-                        android:backgroundTint="#1565C0"
-                        android:textColor="#FFFFFF"/>
+                        android:background="@drawable/btn_outline"
+                        android:textColor="@color/primary"/>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvDetailLocation"
+                <TextView android:id="@+id/tvDetailLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="📍 Location"
                     android:textSize="13sp"
-                    android:textColor="#555"
+                    android:textColor="@color/text_secondary"
                     android:layout_marginBottom="12dp"/>
 
-                <!-- In-App WebView Map -->
                 <android.webkit.WebView
                     android:id="@+id/webViewMap"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginBottom="8dp"/>
-
+                    android:layout_height="220dp"/>
             </LinearLayout>
 
-            <!-- Apply Status (if already applied) -->
-            <LinearLayout
-                android:id="@+id/layoutAlreadyApplied"
+            <!-- Already Applied -->
+            <LinearLayout android:id="@+id/layoutAlreadyApplied"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#E8F5E9"
                 android:padding="16dp"
                 android:gravity="center"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
                 android:visibility="gone">
 
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="✅ You have already applied for this task!"
-                    android:textSize="14sp" android:textColor="#2E7D32"
+                    android:textSize="14sp" android:textColor="@color/success"
                     android:textStyle="bold" android:gravity="center"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="The NGO will contact you soon."
-                    android:textSize="12sp" android:textColor="#555"
+                    android:textSize="12sp" android:textColor="@color/text_secondary"
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
 
-            <!-- Bottom space -->
-            <View android:layout_width="match_parent" android:layout_height="100dp"/>
-
+            <View android:layout_width="match_parent" android:layout_height="90dp"/>
         </LinearLayout>
     </ScrollView>
 
-    <!-- Apply Button - Fixed Bottom -->
-    <LinearLayout
-        android:id="@+id/layoutApplyBar"
+    <!-- Apply Button Bar -->
+    <LinearLayout android:id="@+id/layoutApplyBar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/card_white"
         android:orientation="horizontal"
         android:gravity="center"
         android:padding="12dp"
@@ -282,29 +326,27 @@
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tvApplyTitle"
+                <TextView android:id="@+id/tvApplyTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Interested?"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:textColor="#1A1A1A"/>
-                <TextView
-                    android:id="@+id/tvApplySubtitle"
+                    android:textColor="@color/text_primary"/>
+
+                <TextView android:id="@+id/tvApplySubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Join this task and make impact"
+                    android:text="Join and make an impact"
                     android:textSize="11sp"
-                    android:textColor="#888888"/>
+                    android:textColor="@color/text_hint"/>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="130dp"
+            <Button android:id="@+id/btnApply"
+                android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:text="Apply Now"
-                android:backgroundTint="#1A1A1A"
+                android:background="@drawable/btn_primary"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"/>
